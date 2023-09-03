@@ -1,6 +1,7 @@
 const Posts = require('../models/postModel')
 const Comments = require('../models/commentModel')
-const Users = require('../models/userModel')
+const Users = require('../models/userModel');
+const { getPresignedUrl } = require('../middleware/s3');
 
 class APIfeatures {
     constructor(query, queryString){
@@ -30,10 +31,16 @@ const postCtrl = {
             })
             await newPost.save()
 
+            const formattedImages = await Promise.all(newPost.images.map(async (image) => ({
+                key: image,
+                url: await getPresignedUrl(image)
+            })))
+
             res.json({
                 msg: 'Created Post!',
                 newPost: {
                     ...newPost._doc,
+                    images: formattedImages,
                     user: req.user
                 }
             })
@@ -48,14 +55,20 @@ const postCtrl = {
             }), req.query).paginating()
 
             const posts = await features.query.sort('-createdAt')
-            .populate("user likes", "avatar username fullname followers")
-            .populate({
-                path: "comments",
-                populate: {
-                    path: "user likes",
-                    select: "-password"
-                }
-            })
+                .populate("user likes", "avatar username fullname followers")
+                .populate({
+                    path: "comments",
+                    populate: {
+                        path: "user likes",
+                        select: "-password"
+                    }
+                })
+            for (let post of posts) {
+                post.images = await Promise.all(post.images.map(async (image) => ({
+                    key: image,
+                    url: await getPresignedUrl(image)
+                })))
+            }
 
             res.json({
                 msg: 'Success!',

@@ -13,7 +13,7 @@ const SocketServer = require('./socketServer')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(morgan())
+app.use(morgan('dev'))
 app.use(cors())
 app.use(cookieParser())
 

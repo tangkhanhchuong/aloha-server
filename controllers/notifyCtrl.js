@@ -7,9 +7,8 @@ const notifyCtrl = {
             const { id, recipients, url, text, content, image } = req.body
 
             if(recipients.includes(req.user._id.toString())) return;
-
             const notify = new Notifies({
-                id, recipients, url, text, content, image, user: req.user._id
+                id, recipients, url, text, content, image: image.key, user: req.user._id
             })
 
             await notify.save()
