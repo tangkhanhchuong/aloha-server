@@ -1,9 +1,3 @@
-const Posts = require('../models/post.model')
-const Comments = require('../models/comment.model')
-const Users = require('../models/user.model')
-const { getPresignedUrl } = require('../middleware/s3')
-const { APIFeatures } = require('../utils/APIFeatures')
-
 const postService = require('../services/post.service')
 
 const postController = {
@@ -114,7 +108,7 @@ const postController = {
         try {
             await postService.save({
                 id: req.params.id,
-                userId: req.user.id
+                userId: req.user._id
             })
             res.json({ msg: 'Saved Post!' })
         } catch (err) {
@@ -126,7 +120,7 @@ const postController = {
         try {
             await postService.unsave({
                 id: req.params.id,
-                userId: req.user.id
+                userId: req.user._id
             })
             res.json({ msg: 'Unsaved Post!' })
         } catch (err) {

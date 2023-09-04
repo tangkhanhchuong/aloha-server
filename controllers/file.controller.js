@@ -1,19 +1,19 @@
-const { getPresignedUrl } = require("../middleware/s3")
+const fileService = require('../services/file.service')
 
 const fileController = {
-	upload: async (req, res) => {
-		if (!req.files) {
-			res.status(404).json({ msg: 'Files not found !' })
+	upload: async (req, res, next) => {
+		try {
+			const { files } = await fileService.upload({
+				uploadedFiles: req.files
+			})
+			
+			return res.json({
+				msg: 'Files uploaded !',
+				files
+			})
+		} catch (err) {
+			next(err)
 		}
-		const uploadedFiles = []
-		for (let { key } of req.files) {
-			const url = await getPresignedUrl(key)
-			uploadedFiles.push({ key, url })
-		}
-		return res.json({
-			msg: 'Files uploaded !',
-			files: uploadedFiles
-		})
 	},
 }
 

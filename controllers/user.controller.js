@@ -3,9 +3,10 @@ const Posts = require('../models/post.model')
 const { getPresignedUrl } = require('../middleware/s3')
 const { APIFeatures } = require('../utils/APIFeatures')
 
+const userService = require('../services/user.service')
 
 const userController = {
-    search: async (req, res) => {
+    search: async (req, res, next) => {
         try {
             const users = await Users
                 .find({
@@ -26,11 +27,11 @@ const userController = {
                 users: formattedUsers
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 
-    get: async (req, res) => {
+    get: async (req, res, next) => {
         try {
             const user = await Users
                 .findById(req.params.id)
@@ -42,11 +43,11 @@ const userController = {
             user.avatar = await getPresignedUrl(user.avatar)
             return res.json({ user })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 
-    update: async (req, res) => {
+    update: async (req, res, next) => {
         try {
             const { avatar, fullname, mobile, address, story, website, gender } = req.body
             if(!fullname) {
@@ -59,11 +60,11 @@ const userController = {
 
             return res.json({ msg: 'Update Success!' })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 
-    follow: async (req, res) => {
+    follow: async (req, res, next) => {
         try {
             const user = await Users.find({ _id: req.params.id, followers: req.user._id })
             if(user.length > 0) {
@@ -90,11 +91,11 @@ const userController = {
 
             return res.json({ user: updatedUser })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 
-    unfollow: async (req, res) => {
+    unfollow: async (req, res, next) => {
         try {
 
             const updatedUser = await Users.findOneAndUpdate({ _id: req.params.id }, { 
@@ -117,11 +118,11 @@ const userController = {
 
             return res.json({ user: updatedUser })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 
-    suggest: async (req, res) => {
+    suggest: async (req, res, next) => {
         try {
             const newArr = [ ...req.user.following, req.user._id ]
             const num  = req.query.num || 10
@@ -141,11 +142,11 @@ const userController = {
                 count: formattedUsers.length
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 
-    getUserPosts: async (req, res) => {
+    getUserPosts: async (req, res, next) => {
         try {
             const features = new APIFeatures(Posts.find({ user: req.params.id }), req.query)
                 .paginate()
@@ -164,11 +165,11 @@ const userController = {
                 count: formattedPosts.length
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 
-    getDiscoverPosts: async (req, res) => {
+    getDiscoverPosts: async (req, res, next) => {
         try {
             const newArr = [...req.user.following, req.user._id]
             const num  = req.query.num || 9
@@ -184,11 +185,11 @@ const userController = {
                 posts
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
     
-    getSavedPosts: async (req, res) => {
+    getSavedPosts: async (req, res, next) => {
         try {
             const features = new APIFeatures(Posts.find({
                 _id: { $in: req.user.saved }
@@ -200,7 +201,7 @@ const userController = {
                 count: savePosts.length
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 }

@@ -1,47 +1,31 @@
-const { getPresignedUrl } = require('../middleware/s3');
-const Conversations = require('../models/conversation.model')
-const Messages = require('../models/message.model')
-const { APIFeatures } = require('../utils/APIFeatures')
+const conversationService = require('../services/conversation.service')
 
 const conversationController = {
-    list: async (req, res) => {
+    list: async (req, res, next) => {
         try {
-            const features = new APIFeatures(Conversations.find({
-                recipients: req.user._id
-            }), req.query).paginate()
-
-            const conversations = await features.query
-                .sort('-updatedAt')
-                .populate('recipients', 'avatar username fullname')
-
-            const formattedConversations = await Promise.all(conversations.map(async (conversation) => {
-                conversation.recipients = await Promise.all(conversation.recipients.map(async (recipent) => {
-                    recipent.avatar = await getPresignedUrl(recipent.avatar)
-                    return recipent
-                }))
-                return conversation
-            }))
+            const { conversations } = await conversationService.list({
+                userId: req.user._id,
+                query: req.query
+            })
 
             return res.json({
-                conversations: formattedConversations,
+                conversations,
                 count: conversations.length
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
-    delete: async (req, res) => {
+
+    delete: async (req, res, next) => {
         try {
-            const newConver = await Conversations.findOneAndDelete({
-                $or: [
-                    { recipients: [req.user._id, req.params.id] },
-                    { recipients: [req.params.id, req.user._id] }
-                ]
+            await conversationService.delete({
+                id: req.params.id,
+                userId: req.user._id
             })
-            await Messages.deleteMany({ conversation: newConver._id })
             return res.json({ msg: 'Delete Success!' })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 }

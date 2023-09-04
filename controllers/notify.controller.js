@@ -1,9 +1,10 @@
 const Notifies = require('../models/notify.model')
 const { getPresignedUrl } = require('../middleware/s3')
 
+const notifyService = require('../services/notify.service')
 
 const notifyController = {
-    create: async (req, res) => {
+    create: async (req, res, next) => {
         try {
             const { id, recipients, url, text, content } = req.body
 
@@ -17,10 +18,11 @@ const notifyController = {
             await notify.save()
             return res.json({ notify })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
-    remove: async (req, res) => {
+
+    remove: async (req, res, next) => {
         try {
             const notify = await Notifies.findOneAndDelete({
                 id: req.params.id, url: req.query.url
@@ -28,10 +30,11 @@ const notifyController = {
             
             return res.json({ notify })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
-    list: async (req, res) => {
+
+    list: async (req, res, next) => {
         try {
             const notifies = await Notifies
                 .find({ recipients: req.user._id })
@@ -44,10 +47,11 @@ const notifyController = {
             }))
             return res.json({ notifies: formattedNotifies })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
-    markAsRead: async (req, res) => {
+    
+    markAsRead: async (req, res, next) => {
         try {
             const notifies = await Notifies.findOneAndUpdate({ _id: req.params.id }, {
                 isRead: true
@@ -55,15 +59,16 @@ const notifyController = {
 
             return res.json({ notifies })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
-    deleteAll: async (req, res) => {
+    
+    deleteAll: async (req, res, next) => {
         try {
             const notifies = await Notifies.deleteMany({ recipients: req.user._id })
             return res.json({ notifies })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 }

@@ -47,7 +47,7 @@ const authController = {
             res.clearCookie('refreshtoken', { path: '/api/refresh-token' })
             return res.json({ msg: 'Logged out!' })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
     

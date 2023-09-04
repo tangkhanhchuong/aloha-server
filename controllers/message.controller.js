@@ -1,63 +1,44 @@
-const Conversations = require('../models/conversation.model')
-const Messages = require('../models/message.model')
-const { APIFeatures } = require('../utils/APIFeatures')
+const messageService = require('../services/message.service')
 
 const messageController = {
-    create: async (req, res) => {
+    create: async (req, res, next) => {
         try {
             const { sender, recipient, text, media, call } = req.body
-
-            if(!recipient || (!text.trim() && media.length === 0 && !call)) {
-                return;
-            }
-
-            const newConversation = await Conversations.findOneAndUpdate({
-                $or: [
-                    { recipients: [sender, recipient] },
-                    { recipients: [recipient, sender] }
-                ]
-            }, {
-                recipients: [sender, recipient],
-                text, media, call
-            }, { new: true, upsert: true })
-
-            const newMessage = new Messages({
-                conversation: newConversation._id,
-                sender, call,
-                recipient, text, media
+            await messageService.create({
+                sender, recipient, text, media, call
             })
 
-            await newMessage.save()
             return res.json({ msg: 'Create Success!' })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
-    list: async (req, res) => {
-        try {
-            const features = new APIFeatures(Messages.find({
-                $or: [
-                    {sender: req.user._id, recipient: req.params.id},
-                    {sender: req.params.id, recipient: req.user._id}
-                ]
-            }), req.query).paginate()
 
-            const messages = await features.query.sort('-createdAt')
+    list: async (req, res, next) => {
+        try {
+            const { messages } = await messageService.list({
+                id: req.params.id,
+                userId: req.user._id,
+                query: req.query
+            })
             return res.json({
                 messages,
                 count: messages.length
             })
-
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
-    delete: async (req, res) => {
+    
+    delete: async (req, res, next) => {
         try {
-            await Messages.findOneAndDelete({ _id: req.params.id, sender: req.user._id })
+            await messageService.delete({
+                id: req.params.id,
+                userId: req.user._id
+            })
             return res.json({ msg: 'Delete Success!' })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            next(err)
         }
     },
 }
