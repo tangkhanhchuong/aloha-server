@@ -1,21 +1,13 @@
-const Notifies = require('../models/notify.model')
-const { getPresignedUrl } = require('../middleware/s3')
-
 const notifyService = require('../services/notify.service')
 
 const notifyController = {
     create: async (req, res, next) => {
         try {
             const { id, recipients, url, text, content } = req.body
-
-            if(recipients.includes(req.user._id.toString())) {
-                return;
-            }
-            const notify = new Notifies({
-                id, recipients, url, text, content, user: req.user._id
+            const { notify } = await notifyService.create({
+                id, recipients, url, text, content,
+                userId: req.user._id 
             })
-
-            await notify.save()
             return res.json({ notify })
         } catch (err) {
             next(err)
@@ -24,8 +16,9 @@ const notifyController = {
 
     remove: async (req, res, next) => {
         try {
-            const notify = await Notifies.findOneAndDelete({
-                id: req.params.id, url: req.query.url
+            const { notify } = await notifyService.remove({
+                id: req.params.id,
+                url: req.query.url
             })
             
             return res.json({ notify })
@@ -36,16 +29,10 @@ const notifyController = {
 
     list: async (req, res, next) => {
         try {
-            const notifies = await Notifies
-                .find({ recipients: req.user._id })
-                .sort('-createdAt')
-                .populate('user', 'avatar username')
-                
-            const formattedNotifies = await Promise.all(notifies.map(async (notify) => {
-                notify.user.avatar = await getPresignedUrl(notify.user.avatar)
-                return notify
-            }))
-            return res.json({ notifies: formattedNotifies })
+            const { notifies } = await notifyService.list({
+                userId: req.user._id
+            })
+            return res.json({ notifies })
         } catch (err) {
             next(err)
         }
@@ -53,11 +40,11 @@ const notifyController = {
     
     markAsRead: async (req, res, next) => {
         try {
-            const notifies = await Notifies.findOneAndUpdate({ _id: req.params.id }, {
-                isRead: true
+            const { notify } = await notifyService.markAsRead({
+                id: req.params.id
             })
 
-            return res.json({ notifies })
+            return res.json({ notify })
         } catch (err) {
             next(err)
         }
@@ -65,7 +52,9 @@ const notifyController = {
     
     deleteAll: async (req, res, next) => {
         try {
-            const notifies = await Notifies.deleteMany({ recipients: req.user._id })
+            const { notifies } = await notifyService.deleteAll({
+                userId: req.user._id 
+            })
             return res.json({ notifies })
         } catch (err) {
             next(err)
