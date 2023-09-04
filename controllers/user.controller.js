@@ -29,6 +29,7 @@ const userController = {
             return res.status(500).json({ msg: err.message })
         }
     },
+
     get: async (req, res) => {
         try {
             const user = await Users
@@ -44,6 +45,7 @@ const userController = {
             return res.status(500).json({ msg: err.message })
         }
     },
+
     update: async (req, res) => {
         try {
             const { avatar, fullname, mobile, address, story, website, gender } = req.body
@@ -60,6 +62,7 @@ const userController = {
             return res.status(500).json({ msg: err.message })
         }
     },
+
     follow: async (req, res) => {
         try {
             const user = await Users.find({ _id: req.params.id, followers: req.user._id })
@@ -90,6 +93,7 @@ const userController = {
             return res.status(500).json({ msg: err.message })
         }
     },
+
     unfollow: async (req, res) => {
         try {
 
@@ -116,6 +120,7 @@ const userController = {
             return res.status(500).json({ msg: err.message })
         }
     },
+
     suggest: async (req, res) => {
         try {
             const newArr = [ ...req.user.following, req.user._id ]
@@ -133,12 +138,13 @@ const userController = {
             })))
             return res.json({
                 users: formattedUsers,
-                result: formattedUsers.length
+                count: formattedUsers.length
             })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
     },
+
     getUserPosts: async (req, res) => {
         try {
             const features = new APIFeatures(Posts.find({ user: req.params.id }), req.query)
@@ -155,12 +161,13 @@ const userController = {
             
             return res.json({
                 posts: formattedPosts,
-                result: formattedPosts.length
+                count: formattedPosts.length
             })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
     },
+
     getDiscoverPosts: async (req, res) => {
         try {
             const newArr = [...req.user.following, req.user._id]
@@ -173,13 +180,14 @@ const userController = {
 
             return res.json({
                 msg: 'Success!',
-                result: posts.length,
+                count: posts.length,
                 posts
             })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
     },
+    
     getSavedPosts: async (req, res) => {
         try {
             const features = new APIFeatures(Posts.find({
@@ -189,7 +197,7 @@ const userController = {
             const savePosts = await features.query.sort('-createdAt')
             res.json({
                 savePosts,
-                result: savePosts.length
+                count: savePosts.length
             })
         } catch (err) {
             return res.status(500).json({ msg: err.message })

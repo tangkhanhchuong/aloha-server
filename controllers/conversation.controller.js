@@ -24,7 +24,7 @@ const conversationController = {
 
             return res.json({
                 conversations: formattedConversations,
-                result: conversations.length
+                count: conversations.length
             })
         } catch (err) {
             return res.status(500).json({ msg: err.message })

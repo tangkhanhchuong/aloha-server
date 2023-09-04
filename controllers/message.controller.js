@@ -45,7 +45,7 @@ const messageController = {
             const messages = await features.query.sort('-createdAt')
             return res.json({
                 messages,
-                result: messages.length
+                count: messages.length
             })
 
         } catch (err) {

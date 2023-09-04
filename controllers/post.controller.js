@@ -4,227 +4,133 @@ const Users = require('../models/user.model')
 const { getPresignedUrl } = require('../middleware/s3')
 const { APIFeatures } = require('../utils/APIFeatures')
 
+const postService = require('../services/post.service')
+
 const postController = {
-    create: async (req, res) => {
+    create: async (req, res, next) => {
         try {
             const { content, images } = req.body
-            if(images.length === 0) {
-                return res.status(400).json({ msg: 'Please add your photo.' })
-            }
 
-            const newPost = new Posts({
-                content, images, user: req.user._id
+            const { newPost } = await postService.create({
+                content,
+                images,
+                user: req.user
             })
-            await newPost.save()
-
-            const formattedImages = await Promise.all(newPost.images.map(async (image) => ({
-                key: image,
-                url: await getPresignedUrl(image)
-            })))
 
             return res.json({
                 msg: 'Created Post!',
-                newPost: {
-                    ...newPost._doc,
-                    images: formattedImages,
-                    user: req.user
-                }
-            })
-        } catch (err) {
-            return res.status(500).json({ msg: err.message })
-        }
-    },
-    list: async (req, res) => {
-        try {
-            const features =  new APIFeatures(Posts.find({
-                user: [...req.user.following, req.user._id]
-            }), req.query).paginate()
-
-            const posts = await features.query.sort('-createdAt')
-                .populate('user likes', 'avatar username fullname followers')
-                .populate({
-                    path: 'comments',
-                    populate: {
-                        path: 'user likes',
-                        select: '-password'
-                    }
-                })
-            const formattedPosts = await Promise.all(posts.map(async (post) => {
-                post.images = await Promise.all(post.images.map(async (image) => ({
-                    key: image,
-                    url: await getPresignedUrl(image)
-                })))
-                post.user.avatar = await getPresignedUrl(post.user.avatar)
-                post.comments = await Promise.all(post.comments.map(async (comment) => {
-                    comment.user.avatar = await getPresignedUrl(comment.user.avatar)
-                    return comment
-                }))
-                return post
-            }))
-
-            return res.json({
-                msg: 'Success!',
-                result: formattedPosts.length,
-                posts: formattedPosts
-            })
-        } catch (err) {
-            return res.status(500).json({ msg: err.message })
-        }
-    },
-    update: async (req, res) => {
-        try {
-            const { content, images } = req.body
-
-            const post = await Posts
-                .findOneAndUpdate({ _id: req.params.id}, {
-                    content, images
-                })
-                .populate('user likes', 'avatar username fullname')
-                .populate({
-                    path: 'comments',
-                    populate: {
-                        path: 'user likes',
-                        select: '-password'
-                    }
-                })
-
-            const formattedImages = await Promise.all(images.map(async (image) => ({
-                key: image,
-                url: await getPresignedUrl(image)
-            })))
-            const newPost = {
-                ...post._doc,
-                content,
-                images: formattedImages,
-            }
-            newPost.user.avatar = await getPresignedUrl(post.user.avatar)
-            return res.json({
-                msg: 'Updated Post!',
                 newPost
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return next(err)
         }
     },
-    like: async (req, res) => {
+    
+    list: async (req, res, next) => {
         try {
-            const post = await Posts.find({ _id: req.params.id, likes: req.user._id })
-            if(post.length > 0) {
-                return res.status(400).json({ msg: 'You liked this post.' })
-            }
+            const { posts } = await postService.list({
+                user: req.user,
+                query: req.query
+            })
 
-            const like = await Posts.findOneAndUpdate({ _id: req.params.id }, {
-                $push: { likes: req.user._id }
-            }, { new: true })
+            return res.json({
+                msg: 'Success!',
+                posts,
+                count: posts.length,
+            })
+        } catch (err) {
+            return next(err)
+        }
+    },
 
-            if(!like) {
-                return res.status(400).json({ msg: 'This post does not exist.' })
-            }
+    update: async (req, res, next) => {
+        try {
+            const { content, images } = req.body
 
+            const { post } = await postService.update({
+                content, images, postId: req.params.id
+            })
+
+            return res.json({
+                msg: 'Updated Post!',
+                post
+            })
+        } catch (err) {
+            return next(err)
+        }
+    },
+
+    like: async (req, res, next) => {
+        try {
+            await postService.like({
+                postId: req.params.id,
+                userId: req.user._id
+            })
             return res.json({ msg: 'Liked Post!' })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return next(err)
         }
     },
-    unlike: async (req, res) => {
+
+    unlike: async (req, res, next) => {
         try {
-            const like = await Posts.findOneAndUpdate({ _id: req.params.id}, {
-                $pull: {likes: req.user._id}
-            }, {new: true })
-
-            if(!like) {
-                return res.status(400).json({ msg: 'This post does not exist.' })
-            }
-
+            await postService.unlike({
+                postId: req.params.id,
+                userId: req.user._id
+            })
             return res.json({ msg: 'UnLiked Post!' })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return next(err)
         }
     },
-    get: async (req, res) => {
+
+    get: async (req, res, next) => {
         try {
-            const post = await Posts
-                .findById(req.params.id)
-                .populate('user likes', 'avatar username fullname followers')
-                .populate({
-                    path: 'comments',
-                    populate: {
-                        path: 'user likes',
-                        select: '-password'
-                    }
-                })
-
-            if(!post) {
-                return res.status(400).json({ msg: 'This post does not exist.' })
-            }
-            const formattedImages = await Promise.all(post.images.map(async (image) => ({
-                key: image,
-                url: await getPresignedUrl(image)
-            })))
-            post.images = formattedImages
-            post.user.avatar = await getPresignedUrl(post.user.avatar)
-
-            post.comments = await Promise.all(post.comments.map(async (comment) => {
-                comment.user.avatar = await getPresignedUrl(comment.user.avatar)
-                return comment
-            }))
-
+            const { post } = await postService.get({
+                id: req.params.id
+            })
             return res.json({
                 post
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return next(err)
         }
     },
-    delete: async (req, res) => {
+
+    delete: async (req, res, next) => {
         try {
-            const post = await Posts.findOneAndDelete({ _id: req.params.id, user: req.user._id })
-            await Comments.deleteMany({ _id: { $in: post.comments } })
+            const { post } = await postService.delete({ id: req.params.id, user: req.user })
 
             return res.json({
                 msg: 'Deleted Post!',
-                newPost: {
-                    ...post,
-                    user: req.user
-                }
+                post
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return next(err)
         }
     },
-    save: async (req, res) => {
+
+    save: async (req, res, next) => {
         try {
-            const user = await Users.find({ _id: req.user._id, saved: req.params.id })
-            if(user.length > 0) {
-                return res.status(400).json({ msg: 'You saved this post.' })
-            }
-
-            const save = await Users.findOneAndUpdate({ _id: req.user._id}, {
-                $push: { saved: req.params.id }
-            }, {new: true })
-
-            if(!save) {
-                return res.status(400).json({ msg: 'This user does not exist.' })
-            }
-
+            await postService.save({
+                id: req.params.id,
+                userId: req.user.id
+            })
             res.json({ msg: 'Saved Post!' })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return next(err)
         }
     },
     
-    unsave: async (req, res) => {
+    unsave: async (req, res, next) => {
         try {
-            const save = await Users.findOneAndUpdate({ _id: req.user._id }, {
-                $pull: { saved: req.params.id }
-            }, {new: true })
-
-            if(!save) {
-                return res.status(400).json({ msg: 'This user does not exist.' })
-            }
+            await postService.unsave({
+                id: req.params.id,
+                userId: req.user.id
+            })
             res.json({ msg: 'Unsaved Post!' })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return next(err)
         }
     },
 }
