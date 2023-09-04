@@ -12,7 +12,7 @@ router.route('/:id')
     .delete(auth, postController.delete)
 router.patch('/:id/like', auth, postController.like)
 router.patch('/:id/unlike', auth, postController.unlike)
-router.patch('/:id/save', auth, postController.savePost)
-router.patch('/:id/unsave', auth, postController.unsavePost)
+router.patch('/:id/save', auth, postController.save)
+router.patch('/:id/unsave', auth, postController.unsave)
 
 module.exports = router

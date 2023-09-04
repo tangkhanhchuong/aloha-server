@@ -1,141 +1,68 @@
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-
-const Users = require('../models/user.model')
-const { getPresignedUrl } = require('../middleware/s3')
+const authService = require('../services/auth.service')
 
 const authController = {
-    register: async (req, res) => {
+    register: async (req, res, next) => {
         try {
             const { fullname, username, email, password, gender } = req.body
-            let newUserName = username.toLowerCase().replace(/ /g, '')
+            
+            const {
+                user,
+                accessToken: access_token,
+                refreshToken: refresh_token
+            } = await authService.register({ fullname, username, email, password, gender })
 
-            const user_name = await Users.findOne({ username: newUserName })
-            if(user_name) {
-                return res.status(400).json({ msg: 'This user name already exists.'})
-            }
-
-            const userEmail = await Users.findOne({ email })
-            if(userEmail) {
-                return res.status(400).json({ msg: 'This email already exists.' })
-            }
-
-            if(password.length < 6) {
-                return res.status(400).json({ msg: 'Password must be at least 6 characters.' })
-            }
-
-            const passwordHash = await bcrypt.hash(password, 12)
-
-            const newUser = new Users({
-                fullname,
-                email,
-                gender,
-                username: newUserName, 
-                password: passwordHash
-            })
-
-            const accessToken = createAccessToken({ id: newUser._id })
-            const refreshToken = createRefreshToken({ id: newUser._id })
-
-            await newUser.save()
             return res.json({
                 msg: 'Register Success!',
-                access_token: accessToken,
-                refresh_token: refreshToken,
-                user: {
-                    ...newUser._doc,
-                    password: null,
-                }
+                access_token,
+                refresh_token,
+                user
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return next(err)
         }
     },
-    login: async (req, res) => {
+
+    login: async (req, res, next) => {
+        const { email, password } = req.body
         try {
-            const { email, password } = req.body
-
-            const user = await Users
-                .findOne({ email })
-                .populate('followers following', 'avatar username fullname followers following')
-
-            if(!user) {
-                return res.status(400).json({ msg: 'This email does not exist.' })
-            }
-
-            const isMatch = await bcrypt.compare(password, user.password)
-            if(!isMatch) {
-                return res.status(400).json({ msg: 'Password is incorrect.' })
-            }
-
-            const accessToken = createAccessToken({ id: user._id })
-            const refreshToken = createRefreshToken({ id: user._id })
-
-            const avatar = await getPresignedUrl(user.avatar)
+            const {
+                user,
+                accessToken: access_token,
+                refreshToken: refresh_token
+            } = await authService.login({ email, password })
+    
             return res.json({
                 msg: 'Login Success!',
-                access_token: accessToken,
-                refresh_token: refreshToken,
-                user: {
-                    ...user._doc,
-                    avatar,
-                    password: null,
-                }
+                access_token,
+                refresh_token,
+                user
             })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return next(err)
         }
     },
+
     logout: async (req, res) => {
         try {
-            res.clearCookie('refreshtoken', { path: '/api/refresh_token' })
+            res.clearCookie('refreshtoken', { path: '/api/refresh-token' })
             return res.json({ msg: 'Logged out!' })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
     },
-    generateAccessToken: async (req, res) => {
+    
+    generateAccessToken: async (req, res, next) => {
         try {
             const refreshToken = req.body.refreshToken
-            if(!refreshToken) {
-                return res.status(400).json({ msg: 'Please login now.' })
-            }
-
-            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async(err, result) => {
-                if(err) {
-                    return res.status(400).json({ msg: 'Please login now.' })
-                }
-
-                const user = await Users
-                    .findById(result.id)
-                    .select('-password')
-                    .populate('followers following', 'avatar username fullname followers following')
-
-                if(!user) {
-                    return res.status(400).json({ msg: 'This does not exist.' })
-                }
-
-                const accessToken = createAccessToken({ id: result.id })
-                user.avatar = await getPresignedUrl(user.avatar)
-                
-                return res.json({
-                    user,
-                    access_token: accessToken,
-                })
-            })
+            const {
+                user,
+                accessToken: access_token
+            } = await authService.generateAccessToken({ refreshToken })
+            return res.json({ user, access_token })
         } catch (err) {
-            return res.status(500).json({ msg: err.message })
+            return next(err)
         }
     }
-}
-
-
-const createAccessToken = (payload) => {
-    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
-}
-
-const createRefreshToken = (payload) => {
-    return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' })
 }
 
 module.exports = authController

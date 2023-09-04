@@ -192,7 +192,7 @@ const postController = {
             return res.status(500).json({ msg: err.message })
         }
     },
-    savePost: async (req, res) => {
+    save: async (req, res) => {
         try {
             const user = await Users.find({ _id: req.user._id, saved: req.params.id })
             if(user.length > 0) {
@@ -212,7 +212,8 @@ const postController = {
             return res.status(500).json({ msg: err.message })
         }
     },
-    unsavePost: async (req, res) => {
+    
+    unsave: async (req, res) => {
         try {
             const save = await Users.findOneAndUpdate({ _id: req.user._id }, {
                 $pull: { saved: req.params.id }

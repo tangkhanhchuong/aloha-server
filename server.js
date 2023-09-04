@@ -8,6 +8,7 @@ const path = require('path')
 const morgan = require("morgan")
 
 const SocketServer = require('./socketServer')
+const errorHandler = require('./middleware/error.handler')
 
 
 const app = express()
@@ -43,6 +44,7 @@ app.use('/api/v1/comments', require('./routes/comment.router'))
 app.use('/api/v1/notifies', require('./routes/notify.router'))
 app.use('/api/v1/messages', require('./routes/message.router'))
 app.use('/api/v1/files', require('./routes/file.router'))
+app.use(errorHandler)
 
 
 const URI = process.env.MONGODB_URL
