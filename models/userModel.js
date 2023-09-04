@@ -23,11 +23,11 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
     },
     avatar:{
         type: String,
-        default: 'https://res.cloudinary.com/devatchannel/image/upload/v1602752402/avatar/avatar_cugq40.png'
+        default: 'default-avatar.png'
     },
     role: {type: String, default: 'user'},
     gender: {type: String, default: 'male'},
@@ -45,6 +45,5 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true
 })
-
 
 module.exports = mongoose.model('user', userSchema)

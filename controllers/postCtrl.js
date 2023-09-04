@@ -36,7 +36,7 @@ const postCtrl = {
                 url: await getPresignedUrl(image)
             })))
 
-            res.json({
+            return res.json({
                 msg: 'Created Post!',
                 newPost: {
                     ...newPost._doc,
@@ -63,19 +63,23 @@ const postCtrl = {
                         select: "-password"
                     }
                 })
-            for (let post of posts) {
+            for (const post of posts) {
                 post.images = await Promise.all(post.images.map(async (image) => ({
                     key: image,
                     url: await getPresignedUrl(image)
                 })))
+                post.user.avatar = await getPresignedUrl(post.user.avatar)
+                post.comments = await Promise.all(post.comments.map(async (comment) => {
+                    comment.user.avatar = await getPresignedUrl(comment.user.avatar)
+                    return comment
+                }))
             }
 
-            res.json({
+            return res.json({
                 msg: 'Success!',
                 result: posts.length,
                 posts
             })
-
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
@@ -101,13 +105,15 @@ const postCtrl = {
                 key: image,
                 url: await getPresignedUrl(image)
             })))
-            res.json({
+            const newPost = {
+                ...post._doc,
+                content,
+                images: formattedImages,
+            }
+            newPost.user.avatar = await getPresignedUrl(post.user.avatar)
+            return res.json({
                 msg: "Updated Post!",
-                newPost: {
-                    ...post._doc,
-                    content,
-                    images: formattedImages
-                }
+                newPost
             })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
@@ -128,8 +134,7 @@ const postCtrl = {
                 return res.status(400).json({ msg: 'This post does not exist.' })
             }
 
-            res.json({ msg: 'Liked Post!' })
-
+            return res.json({ msg: 'Liked Post!' })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
@@ -144,44 +149,45 @@ const postCtrl = {
                 return res.status(400).json({ msg: 'This post does not exist.' })
             }
 
-            res.json({ msg: 'UnLiked Post!' })
-
+            return res.json({ msg: 'UnLiked Post!' })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
     },
     getUserPosts: async (req, res) => {
+        console.log('Get posts')
         try {
             const features = new APIfeatures(Posts.find({ user: req.params.id }), req.query)
                 .paginating()
             const posts = await features.query.sort("-createdAt")
 
-            for (let post of posts) {
+            for (const post of posts) {
                 post.images = await Promise.all(post.images.map(async (image) => ({
                     key: image,
                     url: await getPresignedUrl(image)
                 })))
             }
-            res.json({
+            
+            return res.json({
                 posts,
                 result: posts.length
             })
-
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
     },
     getPost: async (req, res) => {
         try {
-            const post = await Posts.findById(req.params.id)
-            .populate("user likes", "avatar username fullname followers")
-            .populate({
-                path: "comments",
-                populate: {
-                    path: "user likes",
-                    select: "-password"
-                }
-            })
+            const post = await Posts
+                .findById(req.params.id)
+                .populate("user likes", "avatar username fullname followers")
+                .populate({
+                    path: "comments",
+                    populate: {
+                        path: "user likes",
+                        select: "-password"
+                    }
+                })
 
             if(!post) {
                 return res.status(400).json({ msg: 'This post does not exist.' })
@@ -191,11 +197,18 @@ const postCtrl = {
                 url: await getPresignedUrl(image)
             })))
             post.images = formattedImages
+            post.user.avatar = await getPresignedUrl(post.user.avatar)
 
-            res.json({
+            const imagesSet = {}
+
+            post.comments = await Promise.all(post.comments.map(async (comment) => {
+                comment.user.avatar = await getPresignedUrl(comment.user.avatar)
+                return comment
+            }))
+
+            return res.json({
                 post
             })
-
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
@@ -215,7 +228,6 @@ const postCtrl = {
                 result: posts.length,
                 posts
             })
-
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
@@ -225,14 +237,13 @@ const postCtrl = {
             const post = await Posts.findOneAndDelete({ _id: req.params.id, user: req.user._id })
             await Comments.deleteMany({ _id: {$in: post.comments } })
 
-            res.json({
+            return res.json({
                 msg: 'Deleted Post!',
                 newPost: {
                     ...post,
                     user: req.user
                 }
             })
-
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
@@ -253,7 +264,6 @@ const postCtrl = {
             }
 
             res.json({ msg: 'Saved Post!' })
-
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
@@ -267,9 +277,7 @@ const postCtrl = {
             if(!save) {
                 return res.status(400).json({ msg: 'This user does not exist.' })
             }
-
-            res.json({ msg: 'unSaved Post!' })
-
+            res.json({ msg: 'Unsaved Post!' })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
@@ -281,12 +289,10 @@ const postCtrl = {
             }), req.query).paginating()
 
             const savePosts = await features.query.sort("-createdAt")
-
             res.json({
                 savePosts,
                 result: savePosts.length
             })
-
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }

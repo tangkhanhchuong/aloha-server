@@ -29,6 +29,9 @@ const uploadToS3 = multer({
 })
 
 const getPresignedUrl = async (key) => {
+  if (!key) {
+    return ''
+  }
   const command = new GetObjectCommand({
     Key: key,
     Bucket: bucket

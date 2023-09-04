@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 const Users = require('../models/userModel')
+const { getPresignedUrl } = require('../middleware/s3')
 
 const authCtrl = {
     register: async (req, res) => {
@@ -37,14 +38,13 @@ const authCtrl = {
             const refreshToken = createRefreshToken({ id: newUser._id })
 
             await newUser.save()
-
-            res.json({
+            return res.json({
                 msg: 'Register Success!',
                 access_token: accessToken,
                 refresh_token: refreshToken,
                 user: {
                     ...newUser._doc,
-                    password: ''
+                    password: null,
                 }
             })
         } catch (err) {
@@ -55,7 +55,8 @@ const authCtrl = {
         try {
             const { email, password } = req.body
 
-            const user = await Users.findOne({ email })
+            const user = await Users
+                .findOne({ email })
                 .populate('followers following', 'avatar username fullname followers following')
 
             if(!user) {
@@ -70,13 +71,15 @@ const authCtrl = {
             const accessToken = createAccessToken({ id: user._id })
             const refreshToken = createRefreshToken({ id: user._id })
 
-            res.json({
+            const avatar = await getPresignedUrl(user.avatar)
+            return res.json({
                 msg: 'Login Success!',
                 access_token: accessToken,
                 refresh_token: refreshToken,
                 user: {
                     ...user._doc,
-                    password: ''
+                    avatar,
+                    password: null,
                 }
             })
         } catch (err) {
@@ -113,13 +116,13 @@ const authCtrl = {
                 }
 
                 const accessToken = createAccessToken({ id: result.id })
-
-                res.json({
+                user.avatar = await getPresignedUrl(user.avatar)
+                
+                return res.json({
                     user,
                     access_token: accessToken,
                 })
             })
-            
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
