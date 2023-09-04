@@ -1,10 +1,10 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const Users = require('../models/userModel')
+const Users = require('../models/user.model')
 const { getPresignedUrl } = require('../middleware/s3')
 
-const authCtrl = {
+const authController = {
     register: async (req, res) => {
         try {
             const { fullname, username, email, password, gender } = req.body
@@ -138,4 +138,4 @@ const createRefreshToken = (payload) => {
     return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' })
 }
 
-module.exports = authCtrl
+module.exports = authController

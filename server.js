@@ -35,13 +35,14 @@ ExpressPeerServer(http, { path: '/' })
 
 
 // Routes
-app.use('/api', require('./routes/authRouter'))
-app.use('/api', require('./routes/userRouter'))
-app.use('/api', require('./routes/postRouter'))
-app.use('/api', require('./routes/commentRouter'))
-app.use('/api', require('./routes/notifyRouter'))
-app.use('/api', require('./routes/messageRouter'))
-app.use('/api', require('./routes/fileRouter'))
+app.use('/api/v1/auth', require('./routes/auth.router'))
+app.use('/api/v1/users', require('./routes/user.router'))
+app.use('/api/v1/posts', require('./routes/post.router'))
+app.use('/api/v1/conversations', require('./routes/conversation.router'))
+app.use('/api/v1/comments', require('./routes/comment.router'))
+app.use('/api/v1/notifies', require('./routes/notify.router'))
+app.use('/api/v1/messages', require('./routes/message.router'))
+app.use('/api/v1/files', require('./routes/file.router'))
 
 
 const URI = process.env.MONGODB_URL

@@ -1,0 +1,20 @@
+const { getPresignedUrl } = require("../middleware/s3")
+
+const fileController = {
+	upload: async (req, res) => {
+		if (!req.files) {
+			res.status(404).json({ msg: 'Files not found !' })
+		}
+		const uploadedFiles = []
+		for (let { key } of req.files) {
+			const url = await getPresignedUrl(key)
+			uploadedFiles.push({ key, url })
+		}
+		return res.json({
+			msg: 'Files uploaded !',
+			files: uploadedFiles
+		})
+	},
+}
+
+module.exports = fileController

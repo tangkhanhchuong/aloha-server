@@ -1,9 +1,9 @@
-const Comments = require('../models/commentModel')
-const Posts = require('../models/postModel')
+const Comments = require('../models/comment.model')
+const Posts = require('../models/post.model')
 
 
-const commentCtrl = {
-    createComment: async (req, res) => {
+const commentController = {
+    create: async (req, res) => {
         try {
             const { postId, content, tag, reply, postUserId } = req.body
 
@@ -33,7 +33,7 @@ const commentCtrl = {
             return res.status(500).json({ msg: err.message })
         }
     },
-    updateComment: async (req, res) => {
+    update: async (req, res) => {
         try {
             const { content } = req.body
             
@@ -45,7 +45,7 @@ const commentCtrl = {
             return res.status(500).json({ msg: err.message })
         }
     },
-    likeComment: async (req, res) => {
+    like: async (req, res) => {
         try {
             const comment = await Comments.find({ _id: req.params.id, likes: req.user._id })
             if(comment.length > 0) return res.status(400).json({ msg: 'You liked this post.' })
@@ -59,7 +59,7 @@ const commentCtrl = {
             return res.status(500).json({ msg: err.message })
         }
     },
-    unLikeComment: async (req, res) => {
+    unlike: async (req, res) => {
         try {
             await Comments.findOneAndUpdate({ _id: req.params.id }, {
                 $pull: { likes: req.user._id }
@@ -70,7 +70,7 @@ const commentCtrl = {
             return res.status(500).json({ msg: err.message })
         }
     },
-    deleteComment: async (req, res) => {
+    delete: async (req, res) => {
         try {
             const comment = await Comments.findOneAndDelete({
                 _id: req.params.id,
@@ -91,4 +91,4 @@ const commentCtrl = {
 }
 
 
-module.exports = commentCtrl
+module.exports = commentController

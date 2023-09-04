@@ -1,11 +1,19 @@
-const Users = require('../models/userModel')
-const { getPresignedUrl } = require("../middleware/s3")
+const Users = require('../models/user.model')
+const Posts = require('../models/post.model')
+const { getPresignedUrl } = require('../middleware/s3')
+const { APIFeatures } = require('../utils/APIFeatures')
 
-const userCtrl = {
-    searchUser: async (req, res) => {
+
+const userController = {
+    search: async (req, res) => {
         try {
             const users = await Users
-                .find({ username: { $regex: req.query.username } })
+                .find({
+                    username: {
+                        $regex: req.query.username || '',
+                    },
+
+                })
                 .limit(10)
                 .select('fullname username avatar')
             
@@ -21,7 +29,7 @@ const userCtrl = {
             return res.status(500).json({ msg: err.message })
         }
     },
-    getUser: async (req, res) => {
+    get: async (req, res) => {
         try {
             const user = await Users
                 .findById(req.params.id)
@@ -36,14 +44,14 @@ const userCtrl = {
             return res.status(500).json({ msg: err.message })
         }
     },
-    updateUser: async (req, res) => {
+    update: async (req, res) => {
         try {
             const { avatar, fullname, mobile, address, story, website, gender } = req.body
             if(!fullname) {
                 return res.status(400).json({ msg: 'Please add your full name.' })
             }
 
-            await Users.findOneAndUpdate({_id: req.user._id}, {
+            await Users.findOneAndUpdate({ _id: req.user._id }, {
                 avatar, fullname, mobile, address, story, website, gender
             })
 
@@ -108,9 +116,9 @@ const userCtrl = {
             return res.status(500).json({ msg: err.message })
         }
     },
-    suggestionsUser: async (req, res) => {
+    suggest: async (req, res) => {
         try {
-            const newArr = [...req.user.following, req.user._id]
+            const newArr = [ ...req.user.following, req.user._id ]
             const num  = req.query.num || 10
             const users = await Users
                 .aggregate([
@@ -127,11 +135,66 @@ const userCtrl = {
                 users: formattedUsers,
                 result: formattedUsers.length
             })
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    getUserPosts: async (req, res) => {
+        try {
+            const features = new APIFeatures(Posts.find({ user: req.params.id }), req.query)
+                .paginate()
 
+            const posts = await features.query.sort('-createdAt')
+            const formattedPosts = await Promise.all(posts.map(async (post) => {
+                post.images = await Promise.all(post.images.map(async (image) => ({
+                    key: image,
+                    url: await getPresignedUrl(image)
+                })))
+                return post
+            }))
+            
+            return res.json({
+                posts: formattedPosts,
+                result: formattedPosts.length
+            })
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    getDiscoverPosts: async (req, res) => {
+        try {
+            const newArr = [...req.user.following, req.user._id]
+            const num  = req.query.num || 9
+
+            const posts = await Posts.aggregate([
+                { $match: { user : { $nin: newArr } } },
+                { $sample: { size: Number(num) } },
+            ])
+
+            return res.json({
+                msg: 'Success!',
+                result: posts.length,
+                posts
+            })
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    getSavedPosts: async (req, res) => {
+        try {
+            const features = new APIFeatures(Posts.find({
+                _id: { $in: req.user.saved }
+            }), req.query).paginate()
+
+            const savePosts = await features.query.sort('-createdAt')
+            res.json({
+                savePosts,
+                result: savePosts.length
+            })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
     },
 }
 
-module.exports = userCtrl
+module.exports = userController
