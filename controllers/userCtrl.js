@@ -6,10 +6,11 @@ const userCtrl = {
         try {
             const users = await Users
                 .find({ username: { $regex: req.query.username } })
-                .limit(10).select('fullname username avatar')
+                .limit(10)
+                .select('fullname username avatar')
             
             const formattedUsers = await Promise.all(users.map(async (user) => ({
-                ...user,
+                ...user._doc,
                 avatar: await getPresignedUrl(user.avatar)
             })))
 
@@ -58,14 +59,25 @@ const userCtrl = {
                 return res.status(400).json({ msg: 'You followed this user.' })
             }
 
-            const newUser = await Users.findOneAndUpdate({ _id: req.params.id }, { 
+            const updatedUser = await Users.findOneAndUpdate({ _id: req.params.id }, { 
                 $push: { followers: req.user._id }
             }, { new: true }).populate('followers following', '-password')
 
             await Users.findOneAndUpdate({ _id: req.user._id }, {
                 $push: { following: req.params.id }
             }, { new: true })
-            return res.json({ newUser })
+            
+            updatedUser.avatar = await getPresignedUrl(updatedUser.avatar)
+            updatedUser.followers = await Promise.all(updatedUser.followers.map(async (follower) => {
+                follower.avatar = await getPresignedUrl(follower.avatar)
+                return follower
+            }))
+            updatedUser.following = await Promise.all(updatedUser.following.map(async (followingUser) => {
+                followingUser.avatar = await getPresignedUrl(followingUser.avatar)
+                return followingUser
+            }))
+
+            return res.json({ user: updatedUser })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
@@ -73,7 +85,7 @@ const userCtrl = {
     unfollow: async (req, res) => {
         try {
 
-            const newUser = await Users.findOneAndUpdate({ _id: req.params.id }, { 
+            const updatedUser = await Users.findOneAndUpdate({ _id: req.params.id }, { 
                 $pull: { followers: req.user._id }
             }, { new: true }).populate('followers following', '-password')
 
@@ -81,7 +93,17 @@ const userCtrl = {
                 $pull: { following: req.params.id }
             }, { new: true })
 
-            return res.json({ newUser })
+            updatedUser.avatar = await getPresignedUrl(updatedUser.avatar)
+            updatedUser.followers = await Promise.all(updatedUser.followers.map(async (follower) => {
+                follower.avatar = await getPresignedUrl(follower.avatar)
+                return follower
+            }))
+            updatedUser.following = await Promise.all(updatedUser.following.map(async (followingUser) => {
+                followingUser.avatar = await getPresignedUrl(followingUser.avatar)
+                return followingUser
+            }))
+
+            return res.json({ user: updatedUser })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }

@@ -20,7 +20,11 @@ app.use(cookieParser())
 
 // Socket
 const http = require('http').createServer(app)
-const io = require('socket.io')(http)
+const io = require('socket.io')(http, {
+    cors: {
+        origin: true
+    }
+})
 
 io.on('connection', socket => {
     SocketServer(socket)

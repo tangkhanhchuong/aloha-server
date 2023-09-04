@@ -1,3 +1,4 @@
+const { getPresignedUrl } = require('../middleware/s3');
 const Conversations = require('../models/conversationModel')
 const Messages = require('../models/messageModel')
 
@@ -57,8 +58,16 @@ const messageCtrl = {
                 .sort('-updatedAt')
                 .populate('recipients', 'avatar username fullname')
 
+            const formattedConversations = await Promise.all(conversations.map(async (conversation) => {
+                conversation.recipients = await Promise.all(conversation.recipients.map(async (recipent) => {
+                    recipent.avatar = await getPresignedUrl(recipent.avatar)
+                    return recipent
+                }))
+                return conversation
+            }))
+
             return res.json({
-                conversations,
+                conversations: formattedConversations,
                 result: conversations.length
             })
         } catch (err) {
