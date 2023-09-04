@@ -7,6 +7,8 @@ services:
       - "27017:27017"
     networks:
       - node-app
+    volumes:
+      - mongo-data:/data/db
   mongo-express:
     image: mongo-express:0.54.0
     container_name: mongo-express
@@ -17,6 +19,6 @@ services:
 networks:
   node-app:
     driver: bridge
+
 volumes:
   mongo-data:
-    driver: local

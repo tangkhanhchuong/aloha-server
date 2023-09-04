@@ -3,6 +3,7 @@ dev:
 
 down:
 	docker-compose down
+	docker volume prune -f
 
 bootstrap:
 	cp .env .env.example
