@@ -1,16 +1,17 @@
 const Notifies = require('../models/notifyModel')
+const { getPresignedUrl } = require('../middleware/s3')
 
 
 const notifyCtrl = {
     createNotify: async (req, res) => {
         try {
-            const { id, recipients, url, text, content, image } = req.body
+            const { id, recipients, url, text, content } = req.body
 
             if(recipients.includes(req.user._id.toString())) {
                 return;
             }
             const notify = new Notifies({
-                id, recipients, url, text, content, image: image.key, user: req.user._id
+                id, recipients, url, text, content, user: req.user._id
             })
 
             await notify.save()
@@ -36,7 +37,10 @@ const notifyCtrl = {
                 .find({ recipients: req.user._id })
                 .sort('-createdAt')
                 .populate('user', 'avatar username')
-            
+            for (let notify of notifies) {
+                notify.user.avatar = await getPresignedUrl(notify.user.avatar)
+            }
+
             return res.json({ notifies })
         } catch (err) {
             return res.status(500).json({ msg: err.message })

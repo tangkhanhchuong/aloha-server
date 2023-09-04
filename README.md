@@ -1,6 +1,11 @@
 <h1>Aloha</h1>
 <p>Aloha is MERN stack application with some social media's main features</p>
 
+### Techstack
+- Nodejs
+- Mongo
+- Socket Io
+- AWS: S3
 
 ### Requirements
 - Node >= 16, yarn
