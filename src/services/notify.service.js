@@ -3,29 +3,33 @@ const { getPresignedUrl } = require('../middleware/s3')
 const { getIo, getUserById } = require('../socketServer')
 
 const notifyService = {
-	create: async ({ id, recipients, url, text, content, user }) => {
+	create: async ({ recipients, url, text, content, user }) => {
 		if (recipients.length < 1) {
 			return null
 		}
 		if(recipients.includes(user._id.toString())) {
 				return;
 		}
-		const notify = new Notifies({
-				id, recipients, url, text, content, user: user._id
+		const createdNotify = new Notifies({
+			recipients, url, text, content, user: user._id
 		})
-		await notify.save()
+		await createdNotify.save()
 
-		for (const recipient of recipients) {
+		const formattedRecipients = await Promise.all(recipients.map(async (recipient) => {
+			recipient.avatar = await getPresignedUrl(recipient.avatar)
+			return recipient
+		}))
+		for (const recipient of formattedRecipients) {
 			const user = getUserById(recipient);
 			if (!user) {
 				continue
 			}
 			const io = getIo()
 			io.to(user.socketId).emit('createNotifyToClient', {
-				id, recipients, url, text, content, user
+				_id: createdNotify._id, recipients, url, text, content, user
 			})
 		}
-		return { notify }
+		return { notify: createdNotify }
 	},
 
 	remove: async ({ id, url }) => {

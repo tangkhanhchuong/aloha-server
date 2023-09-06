@@ -2,12 +2,12 @@ const mongoose = require('mongoose')
 
 const notifySchema = new mongoose.Schema({
     id: mongoose.Types.ObjectId,
-    user: {type: mongoose.Types.ObjectId, ref: 'user'},
+    user: { type: mongoose.Types.ObjectId, ref: 'user' },
     recipients: [mongoose.Types.ObjectId],
     url: String,
     text: String,
     content: String,
-    isRead: {type: Boolean, default: false}
+    isRead: { type: Boolean, default: false }
 }, {
     timestamps: true
 })

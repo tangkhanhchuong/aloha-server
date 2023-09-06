@@ -58,7 +58,7 @@ const postController = {
         try {
             await postService.like({
                 postId: req.params.id,
-                userId: req.user._id
+                user: req.user
             })
             return res.json({ msg: 'Liked Post!' })
         } catch (err) {
@@ -70,7 +70,7 @@ const postController = {
         try {
             await postService.unlike({
                 postId: req.params.id,
-                userId: req.user._id
+                user: req.user._id
             })
             return res.json({ msg: 'UnLiked Post!' })
         } catch (err) {

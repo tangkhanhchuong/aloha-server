@@ -1,5 +1,6 @@
 const Comments = require('../models/comment.model')
 const Posts = require('../models/post.model')
+const { addToNotifyQueue } = require('../queues/notify.queue')
 
 const commentService = {
 	create: async ({ postId, content, tag, reply, postUserId, userId }) => {
@@ -28,6 +29,15 @@ const commentService = {
 				$push: { comments: newComment._id }
 		}, { new: true })
 		await newComment.save()
+
+		addToNotifyQueue({
+			text: newComment.reply ? 'mentioned you in a comment.' : 'has commented on your post.',
+			recipients: newComment.reply ? [ newComment.tag._id ] : [ post.user._id ],
+			url: `/posts/${post._id}`,
+			content: newComment.content,
+			user: { _id: userId }
+		})
+
 		return { newComment }
 	},
 

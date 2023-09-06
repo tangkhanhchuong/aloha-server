@@ -2,6 +2,7 @@ const Users = require('../models/user.model')
 const Posts = require('../models/post.model')
 const { getPresignedUrl } = require('../middleware/s3')
 const { APIFeatures } = require('../utils/APIFeatures')
+const { addToNotifyQueue } = require('../queues/notify.queue')
 
 const userService = {
 	search: async ({ username }) => {
@@ -116,6 +117,14 @@ const userService = {
 			followingUser.avatar = await getPresignedUrl(followingUser.avatar)
 			return followingUser
 		}))
+
+		addToNotifyQueue({
+			user: { _id: userId },
+			text: 'has started to follow you.',
+			url: `/profile/${userId}`,
+			recipients: [ updatedUser._id ],
+		})
+
 		return { user: updatedUser }
 	},
 

@@ -3,7 +3,7 @@ const Comments = require('../models/comment.model')
 const Users = require('../models/user.model')
 const { getPresignedUrl } = require('../middleware/s3')
 const { APIFeatures } = require('../utils/APIFeatures')
-const { sendNotification } = require('../queues/notify.queue')
+const { addToNotifyQueue } = require('../queues/notify.queue')
 
 const postService = {
 	create: async ({ content, images, user }) => {
@@ -17,12 +17,12 @@ const postService = {
 			url: await getPresignedUrl(image)
 		})))
 
-		sendNotification({
-			id: newPost._id,
+		addToNotifyQueue({
 			content,
-			user: user,
+			user,
 			url: `/posts/${newPost._id}`,
 			text: 'added a new post.',
+			recipients: [ ...user.followers ]
 		})
 
 		return {
@@ -132,31 +132,38 @@ const postService = {
 		}
 	},
 
-	like: async ({ postId, userId }) => {
-		const post = await Posts.find({ _id: postId, likes: userId })
+	like: async ({ postId, user }) => {
+		const post = await Posts.find({ _id: postId, likes: user._id })
 		if(post.length > 0) {
 			const err = new Error('You liked this post.')
 			err.status = 400
 			throw err
 		}
-
-		const like = await Posts.findOneAndUpdate({ _id: postId }, {
-			$push: { likes: userId }
+		const updatedPost = await Posts.findOneAndUpdate({ _id: postId }, {
+			$push: { likes: user._id }
 		}, { new: true })
 
-		if(!like) {
+		if(!updatedPost) {
 			const err = new Error('This post does not exist.')
 			err.status = 404
 			throw err
 		}
+
+		addToNotifyQueue({
+			user,
+			content: updatedPost.content,
+			url: `/posts/${updatedPost._id}`,
+			recipients: [ updatedPost.user._id ],
+			text: 'like your post.',
+		})
 	},
 	
-	unlike: async ({ postId, userId }) => {
-		const like = await Posts.findOneAndUpdate({ _id: postId }, {
-			$pull: { likes: userId }
+	unlike: async ({ postId, user }) => {
+		const updatedPost = await Posts.findOneAndUpdate({ _id: postId }, {
+			$pull: { likes: user._id }
 		}, { new: true })
 
-		if(!like) {
+		if(!updatedPost) {
 			const err = new Error('This post does not exist.')
 			err.status = 404
 			throw err
@@ -171,11 +178,11 @@ const postService = {
 			throw err
 		}
 
-		const save = await Users.findOneAndUpdate({ _id: userId }, {
+		const updatedUser = await Users.findOneAndUpdate({ _id: userId }, {
 			$push: { saved: id }
 		}, { new: true })
 
-		if(!save) {
+		if(!updatedUser) {
 			const err = new Error('This user does not exist.')
 			err.status = 404
 			throw err
@@ -183,11 +190,11 @@ const postService = {
 	},
 	
 	unsave: async ({ id, userId }) => {
-		const save = await Users.findOneAndUpdate({ _id: userId }, {
+		const updatedUser = await Users.findOneAndUpdate({ _id: userId }, {
 			$pull: { saved: id }
 		}, { new: true })
 
-		if(!save) {
+		if(!updatedUser) {
 			const err = new Error('This user does not exist.')
 			err.status = 404
 			throw err

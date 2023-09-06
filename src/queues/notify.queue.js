@@ -2,30 +2,31 @@ const Bull = require('bull')
 
 const notifyService = require('../services/notify.service')
 
-const notifyQueue = new Bull('notify', {
+const bullConfig = {
   redis: {
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT
   }
-})
+}
+
+const notifyQueue = new Bull('create-notification', bullConfig)
 
 notifyQueue.process((job) => {
   notifyService.create(job.data)
 })
 
-const sendNotification = ({ id, url, text, content, user }) => {
+const addToNotifyQueue = ({ url, text, content, user, recipients }) => {
   notifyQueue.add({
-      id,
       url,
       text,
       content,
       user,
-      recipients: [ ...user.followers ],
+      recipients
     }, {
     attempts: 1
   })
 }
 
 module.exports = {
-  sendNotification
+  addToNotifyQueue
 }

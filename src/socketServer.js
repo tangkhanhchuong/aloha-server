@@ -1,6 +1,7 @@
 const socketIo = require('socket.io')
 
 const logger = require('./utils/logger')
+const Users = require('./models/user.model')
 
 let users = []
 let io;
@@ -28,8 +29,14 @@ const initSocketIo = (http) => {
 
 const handleSocket = (socket) => {
     // Connect - Disconnect
-    socket.on('joinUser', user => {
-        users.push({ id: user._id, socketId: socket.id, followers: user.followers })
+    socket.on('joinUser', async (user) => {
+        users.push({
+            id: user._id,
+            socketId: socket.id,
+            username: user.username,
+            avatar: user.avatar,
+            followers: user.followers
+        })
         logger.info(`User joined ${user._id}`)
     })
 
