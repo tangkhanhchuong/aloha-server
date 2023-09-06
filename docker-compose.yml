@@ -4,7 +4,7 @@ services:
     image: mongo:3.6.19-xenial
     container_name: mongo
     ports:
-      - "27017:27017"
+      - 27017:27017
     networks:
       - node-app
     volumes:
@@ -16,6 +16,13 @@ services:
       - 8081:8081
     networks:
       - node-app
+  redis:
+    image: redis:alpine
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6379:6379
 networks:
   node-app:
     driver: bridge

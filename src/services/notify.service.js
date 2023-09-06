@@ -1,15 +1,30 @@
 const Notifies = require('../models/notify.model')
 const { getPresignedUrl } = require('../middleware/s3')
+const { getIo, getUserById } = require('../socketServer')
 
 const notifyService = {
-	create: async ({ id, recipients, url, text, content, userId }) => {
-		if(recipients.includes(userId.toString())) {
+	create: async ({ id, recipients, url, text, content, user }) => {
+		if (recipients.length < 1) {
+			return null
+		}
+		if(recipients.includes(user._id.toString())) {
 				return;
 		}
 		const notify = new Notifies({
-				id, recipients, url, text, content, user: userId
+				id, recipients, url, text, content, user: user._id
 		})
 		await notify.save()
+
+		for (const recipient of recipients) {
+			const user = getUserById(recipient);
+			if (!user) {
+				continue
+			}
+			const io = getIo()
+			io.to(user.socketId).emit('createNotifyToClient', {
+				id, recipients, url, text, content, user
+			})
+		}
 		return { notify }
 	},
 

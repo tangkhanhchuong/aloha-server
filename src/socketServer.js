@@ -1,47 +1,66 @@
-let users = []
+const socketIo = require('socket.io')
 
-const EditData = (data, id, call) => {
-    const newData = data.map(item => 
-        item.id === id ? {...item, call} : item
-    )
-    return newData;
+const logger = require('./utils/logger')
+
+let users = []
+let io;
+
+const getIo = function() {
+    return io
 }
 
-const SocketServer = (socket) => {
+const getUserById = function (id) {
+    return users.filter(user => user.id === id)[0]
+}
+
+const initSocketIo = (http) => {
+    io = socketIo(http, {
+        cors: {
+            origin: true
+        }
+    })
+    
+    io.on('connection', socket => {
+        handleSocket(socket)
+        logger.info('Connect socket server !')
+    })
+}
+
+const handleSocket = (socket) => {
     // Connect - Disconnect
     socket.on('joinUser', user => {
-        users.push({id: user._id, socketId: socket.id, followers: user.followers})
+        users.push({ id: user._id, socketId: socket.id, followers: user.followers })
+        logger.info(`User joined ${user._id}`)
     })
 
     socket.on('disconnect', () => {
-        const data = users.find(user => user.socketId === socket.id)
-        if(data){
+        const foundUser = users.find(user => user.socketId === socket.id)
+        if(foundUser){
             const clients = users.filter(user => 
-                data.followers.find(item => item._id === user.id)
+                foundUser.followers.find(item => item._id === user.id)
             )
 
             if(clients.length > 0){
                 clients.forEach(client => {
-                    socket.to(`${client.socketId}`).emit('CheckUserOffline', data.id)
+                    socket.to(`${client.socketId}`).emit('CheckUserOffline', foundUser.id)
                 })
             }
 
-            if(data.call){
-                const callUser = users.find(user => user.id === data.call)
+            if(foundUser.call){
+                const callUser = users.find(user => user.id === foundUser.call)
                 if(callUser){
-                    users = EditData(users, callUser.id, null)
+                    users = editData(users, callUser.id, null)
                     socket.to(`${callUser.socketId}`).emit('callerDisconnect')
                 }
             }
+            logger.info(`User left ${foundUser._id}`)
         }
-
         users = users.filter(user => user.socketId !== socket.id)
     })
 
-
     // Likes
     socket.on('likePost', newPost => {
-        const ids = [...newPost.user.followers, newPost.user._id]
+        const ids = [ ...newPost.user.followers, newPost.user._id ]
         const clients = users.filter(user => ids.includes(user.id))
 
         if(clients.length > 0){
@@ -86,7 +105,6 @@ const SocketServer = (socket) => {
         }
     })
 
-
     // Follow
     socket.on('follow', newUser => {
         const user = users.find(user => user.id === newUser._id)
@@ -97,27 +115,18 @@ const SocketServer = (socket) => {
         const user = users.find(user => user.id === newUser._id)
         user && socket.to(`${user.socketId}`).emit('unFollowToClient', newUser)
     })
-
-
-    // Notification
-    socket.on('createNotify', msg => {
-        const client = users.find(user => msg.recipients.includes(user.id))
-        client && socket.to(`${client.socketId}`).emit('createNotifyToClient', msg)
-    })
-
+    
     socket.on('removeNotify', msg => {
         const client = users.find(user => msg.recipients.includes(user.id))
         client && socket.to(`${client.socketId}`).emit('removeNotifyToClient', msg)
 
     })
 
-
     // Message
     socket.on('addMessage', msg => {
         const user = users.find(user => user.id === msg.recipient)
         user && socket.to(`${user.socketId}`).emit('addMessageToClient', msg)
     })
-
 
     // Check User Online / Offline
     socket.on('checkUserOnline', data => {
@@ -138,19 +147,18 @@ const SocketServer = (socket) => {
         
     })
 
-
     // Call User
     socket.on('callUser', data => {
-        users = EditData(users, data.sender, data.recipient)
+        users = editData(users, data.sender, data.recipient)
         
         const client = users.find(user => user.id === data.recipient)
 
         if(client){
             if(client.call){
                 socket.emit('userBusy', data)
-                users = EditData(users, data.sender, null)
+                users = editData(users, data.sender, null)
             }else{
-                users = EditData(users, data.recipient, data.sender)
+                users = editData(users, data.recipient, data.sender)
                 socket.to(`${client.socketId}`).emit('callUserToClient', data)
             }
         }
@@ -161,16 +169,28 @@ const SocketServer = (socket) => {
 
         if(client){
             socket.to(`${client.socketId}`).emit('endCallToClient', data)
-            users = EditData(users, client.id, null)
+            users = editData(users, client.id, null)
 
             if(client.call){
                 const clientCall = users.find(user => user.id === client.call)
                 clientCall && socket.to(`${clientCall.socketId}`).emit('endCallToClient', data)
 
-                users = EditData(users, client.call, null)
+                users = editData(users, client.call, null)
             }
         }
     })
 }
 
-module.exports = SocketServer
+
+const editData = (data, id, call) => {
+    const newData = data.map(item => 
+        item.id === id ? {...item, call} : item
+    )
+    return newData;
+}
+
+module.exports = {
+    getIo,
+    initSocketIo,
+    getUserById
+}

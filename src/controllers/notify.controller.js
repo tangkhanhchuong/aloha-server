@@ -6,7 +6,7 @@ const notifyController = {
             const { id, recipients, url, text, content } = req.body
             const { notify } = await notifyService.create({
                 id, recipients, url, text, content,
-                userId: req.user._id 
+                user: req.user 
             })
             return res.json({ notify })
         } catch (err) {

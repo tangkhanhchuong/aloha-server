@@ -3,15 +3,10 @@ const Comments = require('../models/comment.model')
 const Users = require('../models/user.model')
 const { getPresignedUrl } = require('../middleware/s3')
 const { APIFeatures } = require('../utils/APIFeatures')
+const { sendNotification } = require('../queues/notify.queue')
 
 const postService = {
 	create: async ({ content, images, user }) => {
-		if(images.length === 0) {
-			const err = new Error('Please add your photo.')
-			err.status = 400
-			throw err
-		}
-
 		const newPost = new Posts({
 			content, images, user: user._id
 		})
@@ -21,6 +16,14 @@ const postService = {
 			key: image,
 			url: await getPresignedUrl(image)
 		})))
+
+		sendNotification({
+			id: newPost._id,
+			content,
+			user: user,
+			url: `/posts/${newPost._id}`,
+			text: 'added a new post.',
+		})
 
 		return {
 			newPost: {

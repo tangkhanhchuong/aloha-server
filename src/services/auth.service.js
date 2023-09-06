@@ -41,11 +41,14 @@ const authService = {
 		const refreshToken = createRefreshToken({ id: newUser._id })
 		await newUser.save()
 
+		const avatar = await getPresignedUrl(newUser.avatar)
+
 		return {
 			accessToken,
 			refreshToken,
 			user: {
 				...newUser._doc,
+				avatar,
 				password: null,
 			}
 		}
