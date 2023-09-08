@@ -1,7 +1,7 @@
 
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
 const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3')
-const multer = require("multer")
+const multer = require('multer')
 const multerS3 = require('multer-s3')
 
 const bucket = process.env.AWS_BUCKET_NAME
@@ -20,10 +20,10 @@ const uploadToS3 = multer({
     s3,
     bucket,
     metadata: function (req, file, cb) {
-      cb(null, {fieldName: file.fieldname});
+      cb(null, {fieldName: file.fieldname})
     },
     key: function (req, file, cb) {
-      cb(null, file.fieldname + "-" + Date.now() + ".png")
+      cb(null, file.fieldname + '-' + Date.now() + '.png')
     }
   })
 })

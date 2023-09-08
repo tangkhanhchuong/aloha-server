@@ -11,7 +11,7 @@ const commentService = {
 				throw err
 		}
 
-		if(reply){
+		if(reply) {
 				const cm = await Comments.findById(reply)
 				if(!cm) {
 						const err = new Error('This comment does not exist.')

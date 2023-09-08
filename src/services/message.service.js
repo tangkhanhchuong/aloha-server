@@ -6,7 +6,7 @@ const { APIFeatures } = require('../utils/APIFeatures')
 const messageService = {
 	create: async ({ sender, recipient, text, media, call }) => {
 		if(!recipient || (!text.trim() && media.length === 0 && !call)) {
-			return;
+			return
 		}
 
 		const newConversation = await Conversations.findOneAndUpdate({

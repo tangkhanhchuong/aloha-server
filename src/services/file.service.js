@@ -1,4 +1,4 @@
-const { getPresignedUrl } = require("../helpers/s3")
+const { getPresignedUrl } = require('../helpers/s3')
 
 const fileService = {
 	upload: async ({ uploadedFiles }) => {

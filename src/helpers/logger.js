@@ -1,22 +1,34 @@
-const { createLogger, format, transports, remove } = require("winston")
+const winston = require('winston')
 
 const logLevels = {
-  error: 1,
-  warn: 2,
-  info: 3,
-  debug: 4,
+	error: 1,
+	warn: 2,
+	info: 3,
+	debug: 4,
 }
 
-const logger = createLogger({
-  levels: logLevels,
-  transports: [new transports.Console({
-    format: format.combine(
-      format.colorize(),
-      format.timestamp(),
-      // format.align(),
-      format.printf(info => `${info.timestamp} [${info.level}]: ${info.message}`)
-    )
-  })],
+const syslogColors = {
+	debug: 'rainbow',
+	info: 'cyan',
+	notice: 'white',
+	warning: 'yellow',
+	error: 'bold red'
+}
+
+const logger = winston.createLogger({
+	levels: logLevels,
+	transports: [ 
+		new winston.transports.Console({
+			level: process.env.LOG_LEVEL ?? 'debug',
+			format: winston.format.combine(
+				winston.format.colorize({
+				all: true,
+				colors: syslogColors,
+				}),
+				winston.format.simple()
+			)
+		})
+	]
 })
 
-module.exports = logger
+module.exports = { logger }

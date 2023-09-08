@@ -1,4 +1,4 @@
-const { uploadToS3 } = require('../helpers/s3')
+const { getPresignedUrl } = require('../helpers/s3')
 const Conversations = require('../models/conversation.model')
 const Messages = require('../models/message.model')
 const { APIFeatures } = require('../utils/APIFeatures')

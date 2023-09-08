@@ -4,11 +4,11 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const { ExpressPeerServer } = require('peer')
 const path = require('path')
-const morgan = require("morgan")
+const morgan = require('morgan')
 
 const errorHandler = require('./middleware/error.handler')
 const { initSocketIo } = require('./helpers/socket')
-const logger = require('./helpers/logger')
+const { logger } = require('./helpers/logger')
 const { connectMongoDB } = require('./helpers/mongo')
 
 const bootstrap = async () => {
@@ -33,9 +33,9 @@ const bootstrap = async () => {
     app.use('/api/v1/files', require('./routes/file.router'))
     app.use(errorHandler)
 
-    await connectMongoDB();
+    await connectMongoDB()
 
-    if(process.env.NODE_ENV === 'production'){
+    if(process.env.NODE_ENV === 'production') {
         app.use(express.static('client/build'))
         app.get('*', (req, res) => {
             res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))

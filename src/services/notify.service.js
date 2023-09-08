@@ -1,6 +1,6 @@
 const Notifies = require('../models/notify.model')
 const { getPresignedUrl } = require('../helpers/s3')
-const { getIo, getUserById } = require('../helpers/socket')
+const { getIo, getSocketUserById } = require('../helpers/socket')
 
 const notifyService = {
 	create: async ({ recipients, url, text, content, user }) => {
@@ -8,7 +8,7 @@ const notifyService = {
 			return null
 		}
 		if(recipients.includes(user._id.toString())) {
-				return;
+				return
 		}
 		const createdNotify = new Notifies({
 			recipients, url, text, content, user: user._id
@@ -20,7 +20,7 @@ const notifyService = {
 			return recipient
 		}))
 		for (const recipient of formattedRecipients) {
-			const user = getUserById(recipient);
+			const user = await getSocketUserById(recipient)
 			if (!user) {
 				continue
 			}
