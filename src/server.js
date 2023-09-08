@@ -8,8 +8,8 @@ const path = require('path')
 const morgan = require("morgan")
 
 const errorHandler = require('./middleware/error.handler')
-const { initSocketIo } = require('./socketServer')
-const logger = require('./utils/logger')
+const { initSocketIo } = require('./helpers/socket')
+const logger = require('./helpers/logger')
 
 const app = express()
 app.use(express.json())

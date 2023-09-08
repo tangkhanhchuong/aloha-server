@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 const Users = require('../models/user.model')
-const { getPresignedUrl } = require('../middleware/s3')
+const { getPresignedUrl } = require('../helpers/s3')
 
 const authService = {
 	register: async ({ fullname, username, email, password, gender }) => {

@@ -1,6 +1,6 @@
 const Notifies = require('../models/notify.model')
-const { getPresignedUrl } = require('../middleware/s3')
-const { getIo, getUserById } = require('../socketServer')
+const { getPresignedUrl } = require('../helpers/s3')
+const { getIo, getUserById } = require('../helpers/socket')
 
 const notifyService = {
 	create: async ({ recipients, url, text, content, user }) => {

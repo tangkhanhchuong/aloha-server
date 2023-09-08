@@ -1,7 +1,6 @@
 const socketIo = require('socket.io')
 
-const logger = require('./utils/logger')
-const Users = require('./models/user.model')
+const logger = require('./logger')
 
 let users = []
 let io;
@@ -22,12 +21,12 @@ const initSocketIo = (http) => {
     })
     
     io.on('connection', socket => {
-        handleSocket(socket)
-        logger.info('Connect socket server !')
+        connectSocket(socket)
+        logger.info('Socket server connected !')
     })
 }
 
-const handleSocket = (socket) => {
+const connectSocket = (socket) => {
     // Connect - Disconnect
     socket.on('joinUser', async (user) => {
         users.push({
@@ -60,7 +59,7 @@ const handleSocket = (socket) => {
                     socket.to(`${callUser.socketId}`).emit('callerDisconnect')
                 }
             }
-            logger.info(`User left ${foundUser._id}`)
+            logger.info(`User left ${foundUser.id}`)
         }
         users = users.filter(user => user.socketId !== socket.id)
     })

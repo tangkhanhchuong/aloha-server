@@ -1,4 +1,4 @@
-const { getPresignedUrl } = require('../middleware/s3');
+const { uploadToS3 } = require('../helpers/s3')
 const Conversations = require('../models/conversation.model')
 const Messages = require('../models/message.model')
 const { APIFeatures } = require('../utils/APIFeatures')
@@ -33,7 +33,7 @@ const conversationService = {
 				]
 		})
 		await Messages.deleteMany({ conversation: newConver._id })
-	},
+	}
 }
 
 module.exports = conversationService

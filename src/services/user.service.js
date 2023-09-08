@@ -1,6 +1,6 @@
 const Users = require('../models/user.model')
 const Posts = require('../models/post.model')
-const { getPresignedUrl } = require('../middleware/s3')
+const { getPresignedUrl } = require('../helpers/s3')
 const { APIFeatures } = require('../utils/APIFeatures')
 const { addToNotifyQueue } = require('../queues/notify.queue')
 
