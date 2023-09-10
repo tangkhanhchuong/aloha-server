@@ -1,15 +1,15 @@
 const socketIo = require('socket.io')
 
 const { logger } = require('./logger')
-const { redis } = require('./redis')
+const socketConfig = require('../configs/socket.config')
 
-const SOCKET_USERS = 'socketUsers'
 const ROOM_NAME_PATTERN = 'room::user-'
 
+let socketUsers = []
 let users = []
 let io
 
-const getIo = function () {
+const getIo = () => {
 	return io
 }
 
@@ -17,135 +17,81 @@ const getRoomName = (userId) => {
 	return `${ROOM_NAME_PATTERN}${userId}`
 }
 
-const getSocketUsers = async () => {
-	const users = await redis.get(SOCKET_USERS)
-	return users ? JSON.parse(users) : []
-}
-
 const removeSocketUser = async ({ socket }) => {
-	let users = await getSocketUsers()
+	const beforeFilteredUsers = [ ...users ]
 	users = users.filter(user => {
-		const room = io.sockets.adapter.rooms[getRoomName(user.id)]
-		const usersInRoom = room ? Object.keys(room.sockets) : []
+		const rooms = io.sockets.adapter.rooms
+		const usersInRoom = rooms && rooms.get(getRoomName(user.id)) ? Array.from(rooms.get(getRoomName(user.id))) : []
 		return usersInRoom.length > 0
 	})
+	if (beforeFilteredUsers.length > users.length) {
+		const allRooms = Array.from(socket.adapter.rooms.keys())
+		const roomsToBroadcast = allRooms.filter((room) => room.startsWith(ROOM_NAME_PATTERN))
+		roomsToBroadcast.forEach((room) => {
+			socket.to(room).emit('user_is_offline', socketUsers[socket.id])
+		})
+	}
 
-	await redis.set(SOCKET_USERS, JSON.stringify(users))
+	delete socketUsers[socket.id]
 	return users
 }
 
 const addSocketUser = async ({ user, socket }) => {
-	let users = await getSocketUsers()
+	socketUsers[socket.id] = user._id
 	const filterUsers = users.filter(socketUser => socketUser.id != user._id)
-	if (filterUsers.length < users.length) {
+	if (filterUsers.length == users.length) {
 		users.push({
 			id: user._id,
 			username: user.username,
 			avatar: user.avatar,
 			followers: user.followers
 		})
-		await redis.set(SOCKET_USERS, JSON.stringify(users))
 
 		const roomName = getRoomName(user._id)
 		socket.join(roomName)
+
 		logger.info(JSON.stringify({
 			msg: 'User join room',
 			userId: user._id,
-			socketId: socket.id
+			socketId: socket.id,
+			room: roomName
 		}))
 	}
-
 	return users
 }
 
 const getSocketUserById = async (id) => {
-	const users = await getSocketUsers()
 	return users.filter(user => user.id === id)[0]
 }
 
 const initSocketIo = (http) => {
-	io = socketIo(http,)
+	io = socketIo(http, socketConfig)
 
 	io.on('connection', socket => {
 		connectSocket(socket)
 	})
 }
 
-const connectSocket = (socket) => {
-	// Connect - Disconnect
-	socket.on('userJoined', async (user) => {
-		await addSocketUser({ user, socket })
-	})
+const connectSocket = (socket, io) => {
+	socket.on('user_joined', async (joinedUser) => {
+		await addSocketUser({ user: joinedUser, socket })
+		socket.broadcast.emit('user_is_online', joinedUser._id)
 
-	socket.on('userLeft', async (user) => {
-		console.log('user left')
+		for (const alreadyUser of users) {
+			socket.to(getRoomName(joinedUser._id)).emit('user_is_online', alreadyUser.id)
+			socket.emit('user_is_online', alreadyUser.id)
+		}
 	})
 
 	socket.on('disconnect', async () => {
-		// let users = await getSocketUsers()
-		// const foundUser = await users.find(user => user.socketId === socket.id)
-		// if(foundUser) {
-		//     const clients = users.filter(user => 
-		//         foundUser.followers.find(item => item._id === user.id)
-		//     )
-
-		//     if(clients.length > 0) {
-		//         clients.forEach(client => {
-		//             socket.to(getRoomName(client.id)).emit('checkUserOffline', foundUser.id)
-		//         })
-		//     }
-
-		//     if(foundUser.call) {
-		//         const callUser = users.find(user => user.id === foundUser.call)
-		//         if(callUser) {
-		//             users = editData(users, callUser.id, null)
-		//             socket.to(getRoomName(callUser.id)).emit('callerDisconnect')
-		//         }
-		//     }
-		// }
-		const allRooms = Object.keys(socket.adapter.rooms)
-		const roomsToBroadcast = allRooms.filter((room) => {
-			return room !== userRoom && room.startsWith(ROOM_NAME_PATTERN)
-		})
-		roomsToBroadcast.forEach((room) => {
-			socket.to(room).emit('checkUserOffline', foundUser.id)
-		})
-
-		// logger.info(`User ${foundUser.id} with socket_id ${socket.id} left`)
 		await removeSocketUser({ socket })
 	})
 
-	socket.on('removeNotify', async (msg) => {
-		let users = await getSocketUsers()
-		const client = users.find(user => msg.recipients.includes(user.id))
-		client && socket.to(getRoomName(client.id)).emit('removeNotifyToClient', msg)
-
-	})
-
 	// Message
-	socket.on('addMessage', async (msg) => {
-		let users = await getSocketUsers()
+	socket.on('add_message', async (msg) => {
+		// let users = await getSocketUsers()
 		const user = users.find(user => user.id === msg.recipient)
-		user && socket.to(getRoomName(user.id)).emit('addMessageToClient', msg)
-	})
-
-	// Check User Online / Offline
-	socket.on('checkUserOnline', async (data) => {
-		let users = await getSocketUsers()
-		const following = users.filter(user =>
-			data.following.find(item => item._id === user.id)
-		)
-		socket.emit('checkUserOnlineToMe', following)
-
-		const clients = users.filter(user =>
-			data.followers.find(item => item._id === user.id)
-		)
-		if (clients.length > 0) {
-			clients.forEach(client => {
-				socket.to(getRoomName(client.id)).emit('checkUserOnlineToClient', data._id)
-			})
-		}
-
+		user && socket.to(getRoomName(user.id)).emit('add_message_to_client', msg)
 	})
 
 	// // Call User
@@ -180,13 +126,12 @@ const connectSocket = (socket) => {
 	// })
 }
 
-
-const editData = (data, id, call) => {
-	const newData = data.map(item =>
-		item.id === id ? { ...item, call } : item
-	)
-	return newData
-}
+// const editData = (data, id, call) => {
+// 	const newData = data.map(item =>
+// 		item.id === id ? { ...item, call } : item
+// 	)
+// 	return newData
+// }
 
 module.exports = {
 	getIo,

@@ -25,7 +25,7 @@ const notifyService = {
 				continue
 			}
 			const io = getIo()
-			io.to(getRoomName(user.id)).emit('createNotifyToClient', {
+			io.to(getRoomName(user.id)).emit('send_notifcation', {
 				_id: createdNotify._id, recipients, url, text, content, user
 			})
 		}

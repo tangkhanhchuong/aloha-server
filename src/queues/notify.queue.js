@@ -1,6 +1,7 @@
 const Bull = require('bull')
 
 const notifyService = require('../services/notify.service')
+const { logger } = require('../helpers/logger')
 
 const bullConfig = {
   redis: {
@@ -16,6 +17,10 @@ notifyQueue.process((job) => {
 })
 
 const addToNotifyQueue = ({ url, text, content, user, recipients }) => {
+  logger.info(JSON.stringify({
+    msg: 'Add to queue',
+    payload: { url, text, content, user, recipients }
+  }))
   notifyQueue.add({
     url,
     text,
