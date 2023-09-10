@@ -22,7 +22,7 @@ const postService = {
 			user,
 			url: `/posts/${newPost._id}`,
 			text: 'added a new post.',
-			recipients: [ ...user.followers ]
+			recipients: [...user.followers]
 		})
 
 		return {
@@ -35,7 +35,7 @@ const postService = {
 	},
 
 	list: async ({ user, query }) => {
-		const features =  new APIFeatures(Posts.find({
+		const features = new APIFeatures(Posts.find({
 			user: [...user.following, user._id]
 		}), query).paginate()
 
@@ -66,25 +66,25 @@ const postService = {
 	update: async ({ content, images, postId }) => {
 		const updatedPost = await Posts
 			.findOneAndUpdate({ _id: postId }, {
-					content, images
+				content, images
 			})
 			.populate('user likes', 'avatar username fullname')
 			.populate({
-					path: 'comments',
-					populate: {
-							path: 'user likes',
-							select: '-password'
-					}
+				path: 'comments',
+				populate: {
+					path: 'user likes',
+					select: '-password'
+				}
 			})
 
 		const formattedImages = await Promise.all(images.map(async (image) => ({
-				key: image,
-				url: await getPresignedUrl(image)
+			key: image,
+			url: await getPresignedUrl(image)
 		})))
 		const post = {
-				...updatedPost._doc,
-				content,
-				images: formattedImages,
+			...updatedPost._doc,
+			content,
+			images: formattedImages,
 		}
 		post.user.avatar = await getPresignedUrl(updatedPost.user.avatar)
 		return { post }
@@ -102,7 +102,7 @@ const postService = {
 				}
 			})
 
-		if(!post) {
+		if (!post) {
 			const err = new Error('This post does not exist.')
 			err.status = 400
 			throw err
@@ -125,7 +125,7 @@ const postService = {
 		const post = await Posts.findOneAndDelete({ _id: id, user: user.id })
 		await Comments.deleteMany({ _id: { $in: post.comments } })
 		return {
-			post : {
+			post: {
 				...post,
 				user
 			}
@@ -134,7 +134,7 @@ const postService = {
 
 	like: async ({ postId, user }) => {
 		const post = await Posts.find({ _id: postId, likes: user._id })
-		if(post.length > 0) {
+		if (post.length > 0) {
 			const err = new Error('You liked this post.')
 			err.status = 400
 			throw err
@@ -143,7 +143,7 @@ const postService = {
 			$push: { likes: user._id }
 		}, { new: true })
 
-		if(!updatedPost) {
+		if (!updatedPost) {
 			const err = new Error('This post does not exist.')
 			err.status = 404
 			throw err
@@ -153,17 +153,17 @@ const postService = {
 			user,
 			content: updatedPost.content,
 			url: `/posts/${updatedPost._id}`,
-			recipients: [ updatedPost.user._id ],
+			recipients: [updatedPost.user._id],
 			text: 'like your post.',
 		})
 	},
-	
+
 	unlike: async ({ postId, user }) => {
 		const updatedPost = await Posts.findOneAndUpdate({ _id: postId }, {
 			$pull: { likes: user._id }
 		}, { new: true })
 
-		if(!updatedPost) {
+		if (!updatedPost) {
 			const err = new Error('This post does not exist.')
 			err.status = 404
 			throw err
@@ -172,8 +172,8 @@ const postService = {
 
 	save: async ({ id, userId }) => {
 		const user = await Users.find({ _id: userId, saved: id })
-		if(user.length > 0) {
-			const err = new Error('You saved this post.' )
+		if (user.length > 0) {
+			const err = new Error('You saved this post.')
 			err.status = 400
 			throw err
 		}
@@ -182,19 +182,19 @@ const postService = {
 			$push: { saved: id }
 		}, { new: true })
 
-		if(!updatedUser) {
+		if (!updatedUser) {
 			const err = new Error('This user does not exist.')
 			err.status = 404
 			throw err
 		}
 	},
-	
+
 	unsave: async ({ id, userId }) => {
 		const updatedUser = await Users.findOneAndUpdate({ _id: userId }, {
 			$pull: { saved: id }
 		}, { new: true })
 
-		if(!updatedUser) {
+		if (!updatedUser) {
 			const err = new Error('This user does not exist.')
 			err.status = 404
 			throw err

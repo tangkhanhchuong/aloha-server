@@ -1,6 +1,6 @@
 const Notifies = require('../models/notify.model')
 const { getPresignedUrl } = require('../helpers/s3')
-const { getIo, getSocketUserById } = require('../helpers/socket')
+const { getIo, getSocketUserById, getRoomName } = require('../helpers/socket')
 
 const notifyService = {
 	create: async ({ recipients, url, text, content, user }) => {
@@ -25,7 +25,7 @@ const notifyService = {
 				continue
 			}
 			const io = getIo()
-			io.to(user.socketId).emit('createNotifyToClient', {
+			io.to(getRoomName(user.id)).emit('createNotifyToClient', {
 				_id: createdNotify._id, recipients, url, text, content, user
 			})
 		}

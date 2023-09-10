@@ -23,8 +23,8 @@ const userService = {
 	},
 
 	suggest: async ({ user, query }) => {
-		const newArr = [ ...user.following, user._id ]
-		const num  = query.num || 10
+		const newArr = [...user.following, user._id]
+		const num = query.num || 10
 		const users = await Users
 			.aggregate([
 				{ $match: { _id: { $nin: newArr } } },
@@ -57,11 +57,11 @@ const userService = {
 
 	getDiscoverPosts: async ({ user, query }) => {
 		const newArr = [...user.following, user._id]
-		const num  = query.num || 9
+		const num = query.num || 9
 
 		const posts = await Posts.aggregate([
-				{ $match: { user : { $nin: newArr } } },
-				{ $sample: { size: Number(num) } },
+			{ $match: { user: { $nin: newArr } } },
+			{ $sample: { size: Number(num) } },
 		])
 		return { posts }
 	},
@@ -71,7 +71,7 @@ const userService = {
 			.findById(id)
 			.select('-password')
 			.populate('followers following', '-password')
-		if(!user) {
+		if (!user) {
 			const err = new Error('User does not exist.')
 			err.status = 404
 			throw err
@@ -81,7 +81,7 @@ const userService = {
 	},
 
 	update: async ({ avatar, fullname, mobile, address, story, website, gender, userId }) => {
-		if(!fullname) {
+		if (!fullname) {
 			const err = new Error('Missing fullname !')
 			err.status = 400
 			throw err
@@ -94,20 +94,20 @@ const userService = {
 
 	follow: async ({ id, userId }) => {
 		const user = await Users.find({ _id: id, followers: userId })
-		if(user.length > 0) {
+		if (user.length > 0) {
 			const err = new Error('You followed this user.')
 			err.status = 400
 			throw err
 		}
 
-		const updatedUser = await Users.findOneAndUpdate({ _id: id }, { 
+		const updatedUser = await Users.findOneAndUpdate({ _id: id }, {
 			$push: { followers: userId }
 		}, { new: true }).populate('followers following', '-password')
 
 		await Users.findOneAndUpdate({ _id: userId }, {
-				$push: { following: id }
+			$push: { following: id }
 		}, { new: true })
-		
+
 		updatedUser.avatar = await getPresignedUrl(updatedUser.avatar)
 		updatedUser.followers = await Promise.all(updatedUser.followers.map(async (follower) => {
 			follower.avatar = await getPresignedUrl(follower.avatar)
@@ -122,14 +122,14 @@ const userService = {
 			user: { _id: userId },
 			text: 'has started to follow you.',
 			url: `/profile/${userId}`,
-			recipients: [ updatedUser._id ],
+			recipients: [updatedUser._id],
 		})
 
 		return { user: updatedUser }
 	},
 
 	unfollow: async ({ id, userId }) => {
-		const updatedUser = await Users.findOneAndUpdate({ _id: id }, { 
+		const updatedUser = await Users.findOneAndUpdate({ _id: id }, {
 			$pull: { followers: userId }
 		}, { new: true }).populate('followers following', '-password')
 
@@ -155,11 +155,11 @@ const userService = {
 
 		const posts = await features.query.sort('-createdAt')
 		const formattedPosts = await Promise.all(posts.map(async (post) => {
-				post.images = await Promise.all(post.images.map(async (image) => ({
-						key: image,
-						url: await getPresignedUrl(image)
-				})))
-				return post
+			post.images = await Promise.all(post.images.map(async (image) => ({
+				key: image,
+				url: await getPresignedUrl(image)
+			})))
+			return post
 		}))
 		return { posts: formattedPosts }
 	},

@@ -20,7 +20,7 @@ const uploadToS3 = multer({
     s3,
     bucket,
     metadata: function (req, file, cb) {
-      cb(null, {fieldName: file.fieldname})
+      cb(null, { fieldName: file.fieldname })
     },
     key: function (req, file, cb) {
       cb(null, file.fieldname + '-' + Date.now() + '.png')

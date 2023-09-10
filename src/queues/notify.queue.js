@@ -17,12 +17,12 @@ notifyQueue.process((job) => {
 
 const addToNotifyQueue = ({ url, text, content, user, recipients }) => {
   notifyQueue.add({
-      url,
-      text,
-      content,
-      user,
-      recipients
-    }, {
+    url,
+    text,
+    content,
+    user,
+    recipients
+  }, {
     attempts: 1
   })
 }

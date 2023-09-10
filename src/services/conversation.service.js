@@ -11,15 +11,15 @@ const conversationService = {
 		}), query).paginate()
 
 		const conversations = await features.query
-				.sort('-updatedAt')
-				.populate('recipients', 'avatar username fullname')
+			.sort('-updatedAt')
+			.populate('recipients', 'avatar username fullname')
 
 		const formattedConversations = await Promise.all(conversations.map(async (conversation) => {
-				conversation.recipients = await Promise.all(conversation.recipients.map(async (recipent) => {
-						recipent.avatar = await getPresignedUrl(recipent.avatar)
-						return recipent
-				}))
-				return conversation
+			conversation.recipients = await Promise.all(conversation.recipients.map(async (recipent) => {
+				recipent.avatar = await getPresignedUrl(recipent.avatar)
+				return recipent
+			}))
+			return conversation
 		}))
 
 		return { conversations: formattedConversations }
@@ -27,10 +27,10 @@ const conversationService = {
 
 	delete: async ({ id, userId }) => {
 		const newConver = await Conversations.findOneAndDelete({
-				$or: [
-						{ recipients: [userId, id] },
-						{ recipients: [id, userId] }
-				]
+			$or: [
+				{ recipients: [userId, id] },
+				{ recipients: [id, userId] }
+			]
 		})
 		await Messages.deleteMany({ conversation: newConver._id })
 	}

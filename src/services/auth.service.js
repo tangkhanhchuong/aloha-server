@@ -9,20 +9,20 @@ const authService = {
 		let newUserName = username.toLowerCase().replace(/ /g, '')
 
 		const user = await Users.findOne({ username: newUserName })
-		if(user) {
-            const err = new Error('This username already exists.')
-            err.status = 404
+		if (user) {
+			const err = new Error('This username already exists.')
+			err.status = 404
 			throw err
 		}
 
 		const userEmail = await Users.findOne({ email })
-		if(userEmail) {
+		if (userEmail) {
 			const err = new Error('This email already exists.')
 			err.status = 404
 			throw err
 		}
 
-		if(password.length < 6) {
+		if (password.length < 6) {
 			const err = new Error('Password must be at least 6 characters.')
 			err.status = 404
 			throw err
@@ -56,74 +56,74 @@ const authService = {
 
 	login: async ({ email, password }) => {
 		const user = await Users
-            .findOne({ email })
-            .populate('followers following', 'avatar username fullname followers following')
+			.findOne({ email })
+			.populate('followers following', 'avatar username fullname followers following')
 
-        if(!user) {
-            const err = new Error('This email does not exist.')
-            err.status = 404
+		if (!user) {
+			const err = new Error('This email does not exist.')
+			err.status = 404
 			throw err
-        }
+		}
 
-        const isMatched = await bcrypt.compare(password, user.password)
-        if(!isMatched) {
-            const err = new Error('Password is incorrect.')
-            err.status = 401
+		const isMatched = await bcrypt.compare(password, user.password)
+		if (!isMatched) {
+			const err = new Error('Password is incorrect.')
+			err.status = 401
 			throw err
-        }
+		}
 
-        const accessToken = createAccessToken({ id: user._id })
-        const refreshToken = createRefreshToken({ id: user._id })
+		const accessToken = createAccessToken({ id: user._id })
+		const refreshToken = createRefreshToken({ id: user._id })
 
-        const avatar = await getPresignedUrl(user.avatar)
+		const avatar = await getPresignedUrl(user.avatar)
 
 		return {
 			accessToken,
 			refreshToken,
 			user: {
-                ...user._doc,
-                avatar,
-                password: null,
-            }
+				...user._doc,
+				avatar,
+				password: null,
+			}
 		}
 	},
 
 	generateAccessToken: async ({ refreshToken }) => {
-		if(!refreshToken) {
-            const err = new Error('Please login now.')
-            err.status = 400
+		if (!refreshToken) {
+			const err = new Error('Please login now.')
+			err.status = 400
 			throw err
 		}
 
 		return new Promise((resolve, reject) => {
-			jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async(err, result) => {
-				if(err) {
+			jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, result) => {
+				if (err) {
 					const err = new Error('Please login now.')
 					err.status = 400
 					reject(err)
 				}
-	
+
 				const user = await Users
 					.findById(result.id)
 					.select('-password')
 					.populate('followers following', 'avatar username fullname followers following')
-	
-				if(!user) {
+
+				if (!user) {
 					const err = new Error('This does not exist.')
 					err.status = 404
 					reject(err)
 				}
-	
+
 				const accessToken = createAccessToken({ id: result.id })
 				user.avatar = await getPresignedUrl(user.avatar)
-				
+
 				resolve({
 					user, accessToken
 				})
 			})
 		})
 
-		
+
 	}
 }
 

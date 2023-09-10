@@ -17,13 +17,13 @@ const syslogColors = {
 
 const logger = winston.createLogger({
 	levels: logLevels,
-	transports: [ 
+	transports: [
 		new winston.transports.Console({
 			level: process.env.LOG_LEVEL ?? 'debug',
 			format: winston.format.combine(
 				winston.format.colorize({
-				all: true,
-				colors: syslogColors,
+					all: true,
+					colors: syslogColors,
 				}),
 				winston.format.simple()
 			)
