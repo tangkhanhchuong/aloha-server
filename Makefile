@@ -1,9 +1,8 @@
-dev:
+local-up:
 	docker-compose up -d
 
-down:
+local-down:
 	docker-compose down
-	docker volume prune -f
 
 bootstrap:
 	cp .env .env.example
@@ -15,12 +14,19 @@ pre-deploy:
 	docker image tag aloha-dev:latest 560730833886.dkr.ecr.ap-southeast-1.amazonaws.com/aloha-dev:latest
 	docker push 560730833886.dkr.ecr.ap-southeast-1.amazonaws.com/aloha-dev:latest
 
-deploy-dev:
+dev-up:
 	docker-compose -f docker-compose.dev.yml pull
 	docker-compose -f docker-compose.dev.yml up -d
+	docker image prune -f
 
-ps:
+dev-down:
+	docker-compose -f docker-compose.dev.yml down
+
+dev-ps:
 	docker-compose -f docker-compose.dev.yml ps
 
-logs:
+dev-logs:
 	docker-compose -f docker-compose.dev.yml logs -f aloha
+
+ssh:
+	docker exec -it aloha-server_aloha_1 bash

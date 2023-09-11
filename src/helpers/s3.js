@@ -11,8 +11,10 @@ const secretAccessKey = process.env.AWS_BUCKET_SECRET_ACCESS_KEY
 
 const s3 = new S3Client({
   region,
-  accessKeyId,
-  secretAccessKey,
+  credentials: {
+    accessKeyId,
+    secretAccessKey
+  }
 })
 
 const uploadToS3 = multer({
