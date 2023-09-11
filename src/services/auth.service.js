@@ -11,20 +11,20 @@ const authService = {
 		const user = await Users.findOne({ username: newUserName })
 		if (user) {
 			const err = new Error('This username already exists.')
-			err.status = 404
+			err.status = 400
 			throw err
 		}
 
 		const userEmail = await Users.findOne({ email })
 		if (userEmail) {
 			const err = new Error('This email already exists.')
-			err.status = 404
+			err.status = 400
 			throw err
 		}
 
 		if (password.length < 6) {
 			const err = new Error('Password must be at least 6 characters.')
-			err.status = 404
+			err.status = 400
 			throw err
 		}
 		const hashedPassword = await bcrypt.hash(password, 12)

@@ -17,11 +17,10 @@
 ```
 make bootstrap
 ```
-
 2. Start app
 ```
 yarn dev
 ```
-
 3. Server runs on `https://localhost:5000`
-
+## Demo
+Please click [here](https://aloha-web-git-master-tangkhanhchuong.vercel.app/) for demo
