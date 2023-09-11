@@ -18,3 +18,9 @@ pre-deploy:
 deploy-dev:
 	docker-compose -f docker-compose.dev.yml pull
 	docker-compose -f docker-compose.dev.yml up -d
+
+ps:
+	docker-compose -f docker-compose.dev.yml ps
+
+logs:
+	docker-compose -f docker-compose.dev.yml logs -f aloha

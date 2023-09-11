@@ -100,7 +100,7 @@ const authService = {
 				if (err) {
 					const err = new Error('Please login now.')
 					err.status = 400
-					reject(err)
+					return reject(err)
 				}
 
 				const user = await Users
@@ -111,7 +111,7 @@ const authService = {
 				if (!user) {
 					const err = new Error('This does not exist.')
 					err.status = 404
-					reject(err)
+					return reject(err)
 				}
 
 				const accessToken = createAccessToken({ id: result.id })
