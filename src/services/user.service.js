@@ -149,8 +149,8 @@ const userService = {
 		return { user: updatedUser }
 	},
 
-	getUserPosts: async ({ id, query }) => {
-		const features = new APIFeatures(Posts.find({ user: id }), query)
+	getUserPosts: async ({ user, query }) => {
+		const features = new APIFeatures(Posts.find({ user }), query)
 			.paginate()
 
 		const posts = await features.query.sort('-createdAt')

@@ -53,11 +53,19 @@ const postService = {
 				key: image,
 				url: await getPresignedUrl(image)
 			})))
-			post.user.avatar = await getPresignedUrl(post.user.avatar)
+			const avatar = await getPresignedUrl(post.user.avatar)
 			post.comments = await Promise.all(post.comments.map(async (comment) => {
-				comment.user.avatar = await getPresignedUrl(comment.user.avatar)
+				const commentAvatar = await getPresignedUrl(comment.user.avatar)
+				comment.user = {
+					...comment.user._doc,
+					avatar: commentAvatar				
+				}
 				return comment
 			}))
+			post.user = {
+				...post.user._doc,
+				avatar
+			}
 			return post
 		}))
 		return { posts: formattedPosts }

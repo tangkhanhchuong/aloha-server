@@ -117,15 +117,15 @@ const handleSocketEvents = (socket, io) => {
 	// })	
 }
 
-const reconnectAllUsers = () => {
-	// socket.emit('user_reconnected')
+const reconnectAllUsers = ({ socket }) => {
+	socket.emit('user_reconnected')
 }
 
 const initSocketIo = (http) => {
 	io = socketIo(http, socketConfig)
 
 	io.on('connection', socket => {
-		// reconnectAllUsers()
+		reconnectAllUsers({ socket })
 		handleSocketEvents(socket)
 	})
 }
