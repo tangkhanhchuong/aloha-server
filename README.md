@@ -2,10 +2,10 @@
 <p>Aloha is MERN stack application with some social media's main features</p>
 
 ### Techstack
-- Nodejs
-- Mongo
+- Nodejs, Mongo, BullMq
 - Socket Io
 - AWS: S3
+- Redis
 
 ### Requirements
 - Node >= 16, yarn
