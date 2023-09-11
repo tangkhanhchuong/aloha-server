@@ -19,16 +19,16 @@ const getRoomName = (userId) => {
 
 const removeSocketUser = async ({ socket }) => {
 	const beforeFilteredUsers = [ ...users ]
+	const rooms = io.sockets.adapter.rooms
 	users = users.filter(user => {
-		const rooms = io.sockets.adapter.rooms
 		const usersInRoom = rooms && rooms.get(getRoomName(user.id)) ? Array.from(rooms.get(getRoomName(user.id))) : []
 		return usersInRoom.length > 0
 	})
 	if (beforeFilteredUsers.length > users.length) {
-		const allRooms = Array.from(socket.adapter.rooms.keys())
-		const roomsToBroadcast = allRooms.filter((room) => room.startsWith(ROOM_NAME_PATTERN))
+		const roomsName = Array.from(rooms.keys())
+		const roomsToBroadcast = roomsName.filter((room) => room.startsWith(ROOM_NAME_PATTERN))
 		roomsToBroadcast.forEach((room) => {
-			socket.to(room).emit('user_is_offline', socketUsers[socket.id])
+			socket.to(room).emit('user_is_offline', socketUsers[socket.id.toString()])
 		})
 	}
 
@@ -37,7 +37,7 @@ const removeSocketUser = async ({ socket }) => {
 }
 
 const addSocketUser = async ({ user, socket }) => {
-	socketUsers[socket.id] = user._id
+	socketUsers[socket.id.toString()] = user._id
 	const filterUsers = users.filter(socketUser => socketUser.id != user._id)
 	if (filterUsers.length == users.length) {
 		users.push({
@@ -46,17 +46,17 @@ const addSocketUser = async ({ user, socket }) => {
 			avatar: user.avatar,
 			followers: user.followers
 		})
-
-		const roomName = getRoomName(user._id)
-		socket.join(roomName)
-
-		logger.info(JSON.stringify({
-			msg: 'User join room',
-			userId: user._id,
-			socketId: socket.id,
-			room: roomName
-		}))
 	}
+	const roomName = getRoomName(user._id)
+	socket.join(roomName)
+
+	logger.info(JSON.stringify({
+		msg: 'User join room',
+		userId: user._id,
+		socketId: socket.id,
+		room: roomName
+	}))
+	const rooms = io.sockets.adapter.rooms
 	return users
 }
 
@@ -64,15 +64,7 @@ const getSocketUserById = async (id) => {
 	return users.filter(user => user.id === id)[0]
 }
 
-const initSocketIo = (http) => {
-	io = socketIo(http, socketConfig)
-
-	io.on('connection', socket => {
-		connectSocket(socket)
-	})
-}
-
-const connectSocket = (socket, io) => {
+const handleSocketEvents = (socket, io) => {
 	socket.on('user_joined', async (joinedUser) => {
 		await addSocketUser({ user: joinedUser, socket })
 		socket.broadcast.emit('user_is_online', joinedUser._id)
@@ -89,7 +81,6 @@ const connectSocket = (socket, io) => {
 
 	// Message
 	socket.on('add_message', async (msg) => {
-		// let users = await getSocketUsers()
 		const user = users.find(user => user.id === msg.recipient)
 		user && socket.to(getRoomName(user.id)).emit('add_message_to_client', msg)
 	})
@@ -123,7 +114,20 @@ const connectSocket = (socket, io) => {
 	//             users = editData(users, client.call, null)
 	//         }
 	//     }
-	// })
+	// })	
+}
+
+const reconnectAllUsers = () => {
+	// socket.emit('user_reconnected')
+}
+
+const initSocketIo = (http) => {
+	io = socketIo(http, socketConfig)
+
+	io.on('connection', socket => {
+		// reconnectAllUsers()
+		handleSocketEvents(socket)
+	})
 }
 
 // const editData = (data, id, call) => {
