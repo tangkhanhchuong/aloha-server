@@ -1,3 +1,5 @@
+const { StatusCodes } = require('http-status-codes')
+
 const Comments = require('../models/comment.model')
 const Posts = require('../models/post.model')
 const { addToNotifyQueue } = require('../queues/notify.queue')
@@ -7,7 +9,7 @@ const commentService = {
 		const post = await Posts.findById(postId)
 		if (!post) {
 			const err = new Error('This post does not exist.')
-			err.status = 404
+			err.status = StatusCodes.NOT_FOUND
 			throw err
 		}
 
@@ -15,7 +17,7 @@ const commentService = {
 			const cm = await Comments.findById(reply)
 			if (!cm) {
 				const err = new Error('This comment does not exist.')
-				err.status = 404
+				err.status = StatusCodes.NOT_FOUND
 				throw err
 			}
 		}
@@ -51,7 +53,7 @@ const commentService = {
 		const comment = await Comments.find({ _id: id, likes: userId })
 		if (comment.length > 0) {
 			const err = new Error('You liked this post.')
-			err.status = 400
+			err.status = StatusCodes.BAD_REQUEST
 			throw err
 		}
 

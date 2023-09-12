@@ -10,6 +10,7 @@ bootstrap:
 	yarn install
 
 pre-deploy:
+	docker image prune -f
 	docker image build -t aloha-dev .
 	docker image tag aloha-dev:latest 560730833886.dkr.ecr.ap-southeast-1.amazonaws.com/aloha-dev:latest
 	docker push 560730833886.dkr.ecr.ap-southeast-1.amazonaws.com/aloha-dev:latest

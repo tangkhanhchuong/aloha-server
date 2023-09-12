@@ -6,7 +6,7 @@ const { ExpressPeerServer } = require('peer')
 const path = require('path')
 const morgan = require('morgan')
 
-const errorHandler = require('./middleware/error.handler')
+const { errorHandler, notFoundHandler } = require('./middleware/error.handler')
 const { initSocketIo } = require('./helpers/socket')
 const { logger } = require('./helpers/logger')
 const { connectMongoDB } = require('./helpers/mongo')
@@ -16,7 +16,9 @@ const bootstrap = async () => {
 	app.use(express.json())
 	app.use(express.urlencoded({ extended: true }))
 	app.use(morgan('dev'))
-	app.use(cors())
+	app.use(cors({
+		origin: process.env.CORS_DOMAIN
+	}))
 	app.use(cookieParser())
 
 	const http = require('http').createServer(app)
@@ -31,6 +33,8 @@ const bootstrap = async () => {
 	app.use('/api/v1/notifies', require('./routes/notify.router'))
 	app.use('/api/v1/messages', require('./routes/message.router'))
 	app.use('/api/v1/files', require('./routes/file.router'))
+	app.use('/api/v1/files', require('./routes/file.router'))
+	app.use(notFoundHandler)
 	app.use(errorHandler)
 
 	await connectMongoDB()

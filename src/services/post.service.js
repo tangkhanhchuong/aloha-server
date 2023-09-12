@@ -1,3 +1,5 @@
+const { StatusCodes } = require('http-status-codes')
+
 const Posts = require('../models/post.model')
 const Comments = require('../models/comment.model')
 const Users = require('../models/user.model')
@@ -112,7 +114,7 @@ const postService = {
 
 		if (!post) {
 			const err = new Error('This post does not exist.')
-			err.status = 400
+			err.status = StatusCodes.NOT_FOUND
 			throw err
 		}
 		const formattedImages = await Promise.all(post.images.map(async (image) => ({
@@ -144,7 +146,7 @@ const postService = {
 		const post = await Posts.find({ _id: postId, likes: user._id })
 		if (post.length > 0) {
 			const err = new Error('You liked this post.')
-			err.status = 400
+			err.status = StatusCodes.BAD_REQUEST
 			throw err
 		}
 		const updatedPost = await Posts.findOneAndUpdate({ _id: postId }, {
@@ -153,7 +155,7 @@ const postService = {
 
 		if (!updatedPost) {
 			const err = new Error('This post does not exist.')
-			err.status = 404
+			err.status = StatusCodes.NOT_FOUND
 			throw err
 		}
 
@@ -173,7 +175,7 @@ const postService = {
 
 		if (!updatedPost) {
 			const err = new Error('This post does not exist.')
-			err.status = 404
+			err.status = StatusCodes.NOT_FOUND
 			throw err
 		}
 	},
@@ -182,7 +184,7 @@ const postService = {
 		const user = await Users.find({ _id: userId, saved: id })
 		if (user.length > 0) {
 			const err = new Error('You saved this post.')
-			err.status = 400
+			err.status = StatusCodes.BAD_REQUEST
 			throw err
 		}
 
@@ -192,7 +194,7 @@ const postService = {
 
 		if (!updatedUser) {
 			const err = new Error('This user does not exist.')
-			err.status = 404
+			err.status = StatusCodes.NOT_FOUND
 			throw err
 		}
 	},
@@ -204,7 +206,7 @@ const postService = {
 
 		if (!updatedUser) {
 			const err = new Error('This user does not exist.')
-			err.status = 404
+			err.status = StatusCodes.NOT_FOUND
 			throw err
 		}
 	},

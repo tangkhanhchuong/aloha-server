@@ -1,10 +1,12 @@
+const { StatusCodes } = require('http-status-codes')
+
 const { getPresignedUrl } = require('../helpers/s3')
 
 const fileService = {
 	upload: async ({ uploadedFiles }) => {
 		if (!uploadedFiles) {
 			const err = new Error('Missing files !')
-			err.status = 404
+			err.status = StatusCodes.BAD_REQUEST
 			throw err
 		}
 		const files = []

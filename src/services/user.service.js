@@ -1,3 +1,5 @@
+const { StatusCodes } = require('http-status-codes')
+
 const Users = require('../models/user.model')
 const Posts = require('../models/post.model')
 const { getPresignedUrl } = require('../helpers/s3')
@@ -73,7 +75,7 @@ const userService = {
 			.populate('followers following', '-password')
 		if (!user) {
 			const err = new Error('User does not exist.')
-			err.status = 404
+			err.status = StatusCodes.NOT_FOUND
 			throw err
 		}
 		user.avatar = await getPresignedUrl(user.avatar)
@@ -83,7 +85,7 @@ const userService = {
 	update: async ({ avatar, fullname, mobile, address, story, website, gender, userId }) => {
 		if (!fullname) {
 			const err = new Error('Missing fullname !')
-			err.status = 400
+			err.status = StatusCodes.BAD_REQUEST
 			throw err
 		}
 
@@ -96,7 +98,7 @@ const userService = {
 		const user = await Users.find({ _id: id, followers: userId })
 		if (user.length > 0) {
 			const err = new Error('You followed this user.')
-			err.status = 400
+			err.status = StatusCodes.BAD_REQUEST
 			throw err
 		}
 

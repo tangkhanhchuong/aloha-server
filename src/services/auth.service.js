@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { StatusCodes } = require('http-status-codes')
 
 const Users = require('../models/user.model')
 const { getPresignedUrl } = require('../helpers/s3')
@@ -11,20 +12,20 @@ const authService = {
 		const user = await Users.findOne({ username: newUserName })
 		if (user) {
 			const err = new Error('This username already exists.')
-			err.status = 400
+			err.status = StatusCodes.CONFLICT
 			throw err
 		}
 
 		const userEmail = await Users.findOne({ email })
 		if (userEmail) {
 			const err = new Error('This email already exists.')
-			err.status = 400
+			err.status = StatusCodes.CONFLICT
 			throw err
 		}
 
 		if (password.length < 6) {
 			const err = new Error('Password must be at least 6 characters.')
-			err.status = 400
+			err.status = StatusCodes.BAD_REQUEST
 			throw err
 		}
 		const hashedPassword = await bcrypt.hash(password, 12)
@@ -61,17 +62,16 @@ const authService = {
 
 		if (!user) {
 			const err = new Error('This email does not exist.')
-			err.status = 404
+			err.status = StatusCodes.NOT_FOUND
 			throw err
 		}
 
 		const isMatched = await bcrypt.compare(password, user.password)
 		if (!isMatched) {
 			const err = new Error('Password is incorrect.')
-			err.status = 401
+			err.status = StatusCodes.UNAUTHORIZED
 			throw err
 		}
-
 		const accessToken = createAccessToken({ id: user._id })
 		const refreshToken = createRefreshToken({ id: user._id })
 
@@ -91,7 +91,7 @@ const authService = {
 	generateAccessToken: async ({ refreshToken }) => {
 		if (!refreshToken) {
 			const err = new Error('Please login now.')
-			err.status = 400
+			err.status = StatusCodes.BAD_REQUEST
 			throw err
 		}
 
@@ -99,7 +99,7 @@ const authService = {
 			jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, result) => {
 				if (err) {
 					const err = new Error('Please login now.')
-					err.status = 400
+					err.status = StatusCodes.UNAUTHORIZED
 					return reject(err)
 				}
 
@@ -110,20 +110,17 @@ const authService = {
 
 				if (!user) {
 					const err = new Error('This does not exist.')
-					err.status = 404
+					err.status = StatusCodes.NOT_FOUND
 					return reject(err)
 				}
 
 				const accessToken = createAccessToken({ id: result.id })
 				user.avatar = await getPresignedUrl(user.avatar)
-
 				resolve({
 					user, accessToken
 				})
 			})
 		})
-
-
 	}
 }
 
