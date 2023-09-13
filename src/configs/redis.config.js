@@ -1,6 +1,8 @@
-const redisConfig = {
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT
-}
+const { REDIS_HOST: host, REDIS_PORT: port } = process.env;
 
-module.exports = redisConfig
+const redisConfig = {
+  host,
+  port,
+};
+
+module.exports = redisConfig;

@@ -1,7 +1,7 @@
 const socketConfig = {
   cors: {
-      origin: true
-  }
-}
+    origin: true,
+  },
+};
 
-module.exports = socketConfig
+module.exports = socketConfig;
