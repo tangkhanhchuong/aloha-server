@@ -1,21 +1,21 @@
-const Notifies = require("../models/notify.model");
+const Notifications = require("../models/notification.model");
 const { getPresignedUrl } = require("../helpers/s3");
 const { getIo, getSocketUserById, getRoomName } = require("../helpers/socket");
 
-const notifyService = {
+const notificationService = {
   create: async ({ recipients, url, text, content, user }) => {
     if (recipients.length < 1) return null;
 	
     if (recipients.includes(user._id.toString())) return;
 
-    const createdNotify = new Notifies({
+    const createdNotification = new Notifications({
       recipients,
       url,
       text,
       content,
       user: user._id,
     });
-    await createdNotify.save();
+    await createdNotification.save();
 
     const formattedRecipients = await Promise.all(
       recipients.map(async (recipient) => {
@@ -28,7 +28,7 @@ const notifyService = {
       if (!user) continue;
       const io = getIo();
       io.to(getRoomName(user.id)).emit("send_notifcation", {
-        _id: createdNotify._id,
+        _id: createdNotification._id,
         recipients,
         url,
         text,
@@ -36,45 +36,45 @@ const notifyService = {
         user,
       });
     }
-    return { notify: createdNotify };
+    return { notification: createdNotification };
   },
 
   remove: async ({ id, url }) => {
-    const notify = await Notifies.findOneAndDelete({
+    const notification = await Notifications.findOneAndDelete({
       id,
       url,
     });
-    return { notify };
+    return { notification };
   },
 
   list: async ({ userId }) => {
-    const notifies = await Notifies.find({ recipients: userId })
+    const notifications = await Notifications.find({ recipients: userId })
       .sort("-createdAt")
       .populate("user", "avatar username");
 
-    const formattedNotifies = await Promise.all(
-      notifies.map(async (notify) => {
-        notify.user.avatar = await getPresignedUrl(notify.user.avatar);
-        return notify;
+    const formattedNotifications = await Promise.all(
+      notifications.map(async (notification) => {
+        notification.user.avatar = await getPresignedUrl(notification.user.avatar);
+        return notification;
       })
     );
-    return { notifies: formattedNotifies };
+    return { notifications: formattedNotifications };
   },
 
   markAsRead: async ({ id }) => {
-    const notify = await Notifies.findOneAndUpdate(
+    const notification = await Notifications.findOneAndUpdate(
       { _id: id },
       {
         isRead: true,
       }
     );
-    return { notify };
+    return { notification };
   },
 
   deleteAll: async ({ userId }) => {
-    const notifies = await Notifies.deleteMany({ recipients: userId });
-    return { notifies };
+    const notifications = await Notifications.deleteMany({ recipients: userId });
+    return { notifications };
   },
 };
 
-module.exports = notifyService;
+module.exports = notificationService;

@@ -1,4 +1,5 @@
 version: "3"
+
 services:
   aloha:
     image: "560730833886.dkr.ecr.ap-southeast-1.amazonaws.com/aloha-dev:latest"
@@ -11,6 +12,9 @@ services:
       - /app/node_modules
     depends_on:
       - mongo
+    env_file:
+      - .env.development
+
   mongo:
     image: mongo:3.6.19-xenial
     container_name: mongo
@@ -20,6 +24,7 @@ services:
       - node-app
     volumes:
       - mongo-data:/data/db
+
   mongo-express:
     image: mongo-express:0.54.0
     container_name: mongo-express
@@ -27,6 +32,7 @@ services:
       - 8081:8081
     networks:
       - node-app
+
   redis:
     image: redis:alpine
     container_name: redis
@@ -34,6 +40,7 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
       - 6379:6379
+
 networks:
   node-app:
     driver: bridge

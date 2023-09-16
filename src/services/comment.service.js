@@ -2,7 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 
 const Comments = require("../models/comment.model");
 const Posts = require("../models/post.model");
-const { addToNotifyQueue } = require("../queues/notify.queue");
+const { addToNotificationQueue } = require("../queues/notification.queue");
 
 const commentService = {
   create: async ({ postId, content, tag, reply, postUserId, userId }) => {
@@ -40,7 +40,7 @@ const commentService = {
     );
     await newComment.save();
 
-    addToNotifyQueue({
+    addToNotificationQueue({
       text: newComment.reply
         ? "mentioned you in a comment."
         : "has commented on your post.",

@@ -5,7 +5,7 @@ const Comments = require("../models/comment.model");
 const Users = require("../models/user.model");
 const { getPresignedUrl } = require("../helpers/s3");
 const { APIFeatures } = require("../utils/APIFeatures");
-const { addToNotifyQueue } = require("../queues/notify.queue");
+const { addToNotificationQueue } = require("../queues/notification.queue");
 
 const postService = {
   create: async ({ content, images, user }) => {
@@ -23,7 +23,7 @@ const postService = {
       }))
     );
 
-    addToNotifyQueue({
+    addToNotificationQueue({
       content,
       user,
       url: `/posts/${newPost._id}`,
@@ -185,7 +185,7 @@ const postService = {
       throw err;
     }
 
-    addToNotifyQueue({
+    addToNotificationQueue({
       user,
       content: updatedPost.content,
       url: `/posts/${updatedPost._id}`,

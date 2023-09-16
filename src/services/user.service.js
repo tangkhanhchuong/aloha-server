@@ -4,7 +4,7 @@ const Users = require("../models/user.model");
 const Posts = require("../models/post.model");
 const { getPresignedUrl } = require("../helpers/s3");
 const { APIFeatures } = require("../utils/APIFeatures");
-const { addToNotifyQueue } = require("../queues/notify.queue");
+const { addToNotificationQueue } = require("../queues/notification.queue");
 
 const userService = {
   search: async ({ username }) => {
@@ -172,7 +172,7 @@ const userService = {
       })
     );
 
-    addToNotifyQueue({
+    addToNotificationQueue({
       user: { _id: userId },
       text: "has started to follow you.",
       url: `/profile/${userId}`,

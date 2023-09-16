@@ -6,6 +6,7 @@ local-down:
 
 bootstrap:
 	cp .env .env.example
+	cp .env.development .env.example
 	docker-compose up -d
 	yarn install
 

@@ -1,10 +1,10 @@
-const notifyService = require("../services/notify.service");
+const notificationService = require("../services/notification.service");
 
-const notifyController = {
+const notificationController = {
   create: async (req, res, next) => {
     try {
       const { id, recipients, url, text, content } = req.body;
-      const { notify } = await notifyService.create({
+      const { notification } = await notificationService.create({
         id,
         recipients,
         url,
@@ -12,7 +12,7 @@ const notifyController = {
         content,
         user: req.user,
       });
-      return res.json({ notify });
+      return res.json({ notification });
     } catch (err) {
       next(err);
     }
@@ -20,12 +20,12 @@ const notifyController = {
 
   remove: async (req, res, next) => {
     try {
-      const { notify } = await notifyService.remove({
+      const { notification } = await notificationService.remove({
         id: req.params.id,
         url: req.query.url,
       });
 
-      return res.json({ notify });
+      return res.json({ notification });
     } catch (err) {
       next(err);
     }
@@ -33,10 +33,10 @@ const notifyController = {
 
   list: async (req, res, next) => {
     try {
-      const { notifies } = await notifyService.list({
+      const { notifications } = await notificationService.list({
         userId: req.user._id,
       });
-      return res.json({ notifies });
+      return res.json({ notifications });
     } catch (err) {
       next(err);
     }
@@ -44,11 +44,11 @@ const notifyController = {
 
   markAsRead: async (req, res, next) => {
     try {
-      const { notify } = await notifyService.markAsRead({
+      const { notification } = await notificationService.markAsRead({
         id: req.params.id,
       });
 
-      return res.json({ notify });
+      return res.json({ notification });
     } catch (err) {
       next(err);
     }
@@ -56,14 +56,14 @@ const notifyController = {
 
   deleteAll: async (req, res, next) => {
     try {
-      const { notifies } = await notifyService.deleteAll({
+      const { notifications } = await notificationService.deleteAll({
         userId: req.user._id,
       });
-      return res.json({ notifies });
+      return res.json({ notifications });
     } catch (err) {
       next(err);
     }
   },
 };
 
-module.exports = notifyController;
+module.exports = notificationController;

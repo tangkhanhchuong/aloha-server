@@ -32,9 +32,8 @@ const bootstrap = async () => {
   app.use("/api/v1/posts", require("./routes/post.router"));
   app.use("/api/v1/conversations", require("./routes/conversation.router"));
   app.use("/api/v1/comments", require("./routes/comment.router"));
-  app.use("/api/v1/notifies", require("./routes/notify.router"));
+  app.use("/api/v1/notifications", require("./routes/notification.router"));
   app.use("/api/v1/messages", require("./routes/message.router"));
-  app.use("/api/v1/files", require("./routes/file.router"));
   app.use("/api/v1/files", require("./routes/file.router"));
   app.use(notFoundHandler);
   app.use(errorHandler);

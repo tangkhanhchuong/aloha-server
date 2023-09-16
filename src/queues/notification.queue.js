@@ -1,6 +1,6 @@
 const Bull = require("bull");
 
-const notifyService = require("../services/notify.service");
+const notificationService = require("../services/notification.service");
 const { logger } = require("../helpers/logger");
 
 const bullConfig = {
@@ -10,20 +10,20 @@ const bullConfig = {
   },
 };
 
-const notifyQueue = new Bull("create-notification", bullConfig);
+const notificationQueue = new Bull("create-notification", bullConfig);
 
-notifyQueue.process((job) => {
-  notifyService.create(job.data);
+notificationQueue.process((job) => {
+  notificationService.create(job.data);
 });
 
-const addToNotifyQueue = ({ url, text, content, user, recipients }) => {
+const addToNotificationQueue = ({ url, text, content, user, recipients }) => {
   logger.info(
     JSON.stringify({
       msg: "Add to queue",
       payload: { url, text, content, user, recipients },
     })
   );
-  notifyQueue.add(
+  notificationQueue.add(
     {
       url,
       text,
@@ -38,5 +38,5 @@ const addToNotifyQueue = ({ url, text, content, user, recipients }) => {
 };
 
 module.exports = {
-  addToNotifyQueue,
+  addToNotificationQueue,
 };
