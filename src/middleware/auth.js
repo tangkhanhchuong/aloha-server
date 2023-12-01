@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { StatusCodes } = require("http-status-codes");
 
-const Users = require("../models/user.model");
+const Users = require("../module/user/user.model");
 
 const auth = async (req, res, next) => {
   try {

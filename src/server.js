@@ -7,9 +7,9 @@ const path = require("path");
 const morgan = require("morgan");
 
 const { errorHandler, notFoundHandler } = require("./middleware/error.handler");
-const { initSocketIo } = require("./helpers/socket");
-const { logger } = require("./helpers/logger");
-const { connectMongoDB } = require("./helpers/mongo");
+const { initSocketIo } = require("./core/socket/socket");
+const { logger } = require("./core/logger/logger");
+const { connectMongoDB } = require("./core/mongo/mongo");
 
 const bootstrap = async () => {
   const app = express();
@@ -27,14 +27,14 @@ const bootstrap = async () => {
   initSocketIo(http);
   ExpressPeerServer(http, { path: "/" });
 
-  app.use("/api/v1/auth", require("./routes/auth.router"));
-  app.use("/api/v1/users", require("./routes/user.router"));
-  app.use("/api/v1/posts", require("./routes/post.router"));
-  app.use("/api/v1/conversations", require("./routes/conversation.router"));
-  app.use("/api/v1/comments", require("./routes/comment.router"));
-  app.use("/api/v1/notifications", require("./routes/notification.router"));
-  app.use("/api/v1/messages", require("./routes/message.router"));
-  app.use("/api/v1/files", require("./routes/file.router"));
+  app.use("/api/v1/auth", require("./module/auth/auth.router"));
+  app.use("/api/v1/users", require("./module/user/user.router"));
+  app.use("/api/v1/posts", require("./module/post/post.router"));
+  app.use("/api/v1/conversations", require("./module/conversation/conversation.router"));
+  app.use("/api/v1/comments", require("./module/comment/comment.router"));
+  app.use("/api/v1/notifications", require("./module/notification/notification.router"));
+  app.use("/api/v1/messages", require("./module/message/message.router"));
+  app.use("/api/v1/files", require("./module/file/file.router"));
   app.use(notFoundHandler);
   app.use(errorHandler);
 
