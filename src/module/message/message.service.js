@@ -1,6 +1,6 @@
-const Conversations = require("../conversation/conversation.model");
-const Messages = require("./message.model");
-const { APIFeatures } = require("../../shared/APIFeatures");
+const Conversations = require('../conversation/conversation.model');
+const Messages = require('./message.model');
+const { APIFeatures } = require('../../shared/APIFeatures');
 
 const messageService = {
   create: async ({ sender, recipient, text, media, call }) => {
@@ -43,7 +43,7 @@ const messageService = {
       }),
       query
     ).paginate();
-    const messages = await features.query.sort("-createdAt");
+    const messages = await features.query.sort('-createdAt');
     return { messages };
   },
 

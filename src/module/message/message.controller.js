@@ -1,4 +1,4 @@
-const messageService = require("./message.service");
+const messageService = require('./message.service');
 
 const messageController = {
   create: async (req, res, next) => {
@@ -12,7 +12,7 @@ const messageController = {
         call,
       });
 
-      return res.json({ msg: "Create Success!" });
+      return res.json({ msg: 'Create Success!' });
     } catch (err) {
       next(err);
     }
@@ -40,7 +40,7 @@ const messageController = {
         id: req.params.id,
         userId: req.user._id,
       });
-      return res.json({ msg: "Delete Success!" });
+      return res.json({ msg: 'Delete Success!' });
     } catch (err) {
       next(err);
     }

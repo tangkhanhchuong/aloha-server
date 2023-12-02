@@ -1,14 +1,15 @@
-const { StatusCodes } = require("http-status-codes");
+const { StatusCodes } = require('http-status-codes');
 
-const Comments = require("./comment.model");
-const Posts = require("../post/post.model");
-const { addToNotificationQueue } = require("../notification/notification.queue");
+const Comments = require('./comment.model');
+const Posts = require('../post/post.model');
+const { addToNotificationQueue } = require('../notification/notification.queue');
+const { POST, COMMENT } = require('../../shared/message');
 
 const commentService = {
   create: async ({ postId, content, tag, reply, postUserId, userId }) => {
     const post = await Posts.findById(postId);
     if (!post) {
-      const err = new Error("This post does not exist.");
+      const err = new Error(POST.POST_NOT_FOUND);
       err.status = StatusCodes.NOT_FOUND;
       throw err;
     }
@@ -16,7 +17,7 @@ const commentService = {
     if (reply) {
       const cm = await Comments.findById(reply);
       if (!cm) {
-        const err = new Error("This comment does not exist.");
+        const err = new Error(COMMENT.COMMENT_NOT_FOUND);
         err.status = StatusCodes.NOT_FOUND;
         throw err;
       }
@@ -42,8 +43,8 @@ const commentService = {
 
     addToNotificationQueue({
       text: newComment.reply
-        ? "mentioned you in a comment."
-        : "has commented on your post.",
+        ? 'mentioned you in a comment.'
+        : 'has commented on your post.',
       recipients: newComment.reply ? [newComment.tag._id] : [post.user._id],
       url: `/posts/${post._id}`,
       content: newComment.content,
@@ -66,7 +67,7 @@ const commentService = {
   like: async ({ id, userId }) => {
     const comment = await Comments.find({ _id: id, likes: userId });
     if (comment.length > 0) {
-      const err = new Error("You liked this post.");
+      const err = new Error(COMMENT.COMMENT_LIKED);
       err.status = StatusCodes.BAD_REQUEST;
       throw err;
     }

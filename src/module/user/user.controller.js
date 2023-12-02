@@ -1,4 +1,4 @@
-const userService = require("./user.service");
+const userService = require('./user.service');
 
 const userController = {
   search: async (req, res, next) => {
@@ -40,7 +40,7 @@ const userController = {
         gender,
         userId: req.user._id,
       });
-      return res.json({ msg: "Update Success!" });
+      return res.json({ msg: 'Update Success!' });
     } catch (err) {
       next(err);
     }
@@ -107,7 +107,7 @@ const userController = {
         query: req.query,
       });
       return res.json({
-        msg: "Success!",
+        msg: 'Success!',
         count: posts.length,
         posts,
       });

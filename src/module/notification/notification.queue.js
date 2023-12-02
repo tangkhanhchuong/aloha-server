@@ -1,7 +1,7 @@
-const Bull = require("bull");
+const Bull = require('bull');
 
-const notificationService = require("./notification.service");
-const { logger } = require("../../core/logger/logger");
+const notificationService = require('./notification.service');
+const { logger } = require('../../core/logger/logger');
 
 const bullConfig = {
   redis: {
@@ -10,7 +10,7 @@ const bullConfig = {
   },
 };
 
-const notificationQueue = new Bull("create-notification", bullConfig);
+const notificationQueue = new Bull('create-notification', bullConfig);
 
 notificationQueue.process((job) => {
   notificationService.create(job.data);
@@ -19,7 +19,7 @@ notificationQueue.process((job) => {
 const addToNotificationQueue = ({ url, text, content, user, recipients }) => {
   logger.info(
     JSON.stringify({
-      msg: "Add to queue",
+      msg: 'Add to queue',
       payload: { url, text, content, user, recipients },
     })
   );

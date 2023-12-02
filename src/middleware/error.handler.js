@@ -1,6 +1,6 @@
-const { StatusCodes } = require("http-status-codes");
+const { StatusCodes } = require('http-status-codes');
 
-const { logger } = require("../core/logger/logger");
+const { logger } = require('../core/logger/logger');
 
 const errorHandler = (err, req, res, next) => {
   if (!err.status) {
@@ -14,7 +14,7 @@ const errorHandler = (err, req, res, next) => {
 };
 
 const notFoundHandler = (req, res, next) => {
-  const err = new Error("Not found");
+  const err = new Error('Not found');
   err.status = StatusCodes.NOT_FOUND;
   throw err;
 };

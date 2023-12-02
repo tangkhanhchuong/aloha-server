@@ -1,20 +1,20 @@
-const { StatusCodes } = require("http-status-codes");
+const { StatusCodes } = require('http-status-codes');
 
-const Users = require("./user.model");
-const Posts = require("../post/post.model");
-const { getPresignedUrl } = require("../../core/aws/s3");
-const { APIFeatures } = require("../../shared/APIFeatures");
-const { addToNotificationQueue } = require("../notification/notification.queue");
+const Users = require('./user.model');
+const Posts = require('../post/post.model');
+const { getPresignedUrl } = require('../../core/aws/s3');
+const { APIFeatures } = require('../../shared/APIFeatures');
+const { addToNotificationQueue } = require('../notification/notification.queue');
 
 const userService = {
   search: async ({ username }) => {
     const users = await Users.find({
       username: {
-        $regex: username || "",
+        $regex: username || '',
       },
     })
       .limit(10)
-      .select("fullname username avatar");
+      .select('fullname username avatar');
 
     const formattedUsers = await Promise.all(
       users.map(async (user) => ({
@@ -33,21 +33,21 @@ const userService = {
       { $sample: { size: Number(num) } },
       {
         $lookup: {
-          from: "users",
-          localField: "followers",
-          foreignField: "_id",
-          as: "followers",
+          from: 'users',
+          localField: 'followers',
+          foreignField: '_id',
+          as: 'followers',
         },
       },
       {
         $lookup: {
-          from: "users",
-          localField: "following",
-          foreignField: "_id",
-          as: "following",
+          from: 'users',
+          localField: 'following',
+          foreignField: '_id',
+          as: 'following',
         },
       },
-    ]).project("-password");
+    ]).project('-password');
     const formattedUsers = await Promise.all(
       users.map(async (formattedUser) => ({
         ...formattedUser,
@@ -65,7 +65,7 @@ const userService = {
       query
     ).paginate();
 
-    const savedPosts = await features.query.sort("-createdAt");
+    const savedPosts = await features.query.sort('-createdAt');
     const formattedPosts = await Promise.all(
       savedPosts.map(async (post) => {
         post.images = await Promise.all(
@@ -93,10 +93,10 @@ const userService = {
 
   get: async ({ id }) => {
     const user = await Users.findById(id)
-      .select("-password")
-      .populate("followers following", "-password");
+      .select('-password')
+      .populate('followers following', '-password');
     if (!user) {
-      const err = new Error("User does not exist.");
+      const err = new Error('User does not exist.');
       err.status = StatusCodes.NOT_FOUND;
       throw err;
     }
@@ -115,7 +115,7 @@ const userService = {
     userId,
   }) => {
     if (!fullname) {
-      const err = new Error("Missing fullname !");
+      const err = new Error('Missing fullname !');
       err.status = StatusCodes.BAD_REQUEST;
       throw err;
     }
@@ -137,7 +137,7 @@ const userService = {
   follow: async ({ id, userId }) => {
     const user = await Users.find({ _id: id, followers: userId });
     if (user.length > 0) {
-      const err = new Error("You followed this user.");
+      const err = new Error('You followed this user.');
       err.status = StatusCodes.BAD_REQUEST;
       throw err;
     }
@@ -148,7 +148,7 @@ const userService = {
         $push: { followers: userId },
       },
       { new: true }
-    ).populate("followers following", "-password");
+    ).populate('followers following', '-password');
 
     await Users.findOneAndUpdate(
       { _id: userId },
@@ -174,7 +174,7 @@ const userService = {
 
     addToNotificationQueue({
       user: { _id: userId },
-      text: "has started to follow you.",
+      text: 'has started to follow you.',
       url: `/profile/${userId}`,
       recipients: [updatedUser._id],
     });
@@ -189,7 +189,7 @@ const userService = {
         $pull: { followers: userId },
       },
       { new: true }
-    ).populate("followers following", "-password");
+    ).populate('followers following', '-password');
 
     await Users.findOneAndUpdate(
       { _id: userId },
@@ -218,7 +218,7 @@ const userService = {
   getUserPosts: async ({ user, query }) => {
     const features = new APIFeatures(Posts.find({ user }), query).paginate();
 
-    const posts = await features.query.sort("-createdAt");
+    const posts = await features.query.sort('-createdAt');
     const formattedPosts = await Promise.all(
       posts.map(async (post) => {
         post.images = await Promise.all(

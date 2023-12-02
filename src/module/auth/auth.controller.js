@@ -1,4 +1,6 @@
-const authService = require("./auth.service");
+const authService = require('./auth.service');
+
+const { AUTH } = require('../../shared/message');
 
 const authController = {
   register: async (req, res, next) => {
@@ -18,7 +20,7 @@ const authController = {
       });
 
       return res.json({
-        msg: "Register Success!",
+        msg: 'Register Success!',
         access_token,
         refresh_token,
         user,
@@ -38,7 +40,7 @@ const authController = {
       } = await authService.login({ email, password });
 
       return res.json({
-        msg: "Login Success!",
+        msg: AUTH.LOGIN_SUCCESS,
         access_token,
         refresh_token,
         user,
@@ -50,8 +52,10 @@ const authController = {
 
   logout: async (req, res) => {
     try {
-      res.clearCookie("refreshtoken", { path: "/api/refresh-token" });
-      return res.json({ msg: "Logged out!" });
+      res.clearCookie('refreshtoken', { path: '/api/refresh-token' });
+      return res.json({
+        msg: AUTH.LOGOUT_SUCCESS
+      });
     } catch (err) {
       next(err);
     }
@@ -62,7 +66,11 @@ const authController = {
       const refreshToken = req.body.refreshToken;
       const { user, accessToken: access_token } =
         await authService.generateAccessToken({ refreshToken });
-      return res.json({ user, access_token });
+      return res.json({
+        msg: AUTH.TOKEN_REFRESHED,
+        user,
+        access_token
+      });
     } catch (err) {
       return next(err);
     }

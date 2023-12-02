@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const conversationSchema = new mongoose.Schema(
   {
-    recipients: [{ type: mongoose.Types.ObjectId, ref: "user" }],
+    recipients: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
     text: String,
     media: Array,
     call: Object,
@@ -12,4 +12,4 @@ const conversationSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("conversation", conversationSchema);
+module.exports = mongoose.model('conversation', conversationSchema);

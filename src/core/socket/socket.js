@@ -1,9 +1,9 @@
-const socketIo = require("socket.io");
+const socketIo = require('socket.io');
 
-const { logger } = require("../logger/logger");
-const socketConfig = require("./socket.config");
+const { logger } = require('../logger/logger');
+const socketConfig = require('./socket.config');
 
-const ROOM_NAME_PATTERN = "room::user-";
+const ROOM_NAME_PATTERN = 'room::user-';
 
 let socketUsers = [];
 let users = [];
@@ -35,7 +35,7 @@ const removeSocketUser = async ({ socket }) => {
     roomsToBroadcast.forEach((room) => {
       socket
         .to(room)
-        .emit("user_is_offline", socketUsers[socket.id.toString()]);
+        .emit('user_is_offline', socketUsers[socket.id.toString()]);
     });
   }
 
@@ -59,7 +59,7 @@ const addSocketUser = async ({ user, socket }) => {
 
   logger.info(
     JSON.stringify({
-      msg: "User join room",
+      msg: 'User join room',
       userId: user._id,
       socketId: socket.id,
       room: roomName,
@@ -74,26 +74,26 @@ const getSocketUserById = async (id) => {
 };
 
 const handleSocketEvents = (socket, io) => {
-  socket.on("user_joined", async (joinedUser) => {
+  socket.on('user_joined', async (joinedUser) => {
     await addSocketUser({ user: joinedUser, socket });
-    socket.broadcast.emit("user_is_online", joinedUser._id);
+    socket.broadcast.emit('user_is_online', joinedUser._id);
 
     for (const alreadyUser of users) {
       socket
         .to(getRoomName(joinedUser._id))
-        .emit("user_is_online", alreadyUser.id);
-      socket.emit("user_is_online", alreadyUser.id);
+        .emit('user_is_online', alreadyUser.id);
+      socket.emit('user_is_online', alreadyUser.id);
     }
   });
 
-  socket.on("disconnect", async () => {
+  socket.on('disconnect', async () => {
     await removeSocketUser({ socket });
   });
 
   // Message
-  socket.on("add_message", async (msg) => {
+  socket.on('add_message', async (msg) => {
     const user = users.find((user) => user.id === msg.recipient);
-    user && socket.to(getRoomName(user.id)).emit("add_message_to_client", msg);
+    user && socket.to(getRoomName(user.id)).emit('add_message_to_client', msg);
   });
 
   // // Call User
@@ -129,13 +129,13 @@ const handleSocketEvents = (socket, io) => {
 };
 
 const reconnectAllUsers = ({ socket }) => {
-  socket.emit("user_reconnected");
+  socket.emit('user_reconnected');
 };
 
 const initSocketIo = (http) => {
   io = socketIo(http, socketConfig);
 
-  io.on("connection", (socket) => {
+  io.on('connection', (socket) => {
     reconnectAllUsers({ socket });
     handleSocketEvents(socket);
   });
