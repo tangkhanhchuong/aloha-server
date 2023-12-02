@@ -1,11 +1,12 @@
-const { StatusCodes } = require("http-status-codes");
+const { StatusCodes } = require('http-status-codes');
 
-const Posts = require("./post.model");
-const Comments = require("../comment/comment.model");
-const Users = require("../user/user.model");
-const { getPresignedUrl } = require("../../core/aws/s3");
-const { APIFeatures } = require("../../shared/APIFeatures");
-const { addToNotificationQueue } = require("../notification/notification.queue");
+const Posts = require('./post.model');
+const Comments = require('../comment/comment.model');
+const Users = require('../user/user.model');
+const { addToNotificationQueue } = require('../notification/notification.queue');
+const { getPresignedUrl } = require('../../core/aws/s3');
+const { APIFeatures } = require('../../shared/APIFeatures');
+const { USER, POST } = require('../../shared/message');
 
 const postService = {
   create: async ({ content, images, user }) => {
@@ -27,7 +28,7 @@ const postService = {
       content,
       user,
       url: `/posts/${newPost._id}`,
-      text: "added a new post.",
+      text: 'added a new post.',
       recipients: [...user.followers],
     });
 
@@ -49,13 +50,13 @@ const postService = {
     ).paginate();
 
     const posts = await features.query
-      .sort("-createdAt")
-      .populate("user likes", "avatar username fullname followers")
+      .sort('-createdAt')
+      .populate('user likes', 'avatar username fullname followers')
       .populate({
-        path: "comments",
+        path: 'comments',
         populate: {
-          path: "user likes",
-          select: "-password",
+          path: 'user likes',
+          select: '-password',
         },
       });
     const formattedPosts = await Promise.all(
@@ -95,12 +96,12 @@ const postService = {
         images,
       }
     )
-      .populate("user likes", "avatar username fullname")
+      .populate('user likes', 'avatar username fullname')
       .populate({
-        path: "comments",
+        path: 'comments',
         populate: {
-          path: "user likes",
-          select: "-password",
+          path: 'user likes',
+          select: '-password',
         },
       });
 
@@ -121,17 +122,17 @@ const postService = {
 
   get: async ({ id }) => {
     const post = await Posts.findById(id)
-      .populate("user likes", "avatar username fullname followers")
+      .populate('user likes', 'avatar username fullname followers')
       .populate({
-        path: "comments",
+        path: 'comments',
         populate: {
-          path: "user likes",
-          select: "-password",
+          path: 'user likes',
+          select: '-password',
         },
       });
 
     if (!post) {
-      const err = new Error("This post does not exist.");
+      const err = new Error(POST.POST_NOT_FOUND);
       err.status = StatusCodes.NOT_FOUND;
       throw err;
     }
@@ -166,7 +167,7 @@ const postService = {
   like: async ({ postId, user }) => {
     const post = await Posts.find({ _id: postId, likes: user._id });
     if (post.length > 0) {
-      const err = new Error("You liked this post.");
+      const err = new Error(POST.POST_LIKED);
       err.status = StatusCodes.BAD_REQUEST;
       throw err;
     }
@@ -180,7 +181,7 @@ const postService = {
     );
 
     if (!updatedPost) {
-      const err = new Error("This post does not exist.");
+      const err = new Error(POST.POST_NOT_FOUND);
       err.status = StatusCodes.NOT_FOUND;
       throw err;
     }
@@ -190,7 +191,7 @@ const postService = {
       content: updatedPost.content,
       url: `/posts/${updatedPost._id}`,
       recipients: [updatedPost.user._id],
-      text: "like your post.",
+      text: 'like your post.',
     });
   },
 
@@ -204,7 +205,7 @@ const postService = {
     );
 
     if (!updatedPost) {
-      const err = new Error("This post does not exist.");
+      const err = new Error(POST.POST_NOT_FOUND);
       err.status = StatusCodes.NOT_FOUND;
       throw err;
     }
@@ -213,7 +214,7 @@ const postService = {
   save: async ({ id, userId }) => {
     const user = await Users.find({ _id: userId, saved: id });
     if (user.length > 0) {
-      const err = new Error("You saved this post.");
+      const err = new Error(POST.POST_SAVED);
       err.status = StatusCodes.BAD_REQUEST;
       throw err;
     }
@@ -227,7 +228,7 @@ const postService = {
     );
 
     if (!updatedUser) {
-      const err = new Error("This user does not exist.");
+      const err = new Error(USER.USER_NOT_FOUND);
       err.status = StatusCodes.NOT_FOUND;
       throw err;
     }
@@ -243,7 +244,7 @@ const postService = {
     );
 
     if (!updatedUser) {
-      const err = new Error("This user does not exist.");
+      const err = new Error(USER.USER_NOT_FOUND);
       err.status = StatusCodes.NOT_FOUND;
       throw err;
     }

@@ -1,7 +1,7 @@
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
-const multer = require("multer");
-const multerS3 = require("multer-s3");
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
 
 const bucket = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_BUCKET_REGION;
@@ -30,7 +30,7 @@ const uploadToS3 = multer({
 });
 
 const getPresignedUrl = async (key) => {
-  if (!key) return "";
+  if (!key) return '';
 
   const command = new GetObjectCommand({
     Key: key,

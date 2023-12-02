@@ -6,7 +6,7 @@ services:
     ports:
       - 27017:27017
     networks:
-      - node-app
+      - aloha-platform
     volumes:
       - mongo-data:/data/db
   mongo-express:
@@ -15,16 +15,30 @@ services:
     ports:
       - 8081:8081
     networks:
-      - node-app
+      - aloha-platform
   redis:
-    image: redis:alpine
     container_name: redis
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+    image: redis:alpine
+    expose:
+      - 6379
     ports:
       - 6379:6379
+    restart: unless-stopped
+    networks:
+      - aloha-platform
+  redis_commander:
+    container_name: redis_commander
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - '8082:8081'
+    depends_on:
+      - redis
+    networks:
+      - aloha-platform
 networks:
-  node-app:
+  aloha-platform:
     driver: bridge
 
 volumes:

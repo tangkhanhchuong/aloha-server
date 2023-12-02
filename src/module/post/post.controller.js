@@ -1,4 +1,4 @@
-const postService = require("./post.service");
+const postService = require('./post.service');
 
 const postController = {
   create: async (req, res, next) => {
@@ -12,7 +12,7 @@ const postController = {
       });
 
       return res.json({
-        msg: "Created Post!",
+        msg: 'Created Post!',
         newPost,
       });
     } catch (err) {
@@ -28,7 +28,7 @@ const postController = {
       });
 
       return res.json({
-        msg: "Success!",
+        msg: 'Success!',
         posts,
         count: posts.length,
       });
@@ -48,7 +48,7 @@ const postController = {
       });
 
       return res.json({
-        msg: "Updated Post!",
+        msg: 'Updated Post!',
         post,
       });
     } catch (err) {
@@ -62,7 +62,7 @@ const postController = {
         postId: req.params.id,
         user: req.user,
       });
-      return res.json({ msg: "Liked Post!" });
+      return res.json({ msg: 'Liked Post!' });
     } catch (err) {
       return next(err);
     }
@@ -74,7 +74,7 @@ const postController = {
         postId: req.params.id,
         user: req.user._id,
       });
-      return res.json({ msg: "UnLiked Post!" });
+      return res.json({ msg: 'UnLiked Post!' });
     } catch (err) {
       return next(err);
     }
@@ -101,7 +101,7 @@ const postController = {
       });
 
       return res.json({
-        msg: "Deleted Post!",
+        msg: 'Deleted Post!',
         post,
       });
     } catch (err) {
@@ -115,7 +115,7 @@ const postController = {
         id: req.params.id,
         userId: req.user._id,
       });
-      res.json({ msg: "Saved Post!" });
+      res.json({ msg: 'Saved Post!' });
     } catch (err) {
       return next(err);
     }
@@ -127,7 +127,7 @@ const postController = {
         id: req.params.id,
         userId: req.user._id,
       });
-      res.json({ msg: "Unsaved Post!" });
+      res.json({ msg: 'Unsaved Post!' });
     } catch (err) {
       return next(err);
     }

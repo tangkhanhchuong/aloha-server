@@ -1,4 +1,4 @@
-const winston = require("winston");
+const winston = require('winston');
 
 const logLevels = {
   error: 1,
@@ -8,18 +8,18 @@ const logLevels = {
 };
 
 const syslogColors = {
-  debug: "rainbow",
-  info: "cyan",
-  notice: "white",
-  warning: "yellow",
-  error: "bold red",
+  debug: 'rainbow',
+  info: 'cyan',
+  notice: 'white',
+  warning: 'yellow',
+  error: 'bold red',
 };
 
 const logger = winston.createLogger({
   levels: logLevels,
   transports: [
     new winston.transports.Console({
-      level: process.env.LOG_LEVEL ?? "debug",
+      level: process.env.LOG_LEVEL ?? 'debug',
       format: winston.format.combine(
         winston.format.colorize({
           all: true,

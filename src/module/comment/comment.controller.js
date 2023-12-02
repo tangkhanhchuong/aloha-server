@@ -1,4 +1,4 @@
-const commentService = require("./comment.service");
+const commentService = require('./comment.service');
 
 const commentController = {
   create: async (req, res, next) => {
@@ -27,7 +27,7 @@ const commentController = {
         id: req.params.id,
         userId: req.user._id,
       });
-      return res.json({ msg: "Update Success!" });
+      return res.json({ msg: 'Update Success!' });
     } catch (err) {
       next(err);
     }
@@ -39,7 +39,7 @@ const commentController = {
         id: req.params.id,
         userId: req.user._id,
       });
-      return res.json({ msg: "Liked Comment!" });
+      return res.json({ msg: 'Liked Comment!' });
     } catch (err) {
       next(err);
     }
@@ -51,7 +51,7 @@ const commentController = {
         id: req.params.id,
         userId: req.user._id,
       });
-      return res.json({ msg: "UnLiked Comment!" });
+      return res.json({ msg: 'UnLiked Comment!' });
     } catch (err) {
       next(err);
     }
@@ -63,7 +63,7 @@ const commentController = {
         id: req.params.id,
         userId: req.user._id,
       });
-      return res.json({ msg: "Deleted Comment!" });
+      return res.json({ msg: 'Deleted Comment!' });
     } catch (err) {
       next(err);
     }

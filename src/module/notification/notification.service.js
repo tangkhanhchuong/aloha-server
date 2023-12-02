@@ -1,6 +1,6 @@
-const Notifications = require("./notification.model");
-const { getPresignedUrl } = require("../../core/aws/s3");
-const { getIo, getSocketUserById, getRoomName } = require("../../core/socket/socket");
+const Notifications = require('./notification.model');
+const { getPresignedUrl } = require('../../core/aws/s3');
+const { getIo, getSocketUserById, getRoomName } = require('../../core/socket/socket');
 
 const notificationService = {
   create: async ({ recipients, url, text, content, user }) => {
@@ -27,7 +27,7 @@ const notificationService = {
       const user = await getSocketUserById(recipient);
       if (!user) continue;
       const io = getIo();
-      io.to(getRoomName(user.id)).emit("send_notifcation", {
+      io.to(getRoomName(user.id)).emit('send_notifcation', {
         _id: createdNotification._id,
         recipients,
         url,
@@ -49,8 +49,8 @@ const notificationService = {
 
   list: async ({ userId }) => {
     const notifications = await Notifications.find({ recipients: userId })
-      .sort("-createdAt")
-      .populate("user", "avatar username");
+      .sort('-createdAt')
+      .populate('user', 'avatar username');
 
     const formattedNotifications = await Promise.all(
       notifications.map(async (notification) => {

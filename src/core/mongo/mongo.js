@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const { uri: mongoUri } = require("./mongo.config.js");
-const { logger } = require("../logger/logger.js");
+const { uri: mongoUri } = require('./mongo.config.js');
+const { logger } = require('../logger/logger.js');
 
 const mongoOptions = {
   useCreateIndex: true,

@@ -1,7 +1,7 @@
-const { getPresignedUrl } = require("../../core/aws/s3");
-const Conversations = require("./conversation.model");
-const Messages = require("../message/message.model");
-const { APIFeatures } = require("../../shared/APIFeatures");
+const { getPresignedUrl } = require('../../core/aws/s3');
+const Conversations = require('./conversation.model');
+const Messages = require('../message/message.model');
+const { APIFeatures } = require('../../shared/APIFeatures');
 
 const conversationService = {
   list: async ({ userId, query }) => {
@@ -13,8 +13,8 @@ const conversationService = {
     ).paginate();
 
     const conversations = await features.query
-      .sort("-updatedAt")
-      .populate("recipients", "avatar username fullname");
+      .sort('-updatedAt')
+      .populate('recipients', 'avatar username fullname');
 
     const formattedConversations = await Promise.all(
       conversations.map(async (conversation) => {

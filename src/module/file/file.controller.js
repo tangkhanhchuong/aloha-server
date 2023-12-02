@@ -1,4 +1,4 @@
-const fileService = require("./file.service");
+const fileService = require('./file.service');
 
 const fileController = {
   upload: async (req, res, next) => {
@@ -8,7 +8,7 @@ const fileController = {
       });
 
       return res.json({
-        msg: "Files uploaded !",
+        msg: 'Files uploaded !',
         files,
       });
     } catch (err) {
