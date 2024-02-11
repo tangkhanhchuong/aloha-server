@@ -63,7 +63,7 @@ const authService = {
     );
 
     if (!user) {
-      const err = new Error(AUTH.EMAIL_EXISTED);
+      const err = new Error(AUTH.EMAIL_NOT_EXISTED);
       err.status = StatusCodes.NOT_FOUND;
       throw err;
     }
