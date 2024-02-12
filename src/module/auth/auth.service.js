@@ -59,7 +59,6 @@ const authService = {
   login: async ({ email, password }) => {
     const user = await Users.findOne({ email }).populate(
       'followers following',
-      'avatar username fullname followers following'
     );
 
     if (!user) {
@@ -112,7 +111,6 @@ const authService = {
             .select('-password')
             .populate(
               'followers following',
-              'avatar username fullname followers following'
             );
 
           if (!user) {
