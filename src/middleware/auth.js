@@ -13,17 +13,18 @@ const auth = async (req, res, next) => {
         .json({ msg: AUTH.UNAUTHENTICATED });
 
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    if (!decoded)
+    if (!decoded) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
         .json({ msg: AUTH.SESSION_EXPIRED });
-
+    }
+    
     const user = await Users.findOne({ _id: decoded.id });
     req.user = user;
     next();
   } catch (err) {
     return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .status(StatusCodes.UNAUTHORIZED)
       .json({ msg: err.message });
   }
 };

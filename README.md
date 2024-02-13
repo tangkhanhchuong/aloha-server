@@ -1,5 +1,5 @@
-<h1>Aloha</h1>
-<p>Aloha is MERN stack application with some social media's main features</p>
+<h1>Konoha</h1>
+<p>Konoha is MERN stack application with some social media's main features</p>
 
 ### Techstack
 - Nodejs, Mongo, BullMq
