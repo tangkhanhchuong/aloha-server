@@ -22,15 +22,15 @@ const postController = {
 
   list: async (req, res, next) => {
     try {
-      const { posts } = await postService.list({
+      const { posts, count } = await postService.list({
         user: req.user,
         query: req.query,
       });
 
       return res.json({
-        msg: 'Success!',
         posts,
-        count: posts.length,
+        count,
+        msg: 'Success!',
       });
     } catch (err) {
       return next(err);
