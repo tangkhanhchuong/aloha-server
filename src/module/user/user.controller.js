@@ -87,13 +87,13 @@ const userController = {
 
   getUserPosts: async (req, res, next) => {
     try {
-      const { posts } = await userService.getUserPosts({
+      const { posts, count } = await userService.getUserPosts({
         user: req.user,
         query: req.query,
       });
       return res.json({
         posts,
-        count: posts.length,
+        count,
       });
     } catch (err) {
       next(err);
@@ -118,13 +118,13 @@ const userController = {
 
   getSavedPosts: async (req, res, next) => {
     try {
-      const { savedPosts } = await userService.getSavedPosts({
+      const { savedPosts, count } = await userService.getSavedPosts({
         user: req.user,
         query: req.query,
       });
       res.json({
         savedPosts,
-        count: savedPosts.length,
+        count,
       });
     } catch (err) {
       next(err);

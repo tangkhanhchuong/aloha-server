@@ -58,26 +58,52 @@ const userService = {
   },
 
   getSavedPosts: async ({ user, query }) => {
+    const condition = {
+      _id: { $in: user.saved },
+    }
     const features = new APIFeatures(
-      Posts.find({
-        _id: { $in: user.saved },
-      }),
+      Posts.find(condition),
       query
     ).paginate();
 
-    const savedPosts = await features.query.sort('-createdAt');
+    const posts = await features.query
+      .sort('-createdAt')
+      .populate('likes user', '-password')
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'user likes',
+          select: '-password',
+        },
+      });;
     const formattedPosts = await Promise.all(
-      savedPosts.map(async (post) => {
+      posts.map(async (post) => {
         post.images = await Promise.all(
           post.images.map(async (image) => ({
             key: image,
             url: await getPresignedUrl(image),
           }))
+          );
+        const avatar = await getPresignedUrl(post.user.avatar);
+        post.comments = await Promise.all(
+          post.comments.map(async (comment) => {
+            const commentAvatar = await getPresignedUrl(comment.user.avatar);
+            comment.user = {
+              ...comment.user._doc,
+              avatar: commentAvatar,
+            };
+            return comment;
+          })
         );
+        post.user = {
+          ...post.user._doc,
+          avatar,
+        };
         return post;
       })
     );
-    return { savedPosts: formattedPosts };
+    const count = await Posts.countDocuments(condition)
+    return { count, savedPosts: formattedPosts };
   },
 
   getDiscoverPosts: async ({ user, query }) => {
@@ -217,8 +243,16 @@ const userService = {
 
   getUserPosts: async ({ user, query }) => {
     const features = new APIFeatures(Posts.find({ user }), query).paginate();
-
-    const posts = await features.query.sort('-createdAt');
+    const posts = await features.query
+      .sort('-createdAt')
+      .populate('likes user', '-password')
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'user likes',
+          select: '-password',
+        },
+      });
     const formattedPosts = await Promise.all(
       posts.map(async (post) => {
         post.images = await Promise.all(
@@ -226,11 +260,27 @@ const userService = {
             key: image,
             url: await getPresignedUrl(image),
           }))
+          );
+        const avatar = await getPresignedUrl(post.user.avatar);
+        post.comments = await Promise.all(
+          post.comments.map(async (comment) => {
+            const commentAvatar = await getPresignedUrl(comment.user.avatar);
+            comment.user = {
+              ...comment.user._doc,
+              avatar: commentAvatar,
+            };
+            return comment;
+          })
         );
+        post.user = {
+          ...post.user._doc,
+          avatar,
+        };
         return post;
       })
     );
-    return { posts: formattedPosts };
+    const count = await Posts.countDocuments({ user })
+    return { count, posts: formattedPosts };
   },
 };
 
