@@ -42,16 +42,15 @@ const postService = {
   },
 
   list: async ({ user, query }) => {
+    const condition = { user: [...user.following, user._id] }
     const features = new APIFeatures(
-      Posts.find({
-        user: [...user.following, user._id],
-      }),
+      Posts.find(condition),
       query
     ).paginate();
 
     const posts = await features.query
       .sort('-createdAt')
-      .populate('user likes', 'avatar username fullname followers')
+      .populate('user likes')
       .populate({
         path: 'comments',
         populate: {
@@ -85,7 +84,8 @@ const postService = {
         return post;
       })
     );
-    return { posts: formattedPosts };
+    const count = await Posts.countDocuments(condition)
+    return { count, posts: formattedPosts };
   },
 
   update: async ({ content, images, postId }) => {
@@ -96,7 +96,7 @@ const postService = {
         images,
       }
     )
-      .populate('user likes', 'avatar username fullname')
+      .populate('user likes')
       .populate({
         path: 'comments',
         populate: {
@@ -122,7 +122,7 @@ const postService = {
 
   get: async ({ id }) => {
     const post = await Posts.findById(id)
-      .populate('user likes', 'avatar username fullname followers')
+      .populate('user likes')
       .populate({
         path: 'comments',
         populate: {
