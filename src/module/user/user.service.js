@@ -1,4 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
+const _ = require('lodash')
 
 const Users = require('./user.model');
 const Posts = require('../post/post.model');
@@ -145,10 +146,20 @@ const userService = {
       err.status = StatusCodes.BAD_REQUEST;
       throw err;
     }
+    console.log({
+      avatar,
+      fullname,
+      mobile,
+      address,
+      story,
+      website,
+      gender,
+      userId,
+    })
 
     await Users.findOneAndUpdate(
       { _id: userId },
-      {
+      _.omitBy({
         avatar,
         fullname,
         mobile,
@@ -156,7 +167,7 @@ const userService = {
         story,
         website,
         gender,
-      }
+      }, _.isNil)
     );
   },
 
