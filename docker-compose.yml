@@ -1,0 +1,128 @@
+version: "3"
+services:
+  mongo:
+    container_name: aloha-platform-mongo
+    image: mongo:3.6.19-xenial
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=aloha
+    ports:
+      - 27017:27017
+    networks:
+      - aloha-platform
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+
+  mongo-express:
+    container_name: aloha-platform-mongo-express
+    image: mongo-express:0.54.0
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+    depends_on:
+      - mongo
+    ports:
+      - 8081:8081
+    networks:
+      - aloha-platform
+
+  redis:
+    container_name: aloha-platform-redis
+    image: redis:alpine
+    expose:
+      - 6379
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+    networks:
+      - aloha-platform
+    volumes:
+      - redis-data:/data
+
+  redis_commander:
+    container_name: aloha-platform-redis_commander
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8082:8081"
+    depends_on:
+      - redis
+    networks:
+      - aloha-platform
+
+  rabbitmq:
+    container_name: aloha-platform-rabbitmq
+    image: rabbitmq:3-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabitmq
+      - RABBITMQ_DEFAULT_PASS=password
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/
+      - rabbitmq-logs:/var/log/rabbitmq
+    networks:
+      - aloha-platform
+
+  elasticsearch:
+    container_name: aloha-platform-elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    networks:
+      - aloha-platform
+    ports:
+      - 9200:9200
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+
+  kibana:
+    container_name: aloha-platform-kibana
+    image: docker.elastic.co/kibana/kibana:7.14.0
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es-container:9200
+    networks:
+      - aloha-platform
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+
+  neo4j:
+    container_name: neo4j
+    image: neo4j:latest
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_AUTH=neo4j/aloha12345
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+      - neo4j-import:/var/lib/neo4j/import
+      - neo4j-plugins:/plugins
+
+networks:
+  aloha-platform:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  mongo-config:
+  redis-data:
+  rabbitmq-data:
+  rabbitmq-logs:
+  elasticsearch-data:
+  neo4j-data:
+  neo4j-logs:
+  neo4j-import:
+  neo4j-plugins:
