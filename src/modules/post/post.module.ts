@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 
 import { RmqModule } from 'core/rmq/rmq.module';
 
-import { PostCommentModule } from './post-comment/post-comment.module';
 import { PostManagementModule } from './post-management/post-management.module';
 import { PostReactionModule } from './post-reaction/post-reaction.module';
 
@@ -10,7 +9,6 @@ import { PostReactionModule } from './post-reaction/post-reaction.module';
 	imports: [
 		RmqModule,
 		PostManagementModule,
-		PostCommentModule,
 		PostReactionModule
 	]
 })

@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsString } from 'class-validator';
 
-export const Relation_GetFollowersURL = 'relation/get-followers';
+export const UserRelation_GetFollowersURL = 'user-relation/get-followers';
 
-export class Relation_GetFollowersRequestDTO {
+export class UserRelation_GetFollowersRequestDTO {
 	@ApiProperty({
 		type: String,
 		default: '',
@@ -13,7 +13,7 @@ export class Relation_GetFollowersRequestDTO {
 	userId: string;
 }
 
-export class Relation_GetFollowersResponseDTO {
+export class UserRelation_GetFollowersResponseDTO {
     @IsArray()
 	followers: { userId: string }[];
 }

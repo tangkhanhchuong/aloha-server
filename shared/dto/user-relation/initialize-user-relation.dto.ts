@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export const Relation_CreateUserURL = 'relation/create-user';
+export const UserRelation_IntializeUserRelationURL = 'user-relation/initialize-user-relation';
 
-export class Relation_CreateUserRequestDTO {
+export class UserRelation_IntializeUserRelationRequestDTO {
 	@ApiProperty({
 		type: String,
 		default: '',
@@ -29,7 +29,7 @@ export class Relation_CreateUserRequestDTO {
 	avatar: string;
 }
 
-export class Relation_CreateUserResponseDTO {
+export class UserRelation_IntializeUserRelationResponseDTO {
 	@IsString()
 	elementId: string;
 }

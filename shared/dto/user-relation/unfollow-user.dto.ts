@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsString } from 'class-validator';
 
-export const Relation_UnfollowURL = 'relation/unfollow';
+export const UserRelation_UnfollowUserURL = 'user-relation/unfollow';
 
-export class Relation_UnfollowRequestDTO {
+export class UserRelation_UnfollowUserRequestDTO {
 	@ApiProperty({
 		type: String,
 		default: '',
@@ -21,7 +21,7 @@ export class Relation_UnfollowRequestDTO {
 	followeeId: string;
 }
 
-export class Relation_UnfollowResponseDTO {
+export class UserRelation_UnfollowUserResponseDTO {
 	@IsBoolean()
 	status: boolean;
 }

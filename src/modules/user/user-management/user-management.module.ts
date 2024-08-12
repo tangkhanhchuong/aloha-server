@@ -25,6 +25,9 @@ import { SearchUsersService } from './search-users/search-users.service';
 		SearchUsersService,
 		Logger
 	],
-	exports: [],
+	exports: [
+		CreateUserService,
+		SearchUsersService
+	],
 })
 export class UserManagementModule {}

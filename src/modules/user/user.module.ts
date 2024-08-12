@@ -13,6 +13,10 @@ import { UserSettingsModule } from './user-settings/user-settings.module';
 		RmqModule,
 		UserManagementModule,
 		UserSettingsModule
+	],
+	exports: [
+		UserManagementModule,
+		UserSettingsModule,
 	]
 })
 export class UserModule {}

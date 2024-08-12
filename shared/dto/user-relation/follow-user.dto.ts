@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-export const Relation_FollowURL = 'relation/follow';
+export const UserRelation_FollowUserURL = 'user-relation/follow-user';
 
-export class Relation_FollowRequestDTO {
+export class UserRelation_FollowUserRequestDTO {
 	@ApiProperty({
 		type: String,
 		default: '',
@@ -21,7 +21,7 @@ export class Relation_FollowRequestDTO {
 	followeeId: string;
 }
 
-export class Relation_FollowResponseDTO {
+export class UserRelation_FollowUserResponseDTO {
 	@IsString()
 	elementId: string;
 
