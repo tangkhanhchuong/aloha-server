@@ -8,13 +8,14 @@ import {
     User_CreateUserResponseDTO
 } from 'shared/dto/user/create-user.dto';
 import { RequestUserRelationService } from 'shared/request/request-user-relation/request-user-relation.service';
+import { InitializeUserRelationService } from 'src/modules/user-relation/initialize-user-relation/initialize-user-relation.service';
 
 @Injectable()
 export class CreateUserService {
 	constructor(
 		@InjectModel(User.name)
 		private readonly userModel: Model<User>,
-		private readonly requestUserRelationService: RequestUserRelationService,
+		private readonly initializeUserRelationService: InitializeUserRelationService,
 	) {}
 
 	async execute(dto: User_CreateUserRequestDTO): Promise<User_CreateUserResponseDTO> {
@@ -28,8 +29,9 @@ export class CreateUserService {
 			username,
 		});
 		const savedUser: User = await user.save();
-
-		
+		await this.initializeUserRelationService.execute({
+				userId: savedUser.id
+			});
 
 		return {
 			id: savedUser.id

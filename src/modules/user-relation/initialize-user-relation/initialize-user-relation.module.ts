@@ -18,6 +18,8 @@ import { InitializeUserRelationService } from './initialize-user-relation.servic
         InitializeUserRelationService,
 		Logger
 	],
-	exports: [],
+	exports: [
+		InitializeUserRelationService
+	]
 })
 export class InitializeUserRelationModule {}

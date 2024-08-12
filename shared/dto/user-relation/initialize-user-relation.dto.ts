@@ -11,25 +11,9 @@ export class UserRelation_IntializeUserRelationRequestDTO {
 	})
 	@IsString()
 	userId: string;
-
-	@ApiProperty({
-		type: String,
-		default: '',
-		required: true,
-	})
-	@IsString()
-	username: string;
-
-	@ApiProperty({
-		type: String,
-		default: '',
-		required: true,
-	})
-	@IsString()
-	avatar: string;
 }
 
 export class UserRelation_IntializeUserRelationResponseDTO {
 	@IsString()
-	elementId: string;
+	userId: string;
 }

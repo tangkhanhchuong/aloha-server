@@ -17,13 +17,10 @@ export class InitializeUserRelationService {
 		: Promise<UserRelation_IntializeUserRelationResponseDTO> {
 		const newNode: Record<string, string>
 			= await this.neo4jService.createNode(GRAPH_LABELS.USER, {
-			userId: body.userId,
-			name: body.username,
-			username: body.username,
-			avatar: body.avatar
-		});
+				userId: body.userId,
+			});
 		return {
-			elementId: newNode.elementId
+			userId: newNode.userId
 		};
 	}
 }

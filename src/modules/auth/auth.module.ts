@@ -3,8 +3,8 @@ import { Logger, Module } from '@nestjs/common';
 import { AWSModule } from 'core/aws/aws.module';
 import { RmqModule } from 'core/rmq/rmq.module';
 import { Services } from 'shared/constants/microservice';
-import { RequestUserModule } from 'shared/request/request-user/request-user.module';
 
+import { UserModule } from '../user/user.module';
 import { ChangePasswordController } from './change-password/change-password.controller';
 import { ChangePasswordService } from './change-password/change-password.service';
 import { ForgotPasswordController } from './forgot-password/forgot-password.controller';
@@ -20,7 +20,7 @@ import { RegisterService } from './register/register.service';
 		RmqModule.register({
             name: Services.USER_SERVICE,
         }),
-        RequestUserModule,
+        UserModule
     ],
     controllers: [
         ChangePasswordController,
