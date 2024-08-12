@@ -1,8 +1,9 @@
 import { Body, Controller, HttpCode, HttpStatus, Logger, Put, UseGuards } from '@nestjs/common';
 
-import { GatewayAuthUser } from 'shared/decorators/gateway-auth-user.decorator';
+import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
+import { AuthUser } from 'shared/decorators/auth-user.decorator';
 import {
-	Auth_ChangePasswordURL,
+	Auth_ChangePasswordDTO,
 	Auth_ChangePasswordRequestDTO
 } from 'shared/dto/auth/change-password.dto';
 
@@ -15,9 +16,10 @@ export class ChangePasswordController {
 		private readonly changePasswordService: ChangePasswordService
 	) {}
 
-	@Put(Auth_ChangePasswordURL)
+	@Put(Auth_ChangePasswordDTO.url)
 	@HttpCode(HttpStatus.OK)
-	async execute(@Body() dto: Auth_ChangePasswordRequestDTO, @GatewayAuthUser() user) {
+	@UseGuards(CognitoGuard)
+	async changePassword(@Body() dto: Auth_ChangePasswordRequestDTO, @AuthUser() user) {
 		try {
 			dto.email = user.email;
 			await this.changePasswordService.execute(user.email, dto);

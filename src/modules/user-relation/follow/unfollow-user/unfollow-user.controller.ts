@@ -1,10 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post } from '@nestjs/common';
+import { Controller, HttpCode, HttpStatus, Logger, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
+import { AuthUser, AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 import {
-	UserRelation_UnfollowUserRequestDTO,
-	UserRelation_UnfollowUserResponseDTO,
-	UserRelation_UnfollowUserURL
+	UserRelation_UnfollowUserDTO,
+	UserRelation_UnfollowUserResponseDTO
 } from 'shared/dto/user-relation/unfollow-user.dto';
 
 import { UnfollowUserService } from './unfollow-user.service';
@@ -17,11 +18,15 @@ export class UnfollowUserController {
 		private readonly unfollowUserService: UnfollowUserService,
 	) {}
 
-	@Post(UserRelation_UnfollowUserURL)
+	@Post(UserRelation_UnfollowUserDTO.url)
 	@HttpCode(HttpStatus.OK)
-	async unfollowUser(@Body() body: UserRelation_UnfollowUserRequestDTO): Promise<UserRelation_UnfollowUserResponseDTO> {
+	@UseGuards(CognitoGuard)
+	async unfollowUser(
+		@Param('userId') userId: string,
+		@AuthUser() authUser: AuthUserPayload
+	): Promise<UserRelation_UnfollowUserResponseDTO> {
 		try {
-			return await this.unfollowUserService.execute(body);
+			return await this.unfollowUserService.execute(authUser.userId, userId);
 		} catch (e) {
 			this.logger.error(e, e.stack, UnfollowUserController.name);
 			throw e;

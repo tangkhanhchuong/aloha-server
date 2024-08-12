@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail } from "class-validator";
 
-export const Auth_ResendRegistrationOTPURL = 'auth/registration/resend-otp';
+import { DTO, METHOD } from "../base.dto";
 
 export class Auth_ResendRegistrationOTPRequestDTO {
 	@ApiProperty({
@@ -11,4 +11,18 @@ export class Auth_ResendRegistrationOTPRequestDTO {
 	})
 	@IsEmail()
 	email: string;
+}
+
+export class Auth_ResendRegistrationOtpDTO extends DTO {
+	public static url = '/auth/resend-registration-otp';
+	public method = METHOD.POST;
+
+	public queryDTO: undefined;
+	public responseDTO: undefined;
+
+	constructor(
+		public bodyDTO: Auth_ResendRegistrationOTPRequestDTO,
+	) {
+		super();
+	}
 }

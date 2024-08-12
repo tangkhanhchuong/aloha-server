@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsString } from 'class-validator';
 
-export const Post_PostCreatePostURL = 'post/create-post';
+import { DTO, METHOD } from '../base.dto';
 
-export class Post_PostCreatePostRequestDTO {
+export class Post_CreatePostRequestDTO {
 	@ApiProperty({
 		type: String,
 		default: 'New Post',
@@ -25,11 +25,24 @@ export class Post_PostCreatePostRequestDTO {
 		isArray: true
 	})
 	@IsArray()
-	@IsString()
 	media: string[];
 }
 
-export class Post_PostCreatePostResponseDTO {
+export class Post_CreatePostResponseDTO {
 	@IsString()
 	id: string;
+}
+
+export class Post_CreatePostDTO extends DTO {
+	public static url = '/posts';
+	public method = METHOD.POST;
+
+	public queryDTO: undefined;
+
+	constructor(
+		public bodyDTO: Post_CreatePostRequestDTO,
+		public responseDTO: Post_CreatePostResponseDTO
+	) {
+		super();
+	}
 }

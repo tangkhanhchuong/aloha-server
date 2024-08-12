@@ -7,7 +7,6 @@ import {
 	SOCIAL_RELATIONS
 } from 'shared/constants/neo4j';
 import {
-	UserRelation_UnfollowUserRequestDTO,
 	UserRelation_UnfollowUserResponseDTO
 } from 'shared/dto/user-relation/unfollow-user.dto';
 import { SearchUsersService } from 'src/modules/user/user-management/search-users/search-users.service';
@@ -19,17 +18,17 @@ export class UnfollowUserService {
 		private readonly searchUsersService: SearchUsersService
 	) {}
 
-	async execute(body: UserRelation_UnfollowUserRequestDTO): Promise<UserRelation_UnfollowUserResponseDTO> {
+	async execute(userId: string, followerId: string): Promise<UserRelation_UnfollowUserResponseDTO> {
 		if (
-			body.userId === body.followeeId
-			|| !isValidObjectId(body.userId)
-			|| !isValidObjectId(body.followeeId)
+			userId === followerId
+			|| !isValidObjectId(userId)
+			|| !isValidObjectId(followerId)
 		) {
 			throw new BadRequestException('Invalid userId or followeeId');
 		}
 
 		const users = await this.searchUsersService.execute({
-			userIds: [body.userId]
+			userIds: [userId]
 		})
 		if (users.total === 0) {
 			throw new NotFoundException("User not found");
@@ -37,9 +36,9 @@ export class UnfollowUserService {
 
 		const followRelation = await this.neo4jService.getDestinationNodes(
 			SOCIAL_RELATIONS.FOLLOW,
-			body.userId,
+			userId,
 			GRAPH_LABELS.USER,
-			body.followeeId,
+			followerId,
 			GRAPH_LABELS.USER,
 		);
 		if (!followRelation[0]) {
@@ -47,9 +46,9 @@ export class UnfollowUserService {
 		}
 		const result = await this.neo4jService.removeRelation(
 			SOCIAL_RELATIONS.FOLLOW,
-			body.userId,
+			userId,
 			GRAPH_LABELS.USER,
-			body.followeeId,
+			followerId,
 			GRAPH_LABELS.USER,
 		);
 		return {

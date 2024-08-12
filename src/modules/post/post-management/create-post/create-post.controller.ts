@@ -1,10 +1,11 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import {
-    Post_PostCreatePostRequestDTO,
-    Post_PostCreatePostResponseDTO,
-    Post_PostCreatePostURL
+	Post_CreatePostDTO,
+	Post_CreatePostRequestDTO,
+	Post_CreatePostResponseDTO
 } from 'shared/dto/post/create-post.dto';
 
 import { CreatePostService } from './create-post.service';
@@ -17,8 +18,9 @@ export class CreatePostController {
 		private readonly logger: Logger,
 	) {}
 
-	@Post(Post_PostCreatePostURL)
-	async createPost(@Body() body: Post_PostCreatePostRequestDTO): Promise<Post_PostCreatePostResponseDTO> {
+	@Post(Post_CreatePostDTO.url)
+	@UseGuards(CognitoGuard)
+	async createPost(@Body() body: Post_CreatePostRequestDTO): Promise<Post_CreatePostResponseDTO> {
 		try {
 			return await this.createPostService.execute(body);
 		} catch (e) {

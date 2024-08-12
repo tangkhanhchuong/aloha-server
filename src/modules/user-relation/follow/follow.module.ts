@@ -2,7 +2,6 @@ import { Logger, Module } from '@nestjs/common';
 
 import { Neo4jModule } from 'core/neo4j/neo4j.module';
 import { RmqModule } from 'core/rmq/rmq.module';
-import { RequestUserModule } from 'shared/request/request-user/request-user.module';
 import { UserModule } from 'src/modules/user/user.module';
 
 import { FollowUserController } from './follow-user/follow-user.controller';

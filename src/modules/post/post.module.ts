@@ -9,7 +9,7 @@ import { PostReactionModule } from './post-reaction/post-reaction.module';
 	imports: [
 		RmqModule,
 		PostManagementModule,
-		PostReactionModule
+		PostReactionModule,
 	]
 })
 export class PostModule {}

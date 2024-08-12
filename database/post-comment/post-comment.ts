@@ -2,28 +2,27 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
 @Schema({ versionKey: false })
-export class User extends Document<number> {
+export class PostComment extends Document<number> {
 	@Prop({
-		type: String,
-		required: true,
-		trim: true,
-		maxlength: 25,
+		type: MongooseSchema.Types.ObjectId,
+		ref: 'Post',
+		required: true
 	})
-	username: string;
+	postId: MongooseSchema.Types.ObjectId;
 
 	@Prop({
-		type: String,
-		required: true,
-		trim: true,
-		unique: true,
+		type: MongooseSchema.Types.ObjectId,
+		ref: 'user',
+		required: true
 	})
-	email: string;
-
+	userId: MongooseSchema.Types.ObjectId;
+    
 	@Prop({
-		type: String,
+		type: Date,
+		default: Date.now,
 	})
-	avatar: string;
-
+    content: Date;
+    
 	@Prop({
 		type: Date,
 		default: Date.now,
@@ -34,7 +33,7 @@ export class User extends Document<number> {
 		type: MongooseSchema.Types.ObjectId,
 		ref: 'User',
 	})
-	createdBy: MongooseSchema.Types.ObjectId;
+	createdBy: string;
 
 	@Prop({
 		type: Date,
@@ -61,4 +60,4 @@ export class User extends Document<number> {
 	deletedBy: MongooseSchema.Types.ObjectId;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const PostCommentSchema = SchemaFactory.createForClass(PostComment);

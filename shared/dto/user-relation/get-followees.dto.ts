@@ -1,19 +1,22 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsString } from 'class-validator';
+import { IsArray } from 'class-validator';
 
-export const UserRelation_GetFolloweesURL = 'user-relation/get-followees';
-
-export class UserRelation_GetFolloweesRequestDTO {
-	@ApiProperty({
-		type: String,
-		default: '',
-		required: true,
-	})
-	@IsString()
-	userId: string;
-}
+import { DTO, METHOD } from '../base.dto';
 
 export class UserRelation_GetFolloweesResponseDTO {
     @IsArray()
 	followees: { userId: string }[];
+}
+
+export class UserRelation_GetFolloweesDTO extends DTO {
+	public static url = '/users/:userId/followees';
+	public method = METHOD.POST;
+
+	public queryDTO: undefined;
+	public bodyDTO: undefined;
+
+	constructor(
+		public responseDTO: UserRelation_GetFolloweesResponseDTO
+	) {
+		super();
+	}
 }

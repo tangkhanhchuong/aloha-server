@@ -1,10 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post } from '@nestjs/common';
+import { Controller, HttpCode, HttpStatus, Logger, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
+import { AuthUser, AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 import {
-	UserRelation_FollowUserRequestDTO,
-	UserRelation_FollowUserResponseDTO,
-	UserRelation_FollowUserURL
+	UserRelation_FollowUserDTO,
+	UserRelation_FollowUserResponseDTO
 } from 'shared/dto/user-relation/follow-user.dto';
 
 import { FollowUserService } from './follow-user.service';
@@ -17,11 +18,15 @@ export class FollowUserController {
 		private readonly followService: FollowUserService,
 	) {}
 
-	@Post(UserRelation_FollowUserURL)
+	@Post(UserRelation_FollowUserDTO.url)
 	@HttpCode(HttpStatus.OK)
-	async followUser(@Body() body: UserRelation_FollowUserRequestDTO): Promise<UserRelation_FollowUserResponseDTO> {
+	@UseGuards(CognitoGuard)
+	async followUser(
+		@Param('userId') userId: string,
+		@AuthUser() authUser: AuthUserPayload
+	): Promise<UserRelation_FollowUserResponseDTO> {
 		try {
-			return await this.followService.execute(body);
+			return await this.followService.execute(authUser.userId, userId);
 		} catch (e) {
 			this.logger.error(e, e.stack, FollowUserController.name);
 			throw e;

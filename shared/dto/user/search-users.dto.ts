@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsOptional, IsString, ValidateIf } from 'class-validator';
+import { IsArray, ValidateIf } from 'class-validator';
 
 import { ListingRequestDTO } from 'shared/dto/listing.request.dto';
 
+import { DTO, METHOD } from '../base.dto';
 import { PaginatedResponseDTO } from '../paginated.response.dto';
-
-export const User_SearchUsersURL = 'user/search-users';
 
 export class User_SearchUsersRequestDTO extends ListingRequestDTO {
 	@ApiProperty({ default: '' })
@@ -28,3 +27,17 @@ export class User_UserResponseDTO {
 }
 
 export class User_SearchUsersResponseDTO extends PaginatedResponseDTO<User_UserResponseDTO> {};
+
+export class User_SearchUsersDTO extends DTO {
+	public static url = '/users';
+	public method = METHOD.POST;
+
+	public queryDTO: undefined;
+
+	constructor(
+		public bodyDTO: User_SearchUsersRequestDTO,
+		public responseDTO: User_SearchUsersResponseDTO
+	) {
+		super();
+	}
+}

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString } from 'class-validator';
 
-export const Post_UpdatePostURL = 'post/update-post/:id';
+import { DTO, METHOD } from '../base.dto';
 
 export class Post_UpdatePostRequestDTO {
 	@ApiProperty({
@@ -34,4 +34,19 @@ export class Post_UpdatePostRequestDTO {
 export class Post_UpdatePostResponseDTO {
 	@IsString()
 	id: string;
+}
+
+
+export class Post_UpdatePostDTO extends DTO {
+	public static url = '/posts/:id';
+	public method = METHOD.PATCH;
+
+	public queryDTO: undefined;
+
+	constructor(
+		public bodyDTO: Post_UpdatePostRequestDTO,
+		public responseDTO: Post_UpdatePostResponseDTO
+	) {
+		super();
+	}
 }

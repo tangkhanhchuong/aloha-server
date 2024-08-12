@@ -4,10 +4,9 @@ import { Model } from 'mongoose';
 
 import { User } from 'database/user/user';
 import {
-    User_CreateUserRequestDTO,
-    User_CreateUserResponseDTO
+	User_CreateUserRequestDTO,
+	User_CreateUserResponseDTO
 } from 'shared/dto/user/create-user.dto';
-import { RequestUserRelationService } from 'shared/request/request-user-relation/request-user-relation.service';
 import { InitializeUserRelationService } from 'src/modules/user-relation/initialize-user-relation/initialize-user-relation.service';
 
 @Injectable()

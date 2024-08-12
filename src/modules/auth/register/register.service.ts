@@ -4,7 +4,6 @@ import { CognitoService } from 'core/aws/cognito/cognito.service';
 import { Auth_ConfirmRegistrationRequestDTO } from 'shared/dto/auth/confirm-registration.dto';
 import { Auth_RegisterRequestDTO, Auth_RegisterResponseDTO } from 'shared/dto/auth/register.dto';
 import { Auth_ResendRegistrationOTPRequestDTO } from 'shared/dto/auth/resend-registration-otp.request.dto';
-import { RequestUserService } from 'shared/request/request-user/request-user.service';
 import { CreateUserService } from 'src/modules/user/user-management/create-user/create-user.service';
 
 @Injectable()

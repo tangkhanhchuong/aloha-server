@@ -1,6 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
+export enum PostStatus {
+	DRAFT = 'DRAFT',
+    PUBLISHED = 'PUBLISHED',
+    ARCHIVED = 'ARCHIVED',
+}
+
 @Schema({ versionKey: false })
 export class Post extends Document<number> {
 	@Prop({
@@ -21,6 +27,24 @@ export class Post extends Document<number> {
 	media: string[];
 
 	@Prop({
+		enum: PostStatus,
+		default: PostStatus.DRAFT,
+	})
+	status: PostStatus;
+
+	@Prop({
+		type: Number,
+		default: 0
+	})
+	numberOfComments: number;
+
+	@Prop({
+		type: Number,
+		default: 0
+	})
+	numberOfReactions: number;
+
+	@Prop({
 		type: Date,
 		default: Date.now,
 	})
@@ -30,7 +54,7 @@ export class Post extends Document<number> {
 		type: MongooseSchema.Types.ObjectId,
 		ref: 'User',
 	})
-	createdBy: string;
+	createdBy: MongooseSchema.Types.ObjectId;
 
 	@Prop({
 		type: Date,
@@ -42,7 +66,7 @@ export class Post extends Document<number> {
 		type: MongooseSchema.Types.ObjectId,
 		ref: 'User',
 	})
-	updatedBy: string;
+	updatedBy: MongooseSchema.Types.ObjectId;
 
 	@Prop({
 		type: Date,
@@ -54,7 +78,7 @@ export class Post extends Document<number> {
 		type: MongooseSchema.Types.ObjectId,
 		ref: 'User',
 	})
-	deletedBy: string;
+	deletedBy: MongooseSchema.Types.ObjectId;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

@@ -7,10 +7,8 @@ import {
 	SOCIAL_RELATIONS
 } from 'shared/constants/neo4j';
 import {
-	UserRelation_FollowUserRequestDTO,
 	UserRelation_FollowUserResponseDTO
 } from 'shared/dto/user-relation/follow-user.dto';
-import { RequestUserService } from 'shared/request/request-user/request-user.service';
 import { SearchUsersService } from 'src/modules/user/user-management/search-users/search-users.service';
 
 @Injectable()
@@ -20,17 +18,17 @@ export class FollowUserService {
 		private readonly searchUsersService: SearchUsersService
 	) {}
 
-	async execute(body: UserRelation_FollowUserRequestDTO): Promise<UserRelation_FollowUserResponseDTO> {
+	async execute(userId: string, followerId: string): Promise<UserRelation_FollowUserResponseDTO> {
 		if (
-			body.userId === body.followeeId
-			|| !isValidObjectId(body.userId)
-			|| !isValidObjectId(body.followeeId)
+			userId === followerId
+			|| !isValidObjectId(userId)
+			|| !isValidObjectId(followerId)
 		) {
 			throw new BadRequestException('Invalid userId or followerId');
 		}
 
 		const users = await this.searchUsersService.execute({
-			userIds: [body.userId]
+			userIds: [userId]
 		})
 		if (users.total === 0) {
 			throw new NotFoundException("User not found");
@@ -38,9 +36,9 @@ export class FollowUserService {
 
 		const followRelation = await this.neo4jService.getDestinationNodes(
 			SOCIAL_RELATIONS.FOLLOW,
-			body.userId,
+			userId,
 			GRAPH_LABELS.USER,
-			body.followeeId,
+			followerId,
 			GRAPH_LABELS.USER,
 		);
 		if (followRelation[0]) {
@@ -48,14 +46,13 @@ export class FollowUserService {
 		}
 		const relation = await this.neo4jService.createRelation(
 			SOCIAL_RELATIONS.FOLLOW,
-			body.userId,
+			userId,
 			GRAPH_LABELS.USER,
-			body.followeeId,
+			followerId,
 			GRAPH_LABELS.USER,
 		);
 		return {
-			elementId: relation.elementId,
-			type: relation.type
+			status: true 
 		};
 	}
 }

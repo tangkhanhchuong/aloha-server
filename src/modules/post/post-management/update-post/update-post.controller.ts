@@ -1,10 +1,11 @@
-import { Body, Controller, Logger, Param, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Logger, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import {
-    Post_UpdatePostRequestDTO,
-    Post_UpdatePostResponseDTO,
-    Post_UpdatePostURL
+	Post_UpdatePostDTO,
+	Post_UpdatePostRequestDTO,
+	Post_UpdatePostResponseDTO
 } from 'shared/dto/post/update-post.dto';
 
 import { Post_UpdatePostService } from './update-post.service';
@@ -17,7 +18,9 @@ export class Post_UpdatePostController {
 		private readonly updatePostService: Post_UpdatePostService,
 	) {}
 
-	@Post(Post_UpdatePostURL)
+	@Patch(Post_UpdatePostDTO.url)
+	@HttpCode(HttpStatus.OK)
+	@UseGuards(CognitoGuard)
 	async updatePost(
 		@Param('id') id: string,
 		@Body() body: Post_UpdatePostRequestDTO

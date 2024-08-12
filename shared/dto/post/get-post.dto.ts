@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsString } from 'class-validator';
 
-export const Post_GetPostURL = 'post/get-post/:id';
+import { DTO, METHOD } from '../base.dto';
 
 export class Post_GetPostResponseDTO {
 	@ApiProperty({
@@ -27,4 +27,18 @@ export class Post_GetPostResponseDTO {
 	@IsArray()
 	@IsString()
 	media: string[];
+}
+
+export class Post_GetPostDTO extends DTO {
+	public static url = '/posts';
+	public method = METHOD.GET;
+
+	public queryDTO: undefined;
+	public bodyDTO: undefined
+
+	constructor(
+		public responseDTO: Post_GetPostResponseDTO
+	) {
+		super();
+	}
 }

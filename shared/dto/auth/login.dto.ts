@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
 
-export const Auth_LoginURL = 'auth/login';
+import { DTO, METHOD } from '../base.dto';
 
 export class Auth_LoginRequestDTO {
 	@ApiProperty({
@@ -22,7 +22,7 @@ export class Auth_LoginRequestDTO {
 }
 
 
-export class AuthLoginResponseDTO {
+export class Auth_LoginResponseDTO {
 	@ApiProperty({
 		default: '',
 	})
@@ -33,4 +33,18 @@ export class AuthLoginResponseDTO {
 	})
 	@IsEmail()
 	refreshToken: string;
+}
+
+export class Auth_LoginDTO extends DTO {
+	public static url = '/auth/login';
+	public method = METHOD.POST;
+
+	public queryDTO: undefined;
+
+	constructor(
+		public bodyDTO: Auth_LoginRequestDTO,
+		public responseDTO: Auth_LoginResponseDTO
+	) {
+		super();
+	}
 }

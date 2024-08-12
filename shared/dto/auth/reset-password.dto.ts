@@ -1,8 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsString } from "class-validator";
 
-export const Auth_ResetPasswordURL = 'auth/forgot-password/reset';
-
+import { DTO, METHOD } from "../base.dto";
 export class Auth_ResetPasswordRequestDTO {
 	@ApiProperty({
 		type: String,
@@ -27,4 +26,18 @@ export class Auth_ResetPasswordRequestDTO {
 	})
 	@IsString()
 	newPassword: string;
+}
+
+export class Auth_ResetPasswordDTO extends DTO {
+	public static url = '/auth/reset-password';
+	public method = METHOD.POST;
+
+	public queryDTO: undefined;
+	public responseDTO: undefined;
+
+	constructor(
+		public bodyDTO: Auth_ResetPasswordRequestDTO,
+	) {
+		super();
+	}
 }

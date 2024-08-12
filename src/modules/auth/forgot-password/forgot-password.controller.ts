@@ -1,11 +1,11 @@
 import { Body, Controller, HttpCode, HttpStatus, Logger, Post } from '@nestjs/common';
 
 import {
-	Auth_ForgotPasswordURL,
+	Auth_ForgotPasswordDTO,
 	Auth_ForgotPasswordRequestDTO
 } from 'shared/dto/auth/forgot-password.dto';
 import {
-	Auth_ResetPasswordURL,
+	Auth_ResetPasswordDTO,
 	Auth_ResetPasswordRequestDTO
 } from 'shared/dto/auth/reset-password.dto';
 
@@ -18,7 +18,7 @@ export class ForgotPasswordController {
 		private readonly forgotPasswordService: ForgotPasswordService
 	) {}
 
-	@Post(Auth_ForgotPasswordURL)
+	@Post(Auth_ForgotPasswordDTO.url)
 	@HttpCode(HttpStatus.OK)
 	async forgotPassword(@Body() dto: Auth_ForgotPasswordRequestDTO) {
 		try {
@@ -29,7 +29,7 @@ export class ForgotPasswordController {
 		}
 	}
 
-	@Post(Auth_ResetPasswordURL)
+	@Post(Auth_ResetPasswordDTO.url)
 	@HttpCode(HttpStatus.OK)
 	async resetPassword(@Body() dto: Auth_ResetPasswordRequestDTO) {
 		try {

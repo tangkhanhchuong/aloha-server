@@ -1,6 +1,15 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-export const AuthUser = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
+export class AuthUserPayload {
+	userId: string;
+	email: string;
+}
+
+export const AuthUser = createParamDecorator((data: unknown, ctx: ExecutionContext): AuthUserPayload => {
 	const request = ctx.switchToHttp().getRequest();
-	return request.user;
+	const headers = request.headers;
+	return {
+		userId: headers.userid,
+		email: headers.email,
+	};
 });

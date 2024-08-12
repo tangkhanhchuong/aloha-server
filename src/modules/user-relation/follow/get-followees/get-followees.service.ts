@@ -6,7 +6,6 @@ import {
 	SOCIAL_RELATIONS
 } from 'shared/constants/neo4j';
 import {
-	UserRelation_GetFolloweesRequestDTO,
 	UserRelation_GetFolloweesResponseDTO
 } from 'shared/dto/user-relation/get-followees.dto';
 
@@ -16,10 +15,10 @@ export class GetFolloweesService {
 		private readonly neo4jService: Neo4jService
 	) {}
 
-	async execute(body: UserRelation_GetFolloweesRequestDTO): Promise<UserRelation_GetFolloweesResponseDTO> {
+	async execute(userId: string): Promise<UserRelation_GetFolloweesResponseDTO> {
 		const followees = await this.neo4jService.getDestinationNodes(
             SOCIAL_RELATIONS.FOLLOW,
-            body.userId,
+            userId,
 			GRAPH_LABELS.USER
 		)
 		return {

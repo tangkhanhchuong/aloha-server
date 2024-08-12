@@ -7,7 +7,7 @@ import {
 } from 'shared/dto/auth/auto-login.dto';
 import {
 	Auth_LoginRequestDTO,
-	AuthLoginResponseDTO
+	Auth_LoginResponseDTO
 } from 'shared/dto/auth/login.dto';
 
 @Injectable()
@@ -15,12 +15,12 @@ export class LoginService {
 	constructor(
 		private readonly cognitoService: CognitoService,
 	) {}
-	async login(dto: Auth_LoginRequestDTO): Promise<AuthLoginResponseDTO> {
+	async login(dto: Auth_LoginRequestDTO): Promise<Auth_LoginResponseDTO> {
 		const authenticatedResult = await this.cognitoService.authenticate(dto.email, dto.password);
 		return {
 			accessToken: authenticatedResult.getIdToken().getJwtToken(),
 			refreshToken: authenticatedResult.getRefreshToken().getToken(),
-		} as AuthLoginResponseDTO;
+		} as Auth_LoginResponseDTO;
 	}
 
 	async autoLogin(dto: Auth_AutoAuthLoginRequestDTO): Promise<Auth_AutoLoginResponseDTO> {

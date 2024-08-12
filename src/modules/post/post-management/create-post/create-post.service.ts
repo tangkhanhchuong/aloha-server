@@ -4,8 +4,8 @@ import { Model } from 'mongoose';
 
 import { Post } from 'database/post/post';
 import {
-    Post_PostCreatePostRequestDTO,
-    Post_PostCreatePostResponseDTO,
+    Post_CreatePostRequestDTO,
+    Post_CreatePostResponseDTO,
 } from 'shared/dto/post/create-post.dto';
 
 @Injectable()
@@ -15,9 +15,14 @@ export class CreatePostService {
 		private readonly postModel: Model<Post>,
     ) {}
     
-	async execute(dto: Post_PostCreatePostRequestDTO): Promise<Post_PostCreatePostResponseDTO> {
+	async execute(dto: Post_CreatePostRequestDTO): Promise<Post_CreatePostResponseDTO> {
 		const { title, content, media } = dto;
-        const createdPost = await this.postModel.create({ title, content, media });
+		const createdPost = await this.postModel.create({
+			title,
+			content,
+			media,
+			// createdBy: 
+		});
         const savedPost = await createdPost.save();
 
         // store to ElasticSearch

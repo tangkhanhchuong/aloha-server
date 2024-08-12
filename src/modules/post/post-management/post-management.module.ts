@@ -1,6 +1,7 @@
 import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { CognitoModule } from 'core/aws/cognito/cognito.module';
 import { RmqModule } from 'core/rmq/rmq.module';
 import { Post, PostSchema } from 'database/post/post';
 
@@ -15,8 +16,11 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 
 @Module({
 	imports: [
-		MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
+		MongooseModule.forFeature([
+			{ name: Post.name, schema: PostSchema }
+		]),
 		RmqModule,
+		CognitoModule
 	],
 	controllers: [
 		GetPostController,
@@ -25,11 +29,11 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 		DeletePostController
 	],
     providers: [
-		Logger,
 		GetPostService,
 		CreatePostService,
 		Post_UpdatePostService,
-		DeletePostService
+		DeletePostService,
+		Logger
     ],
 	exports: [],
 })

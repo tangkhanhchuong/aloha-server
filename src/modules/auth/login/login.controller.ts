@@ -1,14 +1,14 @@
 import { Body, Controller, HttpCode, HttpStatus, Logger, Post } from '@nestjs/common';
 
 import {
-	Auth_AutoLoginURL,
 	Auth_AutoAuthLoginRequestDTO,
+	Auth_AutoLoginDTO,
 	Auth_AutoLoginResponseDTO
 } from 'shared/dto/auth/auto-login.dto';
 import {
-	Auth_LoginURL,
+	Auth_LoginDTO,
 	Auth_LoginRequestDTO,
-	AuthLoginResponseDTO
+	Auth_LoginResponseDTO
 } from 'shared/dto/auth/login.dto';
 
 import { LoginService } from './login.service';
@@ -20,9 +20,9 @@ export class LoginController {
 		private readonly loginService: LoginService
 	) {}
 
-	@Post(Auth_LoginURL)
+	@Post(Auth_LoginDTO.url)
 	@HttpCode(HttpStatus.OK)
-	async login(@Body() dto: Auth_LoginRequestDTO): Promise<AuthLoginResponseDTO> {
+	async login(@Body() dto: Auth_LoginRequestDTO): Promise<Auth_LoginResponseDTO> {
 		try {
 			return await this.loginService.login(dto);
 		} catch (e) {
@@ -31,7 +31,7 @@ export class LoginController {
 		}
 	}
 
-	@Post(Auth_AutoLoginURL)
+	@Post(Auth_AutoLoginDTO.url)
 	@HttpCode(HttpStatus.OK)
 	async autoLogin(@Body() dto: Auth_AutoAuthLoginRequestDTO): Promise<Auth_AutoLoginResponseDTO> {
 		try {
