@@ -28,7 +28,7 @@ export class Post extends Document<number> {
 
 	@Prop({
 		enum: PostStatus,
-		default: PostStatus.DRAFT,
+		default: PostStatus.PUBLISHED,
 	})
 	status: PostStatus;
 

@@ -18,6 +18,7 @@ export class InitializeUserRelationService {
 		const newNode: Record<string, string>
 			= await this.neo4jService.createNode(GRAPH_LABELS.USER, {
 				userId: body.userId,
+				name: body.name
 			});
 		return {
 			userId: newNode.userId

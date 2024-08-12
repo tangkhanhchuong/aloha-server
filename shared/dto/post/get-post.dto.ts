@@ -30,7 +30,7 @@ export class Post_GetPostResponseDTO {
 }
 
 export class Post_GetPostDTO extends DTO {
-	public static url = '/posts';
+	public static url = '/posts/:id';
 	public method = METHOD.GET;
 
 	public queryDTO: undefined;

@@ -9,6 +9,14 @@ export class UserRelation_IntializeUserRelationRequestDTO {
 	})
 	@IsString()
 	userId: string;
+
+	@ApiProperty({
+		type: String,
+		default: '',
+		required: true,
+	})
+	@IsString()
+	name: string;
 }
 
 export class UserRelation_IntializeUserRelationResponseDTO {

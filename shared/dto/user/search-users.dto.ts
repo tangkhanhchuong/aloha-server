@@ -29,7 +29,7 @@ export class User_UserResponseDTO {
 export class User_SearchUsersResponseDTO extends PaginatedResponseDTO<User_UserResponseDTO> {};
 
 export class User_SearchUsersDTO extends DTO {
-	public static url = '/users';
+	public static url = '/users/search';
 	public method = METHOD.POST;
 
 	public queryDTO: undefined;

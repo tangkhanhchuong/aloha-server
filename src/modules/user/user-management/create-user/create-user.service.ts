@@ -29,8 +29,9 @@ export class CreateUserService {
 		});
 		const savedUser: User = await user.save();
 		await this.initializeUserRelationService.execute({
-				userId: savedUser.id
-			});
+			userId: savedUser.id,
+			name: savedUser.username
+		});
 
 		return {
 			id: savedUser.id
