@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { Neo4jService } from 'core/neo4j/neo4j.service';
 import {
-	GRAPH_LABELS,
-	SOCIAL_RELATIONS
+	GraphLabels,
+	SocialRelations
 } from 'shared/constants/neo4j';
 import {
 	UserRelation_GetFollowersResponseDTO
@@ -17,9 +17,9 @@ export class GetFollowersService {
 
 	async execute(userId: string): Promise<UserRelation_GetFollowersResponseDTO> {
 		const followers = await this.neo4jService.getSourceNodes(
-            SOCIAL_RELATIONS.FOLLOW,
+            SocialRelations.FOLLOW,
             userId,
-			GRAPH_LABELS.USER
+			GraphLabels.USER
 		)
 		return {
 			followers: followers.map(follower => ({

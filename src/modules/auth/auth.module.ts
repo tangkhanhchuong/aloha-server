@@ -1,6 +1,6 @@
 import { Logger, Module } from '@nestjs/common';
 
-import { AWSModule } from 'core/aws/aws.module';
+import { CognitoModule } from 'core/aws/cognito/cognito.module';
 import { RmqModule } from 'core/rmq/rmq.module';
 import { Services } from 'shared/constants/microservice';
 
@@ -16,7 +16,7 @@ import { RegisterService } from './register/register.service';
 
 @Module({
     imports: [
-        AWSModule,
+        CognitoModule,
 		RmqModule.register({
             name: Services.USER_SERVICE,
         }),

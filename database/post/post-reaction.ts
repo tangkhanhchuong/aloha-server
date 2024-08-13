@@ -1,15 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-export enum PostReactions {
-	LIKE = 'like',
-    DISLIKE = 'dislike',
-    LOVE = 'love',
-    HAHA = 'haha',
-    WOW = 'wow',
-    SAD = 'sad',
-    ANGRY = 'angry',
-}
+import { PostReactions } from 'shared/constants/post';
 
 @Schema({ versionKey: false })
 export class PostReaction extends Document<number> {

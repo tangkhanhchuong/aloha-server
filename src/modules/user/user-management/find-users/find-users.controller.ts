@@ -3,7 +3,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 
 import {
 	User_FindUsersDTO,
-	User_FindUsersRequestDTO,
+	User_FindUsersRequestBodyDTO,
 	User_FindUsersResponseDTO
 } from 'shared/dto/user/find-users.dto';
 
@@ -18,7 +18,7 @@ export class FindUsersController {
 	) {}
 
 	@Post(User_FindUsersDTO.url)
-	async findUsers(@Query() query: User_FindUsersRequestDTO): Promise<User_FindUsersResponseDTO> {
+	async findUsers(@Query() query: User_FindUsersRequestBodyDTO): Promise<User_FindUsersResponseDTO> {
 		try {
 			return await this.findUsersService.execute(query);
 		} catch (e) {

@@ -1,4 +1,4 @@
-export enum METHOD {
+export enum HttpMedthod {
 	GET = "GET",
 	POST = "POST",
 	PUT = "PUT",
@@ -8,9 +8,10 @@ export enum METHOD {
 
 export abstract class DTO {
     public static readonly url: string;
-	public abstract readonly method: METHOD;
+	public abstract readonly HttpMedthod: HttpMedthod;
 	public abstract queryDTO: unknown;
 	public abstract bodyDTO: unknown;
+	public abstract paramDTO: unknown;
 	public abstract responseDTO: unknown;
 	public headers?: Record<string, string>;
 }

@@ -27,7 +27,8 @@ export class CognitoStrategy extends PassportStrategy(Strategy) {
 		});
   }
 
-  async validate(payload: any) {
+	async validate(payload: any) {
+		console.log({ payload })
     	return { userId: payload.sub, email: payload.email };
   }
 }

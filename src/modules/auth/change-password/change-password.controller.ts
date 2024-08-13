@@ -4,7 +4,7 @@ import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import { AuthUser } from 'shared/decorators/auth-user.decorator';
 import {
 	Auth_ChangePasswordDTO,
-	Auth_ChangePasswordRequestDTO
+	Auth_ChangePasswordRequestBodyDTO
 } from 'shared/dto/auth/change-password.dto';
 
 import { ChangePasswordService } from './change-password.service';
@@ -19,7 +19,7 @@ export class ChangePasswordController {
 	@Put(Auth_ChangePasswordDTO.url)
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(CognitoGuard)
-	async changePassword(@Body() dto: Auth_ChangePasswordRequestDTO, @AuthUser() user) {
+	async changePassword(@Body() dto: Auth_ChangePasswordRequestBodyDTO, @AuthUser() user) {
 		try {
 			dto.email = user.email;
 			await this.changePasswordService.execute(user.email, dto);

@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsString } from "class-validator";
 
-import { DTO, METHOD } from "../base.dto";
+import { DTO, HttpMedthod } from "../base.dto";
 
-export class Auth_ConfirmRegistrationRequestDTO {
+export class Auth_ConfirmRegistrationRequestBodyDTO {
 	@ApiProperty({
 		type: String,
 		default: '000000',
@@ -23,13 +23,14 @@ export class Auth_ConfirmRegistrationRequestDTO {
 
 export class Auth_ConfirmRegistrationDTO extends DTO {
 	public static url = '/auth/confirm-registration';
-	public method = METHOD.POST;
+	public HttpMedthod = HttpMedthod.POST;
 
+	public paramDTO: undefined;
 	public queryDTO: undefined;
 	public responseDTO: undefined;
 
 	constructor(
-		public bodyDTO: Auth_ConfirmRegistrationRequestDTO,
+		public bodyDTO: Auth_ConfirmRegistrationRequestBodyDTO,
 	) {
 		super();
 	}

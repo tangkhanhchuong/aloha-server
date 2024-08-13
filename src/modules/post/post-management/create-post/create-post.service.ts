@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { Post } from 'database/post/post';
 import {
-    Post_CreatePostRequestDTO,
+    Post_CreatePostRequestBodyDTO,
     Post_CreatePostResponseDTO,
 } from 'shared/dto/post/create-post.dto';
 
@@ -15,7 +15,7 @@ export class CreatePostService {
 		private readonly postModel: Model<Post>,
     ) {}
     
-	async execute(dto: Post_CreatePostRequestDTO): Promise<Post_CreatePostResponseDTO> {
+	async execute(dto: Post_CreatePostRequestBodyDTO): Promise<Post_CreatePostResponseDTO> {
 		const { title, content, media } = dto;
 		const createdPost = await this.postModel.create({
 			title,

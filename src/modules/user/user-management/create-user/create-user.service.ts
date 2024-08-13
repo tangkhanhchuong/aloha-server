@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { User } from 'database/user/user';
 import {
-	User_CreateUserRequestDTO,
+	User_CreateUserRequestBodyDTO,
 	User_CreateUserResponseDTO
 } from 'shared/dto/user/create-user.dto';
 import { InitializeUserRelationService } from 'src/modules/user-relation/initialize-user-relation/initialize-user-relation.service';
@@ -17,7 +17,7 @@ export class CreateUserService {
 		private readonly initializeUserRelationService: InitializeUserRelationService,
 	) {}
 
-	async execute(dto: User_CreateUserRequestDTO): Promise<User_CreateUserResponseDTO> {
+	async execute(dto: User_CreateUserRequestBodyDTO): Promise<User_CreateUserResponseDTO> {
 		const { email, username } = dto;
 		const foundUser = await this.userModel.findOne({ email });
 		if (foundUser) {

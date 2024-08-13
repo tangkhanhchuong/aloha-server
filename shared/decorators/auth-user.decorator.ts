@@ -1,4 +1,5 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { isMongoId } from 'class-validator';
 
 export class AuthUserPayload {
 	userId: string;
@@ -7,9 +8,13 @@ export class AuthUserPayload {
 
 export const AuthUser = createParamDecorator((data: unknown, ctx: ExecutionContext): AuthUserPayload => {
 	const request = ctx.switchToHttp().getRequest();
-	const headers = request.headers;
+	const requestUser = request.user;
+	console.log({requestUser})
+	if (!isMongoId(requestUser.userId)) {
+		throw new UnauthorizedException();
+	}
 	return {
-		userId: headers.userid,
-		email: headers.email,
+		userId: requestUser.userId,
+		email: requestUser.email,
 	};
 });

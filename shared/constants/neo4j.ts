@@ -1,7 +1,7 @@
-export enum GRAPH_LABELS {
+export enum GraphLabels {
     USER = 'USER'
 }
 
-export enum SOCIAL_RELATIONS {
+export enum SocialRelations {
     FOLLOW = 'FOLLOW'
 }

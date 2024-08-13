@@ -23,6 +23,7 @@ export class GetFollowersController {
 	@UseGuards(CognitoGuard)
 	async getFollowers(@AuthUser() authUser: AuthUserPayload): Promise<UserRelation_GetFollowersResponseDTO> {
 		try {
+		console.log({ authUser });
 			return await this.getFollowersService.execute(authUser.userId);
 		} catch (e) {
 			this.logger.error(e, e.stack, GetFollowersController.name);

@@ -15,10 +15,10 @@ export class CognitoService {
 	private userPool: CognitoUserPool;
 
 	constructor(configService: ConfigService) {
-		const cognitoConfig = configService.getAWSConfig();
+		const awsConfig = configService.getAWSConfig();
 		this.userPool = new CognitoUserPool({
-			UserPoolId: cognitoConfig.cognitoUserPoolId,
-			ClientId: cognitoConfig.cognitoClientId,
+			UserPoolId: awsConfig.cognitoUserPoolId,
+			ClientId: awsConfig.cognitoClientId,
 		});
 	}
 
@@ -74,6 +74,9 @@ export class CognitoService {
 		const authenticationDetails = new AuthenticationDetails({
 			Username: email,
 			Password: password,
+			ClientMetadata: {
+				userId: "1",
+			}
 		});
 
 		const user = new CognitoUser(userData);

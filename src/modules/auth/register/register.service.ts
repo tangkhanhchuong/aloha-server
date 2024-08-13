@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { CognitoService } from 'core/aws/cognito/cognito.service';
 
-import { Auth_ConfirmRegistrationRequestDTO } from 'shared/dto/auth/confirm-registration.dto';
-import { Auth_RegisterRequestDTO, Auth_RegisterResponseDTO } from 'shared/dto/auth/register.dto';
-import { Auth_ResendRegistrationOTPRequestDTO } from 'shared/dto/auth/resend-registration-otp.request.dto';
+import { Auth_ConfirmRegistrationRequestBodyDTO } from 'shared/dto/auth/confirm-registration.dto';
+import { Auth_RegisterRequestBodyDTO, Auth_RegisterResponseDTO } from 'shared/dto/auth/register.dto';
+import { Auth_ResendRegistrationOTPRequestBodyDTO } from 'shared/dto/auth/resend-registration-otp.request.dto';
 import { ActivateUserService } from 'src/modules/user/user-management/activate-user/activate-user.service';
 import { CreateUserService } from 'src/modules/user/user-management/create-user/create-user.service';
 import { FindUsersService } from 'src/modules/user/user-management/find-users/find-users.service';
@@ -18,7 +18,7 @@ export class RegisterService {
 		private readonly findUserService: FindUsersService
 	) {}
 
-	async execute(body: Auth_RegisterRequestDTO): Promise<Auth_RegisterResponseDTO> {
+	async execute(body: Auth_RegisterRequestBodyDTO): Promise<Auth_RegisterResponseDTO> {
 		const { email, password } = body;
 		const cognitoService = await this.cognitoService.register(email, password);
 		this.logger.debug(`OTP Sent::${JSON.stringify(cognitoService.codeDeliveryDetails)}`);
@@ -28,7 +28,7 @@ export class RegisterService {
 		} as Auth_RegisterResponseDTO;
 	}
 
-	async confirmRegistration(dto: Auth_ConfirmRegistrationRequestDTO) {
+	async confirmRegistration(dto: Auth_ConfirmRegistrationRequestBodyDTO) {
 		const usersResponse = await this.findUserService.execute({ email: dto.email });
 		const foundUser = usersResponse.users?.[0];
 		if (!foundUser) {
@@ -38,7 +38,7 @@ export class RegisterService {
 		await this.activateUserService.execute(foundUser.userId);
 	}
 
-	async resendRegistration(dto: Auth_ResendRegistrationOTPRequestDTO) {
+	async resendRegistration(dto: Auth_ResendRegistrationOTPRequestBodyDTO) {
 		return await this.cognitoService.resendRegistrationOTP(dto.email);
 	}
 }

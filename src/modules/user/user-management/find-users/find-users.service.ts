@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { User } from 'database/user/user';
 import {
-	User_FindUsersRequestDTO,
+	User_FindUsersRequestBodyDTO,
 	User_FindUsersResponseDTO
 } from 'shared/dto/user/find-users.dto';
 
@@ -15,7 +15,7 @@ export class FindUsersService {
 		private readonly userModel: Model<User>,
 	) {}
 
-	async execute(query: User_FindUsersRequestDTO): Promise<User_FindUsersResponseDTO> {
+	async execute(query: User_FindUsersRequestBodyDTO): Promise<User_FindUsersResponseDTO> {
 		let conditions = {};
 		if (query.userIds) {
 			conditions['_id'] = {

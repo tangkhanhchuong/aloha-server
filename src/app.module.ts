@@ -10,6 +10,7 @@ import { SharedModule } from 'shared/shared.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
+import { MediaModule } from './modules/media/media.module';
 import { PostCommentModule } from './modules/post-comment/post-comment.module';
 import { PostModule } from './modules/post/post.module';
 import { UserRelationModule } from './modules/user-relation/user-relation.module';
@@ -26,7 +27,8 @@ import { UserModule } from './modules/user/user.module';
 		UserModule,
 		UserRelationModule,
 		PostModule,
-		PostCommentModule
+		PostCommentModule,
+		MediaModule
 	],
 	providers: [
 		AppService,

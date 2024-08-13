@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-import { UserStatus } from 'shared/constants/user';
+import { UserStatuses } from 'shared/constants/user';
 
 @Schema({ versionKey: false })
 export class User extends Document<number> {
@@ -22,10 +22,10 @@ export class User extends Document<number> {
 	email: string;
 
 	@Prop({
-		enum: UserStatus,
-		default: UserStatus.INACTIVE
+		enum: UserStatuses,
+		default: UserStatuses.INACTIVE
 	})
-	status: UserStatus;
+	status: UserStatuses;
 
 	@Prop({
 		type: String,

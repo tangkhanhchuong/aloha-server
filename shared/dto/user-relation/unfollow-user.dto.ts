@@ -1,6 +1,6 @@
 import { IsBoolean } from 'class-validator';
 
-import { DTO, METHOD } from '../base.dto';
+import { DTO, HttpMedthod } from '../base.dto';
 
 export class UserRelation_UnfollowUserResponseDTO {
 	@IsBoolean()
@@ -9,8 +9,9 @@ export class UserRelation_UnfollowUserResponseDTO {
 
 export class UserRelation_UnfollowUserDTO extends DTO {
 	public static url = '/users/:userId/unfollow';
-	public method = METHOD.POST;
+	public HttpMedthod = HttpMedthod.POST;
 
+	public paramDTO: undefined;
 	public queryDTO: undefined;
 	public bodyDTO: undefined;
 

@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, ValidateIf } from 'class-validator';
 
-import { ListingRequestDTO } from 'shared/dto/listing.request.dto';
+import { ListingRequestBodyDTO } from 'shared/dto/listing.request.dto';
 
-import { DTO, METHOD } from '../base.dto';
+import { DTO, HttpMedthod } from '../base.dto';
 import { PaginatedResponseDTO } from '../paginated.response.dto';
 
-export class User_SearchUsersRequestDTO extends ListingRequestDTO {
+export class User_SearchUsersRequestBodyDTO extends ListingRequestBodyDTO {
 	@ApiProperty({ default: '' })
 	@IsArray()
 	@ValidateIf((obj) => {
@@ -30,12 +30,13 @@ export class User_SearchUsersResponseDTO extends PaginatedResponseDTO<User_UserR
 
 export class User_SearchUsersDTO extends DTO {
 	public static url = '/users/search';
-	public method = METHOD.POST;
+	public HttpMedthod = HttpMedthod.POST;
 
+	public paramDTO: undefined;
 	public queryDTO: undefined;
 
 	constructor(
-		public bodyDTO: User_SearchUsersRequestDTO,
+		public bodyDTO: User_SearchUsersRequestBodyDTO,
 		public responseDTO: User_SearchUsersResponseDTO
 	) {
 		super();

@@ -23,6 +23,7 @@ export class DeletePostController {
 		@Param('id') id: string,
 	): Promise<Post_DeletePostResponseDTO> {
 		try {
+			console.log('Hello')
 			return await this.deletePostService.execute(id);
 		} catch (e) {
 			this.logger.error(e, e.stack, DeletePostController.name);

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model, Schema as MongooseSchema } from 'mongoose';
 
 import { User } from 'database/user/user';
-import { UserStatus } from 'shared/constants/user';
+import { UserStatuses } from 'shared/constants/user';
 import { User_ActivateUserResponseDTO } from 'shared/dto/user/activate-user.dto';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class ActivateUserService {
             if (!user) {
                 throw new BadRequestException('User not found');
             }
-            user.status = UserStatus.ACTIVE;
+            user.status = UserStatuses.ACTIVE;
             if (user.updatedBy) {
                 user.updatedBy = new MongooseSchema.Types.ObjectId(updatedBy);
             }

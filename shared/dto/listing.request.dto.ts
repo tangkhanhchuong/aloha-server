@@ -3,9 +3,9 @@ import { Type } from 'class-transformer';
 import { IsEnum, IsOptional, IsString, Min } from 'class-validator';
 
 import { PAGINATION_DEFAULT, SORT_DEFAULT } from '../constants/find-query';
-import { Order } from '../constants/order';
+import { Orders } from '../constants/order';
 
-export class ListingRequestDTO {
+export class ListingRequestBodyDTO {
 	@ApiProperty({
 		default: PAGINATION_DEFAULT.LIMIT,
 		minimum: 1,
@@ -36,10 +36,10 @@ export class ListingRequestDTO {
 	sortBy?: string = SORT_DEFAULT.SORT_BY;
 
 	@ApiProperty({
-		enum: Order,
-		default: SORT_DEFAULT.SORT_ORDER,
+		enum: Orders,
+		default: SORT_DEFAULT.SORT_Orders,
 		required: true,
 	})
-	@IsEnum(Order)
-	sortOrder?: Order = SORT_DEFAULT.SORT_ORDER;
+	@IsEnum(Orders)
+	sortOrders?: Orders = SORT_DEFAULT.SORT_Orders;
 }

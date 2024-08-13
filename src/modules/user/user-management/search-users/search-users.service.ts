@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { User } from 'database/user/user';
 import {
-	User_SearchUsersRequestDTO,
+	User_SearchUsersRequestBodyDTO,
 	User_SearchUsersResponseDTO
 } from 'shared/dto/user/search-users.dto';
 
@@ -15,7 +15,7 @@ export class SearchUsersService {
 		private readonly userModel: Model<User>,
 	) {}
 
-	async execute(body: User_SearchUsersRequestDTO): Promise<User_SearchUsersResponseDTO> {
+	async execute(body: User_SearchUsersRequestBodyDTO): Promise<User_SearchUsersResponseDTO> {
 		let query;
 		if (body.userIds) {
 			query = this.userModel.find({

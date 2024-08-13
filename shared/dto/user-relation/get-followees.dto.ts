@@ -1,6 +1,6 @@
 import { IsArray } from 'class-validator';
 
-import { DTO, METHOD } from '../base.dto';
+import { DTO, HttpMedthod } from '../base.dto';
 
 export class UserRelation_GetFolloweesResponseDTO {
     @IsArray()
@@ -9,11 +9,12 @@ export class UserRelation_GetFolloweesResponseDTO {
 
 export class UserRelation_GetFolloweesDTO extends DTO {
 	public static url = '/users/:userId/followees';
-	public method = METHOD.POST;
+	public HttpMedthod = HttpMedthod.POST;
 
 	public queryDTO: undefined;
 	public bodyDTO: undefined;
 
+	public paramDTO: undefined;
 	constructor(
 		public responseDTO: UserRelation_GetFolloweesResponseDTO
 	) {

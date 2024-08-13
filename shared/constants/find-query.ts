@@ -1,4 +1,4 @@
-import { Order } from './order';
+import { Orders } from './order';
 
 export const PAGINATION_DEFAULT = {
   PAGE: 1,
@@ -7,5 +7,5 @@ export const PAGINATION_DEFAULT = {
 
 export const SORT_DEFAULT = {
   SORT_BY: 'updatedTime',
-  SORT_ORDER: Order.ASC,
+  SORT_Orders: Orders.ASC,
 };

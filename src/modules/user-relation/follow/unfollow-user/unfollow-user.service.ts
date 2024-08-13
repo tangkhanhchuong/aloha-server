@@ -3,8 +3,8 @@ import { isValidObjectId } from 'mongoose';
 
 import { Neo4jService } from 'core/neo4j/neo4j.service';
 import {
-	GRAPH_LABELS,
-	SOCIAL_RELATIONS
+	GraphLabels,
+	SocialRelations
 } from 'shared/constants/neo4j';
 import {
 	UserRelation_UnfollowUserResponseDTO
@@ -35,21 +35,21 @@ export class UnfollowUserService {
 		}
 
 		const followRelation = await this.neo4jService.getDestinationNodes(
-			SOCIAL_RELATIONS.FOLLOW,
+			SocialRelations.FOLLOW,
 			userId,
-			GRAPH_LABELS.USER,
+			GraphLabels.USER,
 			followerId,
-			GRAPH_LABELS.USER,
+			GraphLabels.USER,
 		);
 		if (!followRelation[0]) {
 			throw new ConflictException("You haven't followed this user yet");
 		}
 		const result = await this.neo4jService.removeRelation(
-			SOCIAL_RELATIONS.FOLLOW,
+			SocialRelations.FOLLOW,
 			userId,
-			GRAPH_LABELS.USER,
+			GraphLabels.USER,
 			followerId,
-			GRAPH_LABELS.USER,
+			GraphLabels.USER,
 		);
 		return {
 			status: result

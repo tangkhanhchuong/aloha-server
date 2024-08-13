@@ -2,16 +2,16 @@ import { Body, Controller, HttpCode, HttpStatus, Logger, Post } from '@nestjs/co
 
 import {
 	Auth_ConfirmRegistrationDTO,
-	Auth_ConfirmRegistrationRequestDTO
+	Auth_ConfirmRegistrationRequestBodyDTO
 } from 'shared/dto/auth/confirm-registration.dto';
 import {
 	Auth_RegisterDTO,
-	Auth_RegisterRequestDTO,
+	Auth_RegisterRequestBodyDTO,
 	Auth_RegisterResponseDTO
 } from 'shared/dto/auth/register.dto';
 import {
 	Auth_ResendRegistrationOtpDTO,
-	Auth_ResendRegistrationOTPRequestDTO
+	Auth_ResendRegistrationOTPRequestBodyDTO
 } from 'shared/dto/auth/resend-registration-otp.request.dto';
 
 import { RegisterService } from './register.service';
@@ -25,7 +25,7 @@ export class RegisterController {
 
     @Post(Auth_RegisterDTO.url)
     @HttpCode(HttpStatus.OK)
-	async register(@Body() dto: Auth_RegisterRequestDTO): Promise<Auth_RegisterResponseDTO> {
+	async register(@Body() dto: Auth_RegisterRequestBodyDTO): Promise<Auth_RegisterResponseDTO> {
 		try {
 			return await this.registerService.execute(dto);
 		} catch (e) {
@@ -36,7 +36,7 @@ export class RegisterController {
 
 	@Post(Auth_ConfirmRegistrationDTO.url)
 	@HttpCode(HttpStatus.OK)
-	async confirmRegistration(@Body() dto: Auth_ConfirmRegistrationRequestDTO) {
+	async confirmRegistration(@Body() dto: Auth_ConfirmRegistrationRequestBodyDTO) {
 		try {
 			await this.registerService.confirmRegistration(dto);
 		} catch (e) {
@@ -47,7 +47,7 @@ export class RegisterController {
 
 	@Post(Auth_ResendRegistrationOtpDTO.url)
 	@HttpCode(HttpStatus.OK)
-	async resendRegistrationOTP(@Body() dto: Auth_ResendRegistrationOTPRequestDTO) {
+	async resendRegistrationOTP(@Body() dto: Auth_ResendRegistrationOTPRequestBodyDTO) {
 		try {
 			await this.registerService.resendRegistration(dto);
 		} catch (e) {

@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-import { DTO, METHOD } from '../base.dto';
+import { DTO, HttpMedthod } from '../base.dto';
 
-export class Auth_ChangePasswordRequestDTO {
+export class Auth_ChangePasswordRequestBodyDTO {
 	email: string;
 
 	@ApiProperty({
@@ -25,13 +25,14 @@ export class Auth_ChangePasswordRequestDTO {
 
 export class Auth_ChangePasswordDTO extends DTO {
 	public static url = '/auth/change-password';
-	public method = METHOD.POST;
+	public HttpMedthod = HttpMedthod.POST;
 
+	public paramDTO: undefined;
 	public queryDTO: undefined;
 	public responseDTO: undefined;
 
 	constructor(
-		public bodyDTO: Auth_ChangePasswordRequestDTO,
+		public bodyDTO: Auth_ChangePasswordRequestBodyDTO,
 	) {
 		super();
 	}

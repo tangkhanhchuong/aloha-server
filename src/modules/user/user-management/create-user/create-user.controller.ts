@@ -3,7 +3,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 
 import {
 	User_CreateUserDTO,
-	User_CreateUserRequestDTO,
+	User_CreateUserRequestBodyDTO,
 	User_CreateUserResponseDTO
 } from 'shared/dto/user/create-user.dto';
 
@@ -18,7 +18,7 @@ export class CreateUserController {
 	) {}
 
 	@Post(User_CreateUserDTO.url)
-	async createUser(@Body() body: User_CreateUserRequestDTO): Promise<User_CreateUserResponseDTO> {
+	async createUser(@Body() body: User_CreateUserRequestBodyDTO): Promise<User_CreateUserResponseDTO> {
 		try {
 			return await this.createUserService.execute(body);
 		} catch (e) {

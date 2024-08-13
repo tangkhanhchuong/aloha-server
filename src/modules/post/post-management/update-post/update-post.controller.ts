@@ -4,7 +4,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import {
 	Post_UpdatePostDTO,
-	Post_UpdatePostRequestDTO,
+	Post_UpdatePostRequestBodyDTO,
 	Post_UpdatePostResponseDTO
 } from 'shared/dto/post/update-post.dto';
 
@@ -23,9 +23,10 @@ export class Post_UpdatePostController {
 	@UseGuards(CognitoGuard)
 	async updatePost(
 		@Param('id') id: string,
-		@Body() body: Post_UpdatePostRequestDTO
+		@Body() body: Post_UpdatePostRequestBodyDTO
 	): Promise<Post_UpdatePostResponseDTO> {
 		try {
+			console.log('Hello')
 			return await this.updatePostService.execute(id, body);
 		} catch (e) {
 			this.logger.error(e, e.stack, Post_UpdatePostController.name);

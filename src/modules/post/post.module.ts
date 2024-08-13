@@ -3,13 +3,13 @@ import { Module } from '@nestjs/common';
 import { RmqModule } from 'core/rmq/rmq.module';
 
 import { PostManagementModule } from './post-management/post-management.module';
-import { PostReactionModule } from './post-reaction/post-reaction.module';
+import { ReactToPostModule } from './reaction-to-post/react-to-pose.module';
 
 @Module({
 	imports: [
 		RmqModule,
 		PostManagementModule,
-		PostReactionModule,
+		ReactToPostModule,
 	]
 })
 export class PostModule {}

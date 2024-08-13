@@ -1,11 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-export enum PostStatus {
-	DRAFT = 'DRAFT',
-    PUBLISHED = 'PUBLISHED',
-    ARCHIVED = 'ARCHIVED',
-}
+import { PostStatuses } from 'shared/constants/post';
 
 @Schema({ versionKey: false })
 export class Post extends Document<number> {
@@ -27,10 +23,10 @@ export class Post extends Document<number> {
 	media: string[];
 
 	@Prop({
-		enum: PostStatus,
-		default: PostStatus.PUBLISHED,
+		enum: PostStatuses,
+		default: PostStatuses.PUBLISHED,
 	})
-	status: PostStatus;
+	status: PostStatuses;
 
 	@Prop({
 		type: Number,

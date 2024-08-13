@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
 
-import { DTO, METHOD } from '../base.dto';
+import { DTO, HttpMedthod } from '../base.dto';
 
-export class Auth_LoginRequestDTO {
+export class Auth_LoginRequestBodyDTO {
 	@ApiProperty({
 		type: String,
 		default: 'example@gmail.com',
@@ -37,12 +37,13 @@ export class Auth_LoginResponseDTO {
 
 export class Auth_LoginDTO extends DTO {
 	public static url = '/auth/login';
-	public method = METHOD.POST;
+	public HttpMedthod = HttpMedthod.POST;
 
+	public paramDTO: undefined;
 	public queryDTO: undefined;
 
 	constructor(
-		public bodyDTO: Auth_LoginRequestDTO,
+		public bodyDTO: Auth_LoginRequestBodyDTO,
 		public responseDTO: Auth_LoginResponseDTO
 	) {
 		super();

@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 import { CognitoService } from 'core/aws/cognito/cognito.service';
-import { UserStatus } from 'shared/constants/user';
+import { UserStatuses } from 'shared/constants/user';
 import {
-	Auth_AutoAuthLoginRequestDTO,
+	Auth_AutoAuthLoginRequestBodyDTO,
 	Auth_AutoLoginResponseDTO
 } from 'shared/dto/auth/auto-login.dto';
 import {
-	Auth_LoginRequestDTO,
+	Auth_LoginRequestBodyDTO,
 	Auth_LoginResponseDTO
 } from 'shared/dto/auth/login.dto';
 import { FindUsersService } from 'src/modules/user/user-management/find-users/find-users.service';
@@ -18,7 +18,7 @@ export class LoginService {
 		private readonly cognitoService: CognitoService,
 		private readonly findUsersService: FindUsersService
 	) {}
-	async login(dto: Auth_LoginRequestDTO): Promise<Auth_LoginResponseDTO> {
+	async login(dto: Auth_LoginRequestBodyDTO): Promise<Auth_LoginResponseDTO> {
 		const users = await this.findUsersService.execute({
 			email: dto.email
 		});
@@ -26,7 +26,7 @@ export class LoginService {
 		if (!foundUser) {
 			throw new NotFoundException('User not found');
 		}
-		if (foundUser.status === UserStatus.INACTIVE) {
+		if (foundUser.status === UserStatuses.INACTIVE) {
 			throw new UnauthorizedException('User is inactive');
 		}
 
@@ -37,7 +37,7 @@ export class LoginService {
 		} as Auth_LoginResponseDTO;
 	}
 
-	async autoLogin(dto: Auth_AutoAuthLoginRequestDTO): Promise<Auth_AutoLoginResponseDTO> {
+	async autoLogin(dto: Auth_AutoAuthLoginRequestBodyDTO): Promise<Auth_AutoLoginResponseDTO> {
 		const accessToken = await this.cognitoService.refreshSession(dto.refreshToken);
 		return {
 			accessToken,

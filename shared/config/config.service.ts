@@ -72,6 +72,9 @@ export class ConfigService {
 			cognitoUserPoolId: this.get('AWS_COGNITO_USER_POOL_ID'),
 			cognitoClientId: this.get('AWS_COGNITO_CLIENT_ID'),
 			region: this.get('AWS_REGION'),
+			bucketName: this.get('AWS_BUCKET_NAME'),
+			accessKey: this.get('AWS_ACCESS_KEY'),
+			secretAccessKey: this.get('AWS_SECRET_ACCESS_KEY')
 		};
 	}
 }

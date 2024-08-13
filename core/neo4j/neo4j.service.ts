@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Neo4jService as NestNeo4jService } from 'nest-neo4j';
 
-import { SOCIAL_RELATIONS } from 'shared/constants/neo4j';
+import { SocialRelations } from 'shared/constants/neo4j';
 
 @Injectable()
 export class Neo4jService {
@@ -23,7 +23,7 @@ export class Neo4jService {
 	}
 
 	async removeRelation(
-		relationType: SOCIAL_RELATIONS,
+		relationType: SocialRelations,
 		user1Id: string,
 		user1Label: string,
 		user2Id: string,
@@ -42,7 +42,7 @@ export class Neo4jService {
 	}
 
 	async createRelation(
-		relationType: SOCIAL_RELATIONS,
+		relationType: SocialRelations,
 		user1Id: string,
 		user1Label: string,
 		user2Id: string,
@@ -67,7 +67,7 @@ export class Neo4jService {
 	}
 
 	async getDestinationNodes(
-		relationType: SOCIAL_RELATIONS,
+		relationType: SocialRelations,
 		srcId: string,
 		srcLabel: string,
 		destId?: string,
@@ -88,7 +88,7 @@ export class Neo4jService {
 	}
 
 	async getSourceNodes(
-		relationType: SOCIAL_RELATIONS,
+		relationType: SocialRelations,
 		destId: string,
 		destLabel: string,
 		srcId?: string,

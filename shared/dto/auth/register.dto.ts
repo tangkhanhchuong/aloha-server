@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsString, MaxLength } from "class-validator";
 
-import { DTO, METHOD } from "../base.dto";
+import { DTO, HttpMedthod } from "../base.dto";
 
-export class Auth_RegisterRequestDTO {
+export class Auth_RegisterRequestBodyDTO {
 	@ApiProperty({
 		type: String,
 		default: 'example',
@@ -43,12 +43,13 @@ export class Auth_RegisterResponseDTO {
 
 export class Auth_RegisterDTO extends DTO {
 	public static url = '/auth/register';
-	public method = METHOD.POST;
+	public HttpMedthod = HttpMedthod.POST;
 
+	public paramDTO: undefined;
 	public queryDTO: undefined;
 
 	constructor(
-		public bodyDTO: Auth_RegisterRequestDTO,
+		public bodyDTO: Auth_RegisterRequestBodyDTO,
 		public responseDTO: Auth_RegisterResponseDTO
 	) {
 		super();

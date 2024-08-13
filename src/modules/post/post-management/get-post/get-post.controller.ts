@@ -21,6 +21,7 @@ export class GetPostController {
 	@UseGuards(CognitoGuard)
 	async getPost(@Param('id') id: string): Promise<Post_GetPostResponseDTO> {
 		try {
+			console.log('Hello')
 			return await this.getPostService.execute(id);
 		} catch (e) {
 			this.logger.error(e, e.stack, GetPostController.name);

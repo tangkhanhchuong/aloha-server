@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsString } from 'class-validator';
 
-import { DTO, METHOD } from '../base.dto';
+import { DTO, HttpMedthod } from '../base.dto';
 
-export class Post_CreatePostRequestDTO {
+export class Post_CreatePostRequestBodyDTO {
 	@ApiProperty({
 		type: String,
 		default: 'New Post',
@@ -35,12 +35,13 @@ export class Post_CreatePostResponseDTO {
 
 export class Post_CreatePostDTO extends DTO {
 	public static url = '/posts';
-	public method = METHOD.POST;
+	public HttpMedthod = HttpMedthod.POST;
 
+	public paramDTO: undefined;
 	public queryDTO: undefined;
 
 	constructor(
-		public bodyDTO: Post_CreatePostRequestDTO,
+		public bodyDTO: Post_CreatePostRequestBodyDTO,
 		public responseDTO: Post_CreatePostResponseDTO
 	) {
 		super();

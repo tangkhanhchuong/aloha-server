@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString } from "class-validator";
 
-import { DTO, METHOD } from "../base.dto";
+import { DTO, HttpMedthod } from "../base.dto";
 
-export class Auth_AutoAuthLoginRequestDTO {
+export class Auth_AutoAuthLoginRequestBodyDTO {
 	@ApiProperty({
 		type: String,
 		default: '',
@@ -22,12 +22,13 @@ export class Auth_AutoLoginResponseDTO {
 
 export class Auth_AutoLoginDTO extends DTO {
 	public static url = '/auth/auto-login';
-	public method = METHOD.POST;
+	public HttpMedthod = HttpMedthod.POST;
 
+	public paramDTO: undefined;
 	public queryDTO: undefined;
 
 	constructor(
-		public bodyDTO: Auth_AutoAuthLoginRequestDTO,
+		public bodyDTO: Auth_AutoAuthLoginRequestBodyDTO,
 		public responseDTO: Auth_AutoLoginResponseDTO
 	) {
 		super();

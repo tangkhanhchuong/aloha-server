@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { Post } from 'database/post/post';
 import {
-    Post_UpdatePostRequestDTO,
+    Post_UpdatePostRequestBodyDTO,
     Post_UpdatePostResponseDTO,
 } from 'shared/dto/post/update-post.dto';
 
@@ -15,7 +15,7 @@ export class Post_UpdatePostService {
 		private readonly postModel: Model<Post>,
     ) {}
     
-    async execute(id: string, dto: Post_UpdatePostRequestDTO): Promise<Post_UpdatePostResponseDTO> {
+    async execute(id: string, dto: Post_UpdatePostRequestBodyDTO): Promise<Post_UpdatePostResponseDTO> {
         const { title, content, media } = dto;
         const updatedPost = await this.postModel.updateOne(
             { id },
