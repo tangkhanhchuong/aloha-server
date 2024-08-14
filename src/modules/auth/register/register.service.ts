@@ -20,9 +20,9 @@ export class RegisterService {
 
 	async execute(body: Auth_RegisterRequestBodyDTO): Promise<Auth_RegisterResponseDTO> {
 		const { email, password } = body;
-		const cognitoService = await this.cognitoService.register(email, password);
-		this.logger.debug(`OTP Sent::${JSON.stringify(cognitoService.codeDeliveryDetails)}`);
 		const saveUser = await this.createUserService.execute(body);
+		const cognitoService = await this.cognitoService.register(email, saveUser.id, password);
+		this.logger.debug(`OTP Sent::${JSON.stringify(cognitoService.codeDeliveryDetails)}`);
 		return {
 			id: saveUser.id,
 		} as Auth_RegisterResponseDTO;

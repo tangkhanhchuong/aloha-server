@@ -3,6 +3,7 @@ import {
 	AuthenticationDetails,
 	CognitoRefreshToken,
 	CognitoUser,
+	CognitoUserAttribute,
 	CognitoUserPool,
 	CognitoUserSession,
 	ISignUpResult,
@@ -22,9 +23,15 @@ export class CognitoService {
 		});
 	}
 
-	public async register(email: string, password: string): Promise<ISignUpResult> {
+	public async register(email: string, userId: string, password: string): Promise<ISignUpResult> {
 		return new Promise((resolve, reject) => {
-			this.userPool.signUp(email, password, null, null, (err, result) => {
+			const attributeList: CognitoUserAttribute[] = [
+				new CognitoUserAttribute({
+					Name: 'nickname',
+					Value: userId
+				})
+			];
+			this.userPool.signUp(email, password, attributeList, null, (err, result) => {
 				if (err) {
 					reject(new UnauthorizedException(err.message));
 				}
@@ -39,7 +46,6 @@ export class CognitoService {
 				Username: email,
 				Pool: this.userPool,
 			};
-		console.log({ email, otp })
 			const user = new CognitoUser(userData);
 			user.confirmRegistration(otp, false, (err, result) => {
 				if (err) {
@@ -73,10 +79,7 @@ export class CognitoService {
 		};
 		const authenticationDetails = new AuthenticationDetails({
 			Username: email,
-			Password: password,
-			ClientMetadata: {
-				userId: "1",
-			}
+			Password: password
 		});
 
 		const user = new CognitoUser(userData);

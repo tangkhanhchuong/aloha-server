@@ -9,7 +9,6 @@ export class AuthUserPayload {
 export const AuthUser = createParamDecorator((data: unknown, ctx: ExecutionContext): AuthUserPayload => {
 	const request = ctx.switchToHttp().getRequest();
 	const requestUser = request.user;
-	console.log({requestUser})
 	if (!isMongoId(requestUser.userId)) {
 		throw new UnauthorizedException();
 	}
