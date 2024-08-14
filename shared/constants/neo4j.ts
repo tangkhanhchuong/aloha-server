@@ -1,7 +1,9 @@
 export enum GraphLabels {
-    USER = 'USER'
+    USER = 'USER',
+    POST = 'POST',
 }
 
 export enum SocialRelations {
-    FOLLOW = 'FOLLOW'
+    FOLLOW_USER = 'FOLLOW_USER',
+    REACT_POST = 'REACT_POST'
 }

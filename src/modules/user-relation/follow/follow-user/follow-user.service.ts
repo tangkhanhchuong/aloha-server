@@ -1,7 +1,9 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 
+import { InjectModel } from '@nestjs/mongoose';
 import { Neo4jService } from 'core/neo4j/neo4j.service';
+import { User } from 'database/user/user';
 import {
 	GraphLabels,
 	SocialRelations
@@ -9,43 +11,40 @@ import {
 import {
 	UserRelation_FollowUserResponseDTO
 } from 'shared/dto/user-relation/follow-user.dto';
-import { SearchUsersService } from 'src/modules/user/user-management/search-users/search-users.service';
 
 @Injectable()
 export class FollowUserService {
 	constructor(
 		private readonly neo4jService: Neo4jService,
-		private readonly searchUsersService: SearchUsersService
+		@InjectModel(User.name)
+		private readonly userModel: Model<User>,
 	) {}
 
 	async execute(userId: string, followerId: string): Promise<UserRelation_FollowUserResponseDTO> {
 		if (
 			userId === followerId
-			|| !isValidObjectId(userId)
 			|| !isValidObjectId(followerId)
 		) {
 			throw new BadRequestException('Invalid userId or followerId');
 		}
 
-		const users = await this.searchUsersService.execute({
-			userIds: [userId]
-		})
-		if (users.total === 0) {
+		const user = await this.userModel.findById(userId)
+		if (!user) {
 			throw new NotFoundException("User not found");
 		}
 
-		const followRelation = await this.neo4jService.getDestinationNodes(
-			SocialRelations.FOLLOW,
+		const followRelations = await this.neo4jService.getDestinationNodes(
+			SocialRelations.FOLLOW_USER,
 			userId,
 			GraphLabels.USER,
 			followerId,
 			GraphLabels.USER,
 		);
-		if (followRelation[0]) {
+		if (followRelations[0]) {
 			throw new ConflictException("You've already followed this user");
 		}
 		const relation = await this.neo4jService.createRelation(
-			SocialRelations.FOLLOW,
+			SocialRelations.FOLLOW_USER,
 			userId,
 			GraphLabels.USER,
 			followerId,

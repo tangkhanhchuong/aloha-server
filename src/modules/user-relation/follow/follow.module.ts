@@ -1,8 +1,9 @@
 import { Logger, Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 
 import { Neo4jModule } from 'core/neo4j/neo4j.module';
 import { RmqModule } from 'core/rmq/rmq.module';
-import { UserModule } from 'src/modules/user/user.module';
+import { User, UserSchema } from 'database/user/user';
 
 import { FollowUserController } from './follow-user/follow-user.controller';
 import { FollowUserService } from './follow-user/follow-user.service';
@@ -17,7 +18,9 @@ import { UnfollowUserService } from './unfollow-user/unfollow-user.service';
 	imports: [
 		RmqModule,
 		Neo4jModule,
-		UserModule
+		MongooseModule.forFeature([
+            { name: User.name, schema: UserSchema },
+		]),
 	],
 	controllers: [
 		FollowUserController,

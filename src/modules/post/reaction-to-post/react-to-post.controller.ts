@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Logger, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
@@ -24,6 +24,7 @@ export class ReactToPostController {
 	) {}
 
 	@Post(Post_ReactToPostDTO.url)
+	@HttpCode(HttpStatus.OK)
 	@UseGuards(CognitoGuard)
     async reactToPost(
 		@Body() bodyDTO: Post_ReactToPostRequestBodyDTO,
@@ -31,8 +32,7 @@ export class ReactToPostController {
 		@AuthUser() authUser: AuthUserPayload
     ): Promise<Post_ReactToPostResponseDTO> {
 		try {
-			return new Post_ReactToPostResponseDTO();
-			// return await this.reactToPostService.execute(bodyDTO, paramDTO, authUser);
+			return await this.reactToPostService.execute(bodyDTO, paramDTO, authUser);
 		} catch (e) {
 			this.logger.error(e, e.stack, ReactToPostController.name);
 			throw e;

@@ -17,7 +17,7 @@ export class GetFollowersService {
 
 	async execute(userId: string): Promise<UserRelation_GetFollowersResponseDTO> {
 		const followers = await this.neo4jService.getSourceNodes(
-            SocialRelations.FOLLOW,
+            SocialRelations.FOLLOW_USER,
             userId,
 			GraphLabels.USER
 		)

@@ -1,4 +1,4 @@
-import { IsEnum, IsMongoId, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsMongoId, IsString } from 'class-validator';
 
 import { PostReactions } from 'shared/constants/post';
 
@@ -23,13 +23,9 @@ export class Post_ReactToPostRequestParamDTO {
 }
 
 export class Post_ReactToPostResponseDTO {
-	@ApiProperty({ type: String })
-	@IsString()
-	userId: string;
-
-	@ApiProperty({ type: String })
-	@IsString()
-	postId: string;
+	@ApiProperty({ type: Boolean })
+	@IsBoolean()
+	isReacted: boolean;
 }
 
 export class Post_ReactToPostDTO extends DTO {

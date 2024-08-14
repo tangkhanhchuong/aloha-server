@@ -2,6 +2,7 @@ import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@
 import { isMongoId } from 'class-validator';
 
 export class AuthUserPayload {
+	cognitoId: string;
 	userId: string;
 	email: string;
 }
@@ -13,6 +14,7 @@ export const AuthUser = createParamDecorator((data: unknown, ctx: ExecutionConte
 		throw new UnauthorizedException();
 	}
 	return {
+		cognitoId: requestUser.cognitoId,
 		userId: requestUser.userId,
 		email: requestUser.email,
 	};
