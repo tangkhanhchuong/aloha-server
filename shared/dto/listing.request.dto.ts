@@ -5,7 +5,7 @@ import { IsEnum, IsOptional, IsString, Min } from 'class-validator';
 import { PAGINATION_DEFAULT, SORT_DEFAULT } from '../constants/find-query';
 import { Orders } from '../constants/order';
 
-export class ListingRequestBodyDTO {
+export class ListingRequestQueryDTO {
 	@ApiProperty({
 		default: PAGINATION_DEFAULT.LIMIT,
 		minimum: 1,

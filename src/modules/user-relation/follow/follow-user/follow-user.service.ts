@@ -35,14 +35,14 @@ export class FollowUserService {
 
 		const followRelations = await this.neo4jService.getDestinationNodes(
 			SocialRelations.FOLLOW_USER,
-			userId,
-			GraphLabels.USER,
-			followerId,
-			GraphLabels.USER,
+			{ id: userId, label: GraphLabels.USER },
+			{ id: followerId, label: GraphLabels.USER }
 		);
+		console.log("Hello1");
 		if (followRelations[0]) {
 			throw new ConflictException("You've already followed this user");
 		}
+		console.log("Hello2");
 		const relation = await this.neo4jService.createRelation(
 			SocialRelations.FOLLOW_USER,
 			userId,

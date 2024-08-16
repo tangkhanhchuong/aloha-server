@@ -63,9 +63,11 @@ export class Neo4jService {
 		query += `
 			RETURN r	
 		`;
+		console.log({query})
 		const result = await session.run(query);
 		session.close();
 		if (!result.records.length) {
+
 			return null;
 		}
 		return {
@@ -107,44 +109,59 @@ export class Neo4jService {
 
 	async getDestinationNodes(
 		relationType: SocialRelations,
-		srcId: string,
-		srcLabel: string,
-		destId?: string,
-		destLabel?: string
-	): Promise<Record<string, string>[]> {
+		src: { id: string, label: string },
+		dest?: { id: string, label: string },
+		pagination?: { skip: number, limit: number }
+	): Promise<{ items: Record<string, string>[], count: number }> {
 		const session = this.neo4jService.getReadSession();
-		let matchQuery = `MATCH (src:${srcLabel})-[r:${relationType}]->(dest${destId ? `:${destLabel}` : ''})`;
-		let whereQuery = ` WHERE src.id = '${srcId}'`;
+		let matchQuery = `MATCH (src:${src.label})-[r:${relationType}]->(dest${dest ? `:${dest.label}` : ''})`;
+		let whereQuery = ` WHERE src.id = '${src.id}'`;
 		
-		if (destId && destLabel) {
-			whereQuery += ` AND dest.id = '${destId}'`;
+		if (dest) {
+			whereQuery += ` AND dest.id = '${dest.id}'`;
 		}
-		const query = matchQuery + whereQuery + ` RETURN dest`;
+		let query = matchQuery + whereQuery + ` RETURN dest, collect(dest) AS count`;
+
+		if (pagination) {
+			query += ` SKIP ${pagination.skip} LIMIT ${pagination.limit}`;
+		}
 		const result = await session.run(query);
-		session.close();	
+		session.close();
 		
-		return result.records.map(record => record.get('dest').properties);
+		return {
+			items: result.records.map(record => record.get('dest').properties) || [],
+			count: result.records[0]?.get('count')[0].identity.toNumber() || 0
+		};
 	}
 
 	async getSourceNodes(
 		relationType: SocialRelations,
-		destId: string,
-		destLabel: string,
-		srcId?: string,
-		srcLabel?: string,
-	): Promise<Record<string, string>[]> {
+		dest: { id: string, label: string },
+		src?: { id: string, label: string },
+		pagination?: { skip: number, limit: number }
+	): Promise<{ items: Record<string, string>[], count: number }> {
 		const session = this.neo4jService.getReadSession();
-		let matchQuery = `MATCH (src${srcId ? `:${srcLabel}` : ''})-[r:${relationType}]->(dest:${destLabel})`;
-		let whereQuery = ` WHERE dest.id = '${destId}'`;
+		let matchQuery = `MATCH (src${src ? `:${src.label}` : ''})-[r:${relationType}]->(dest:${dest.label})`;
+		let whereQuery = ` WHERE dest.id = '${dest.id}'`;
 		
-		if (srcId && srcLabel) {
-			whereQuery += ` AND src.id = '${srcId}'`;
+		if (src) {
+			whereQuery += ` AND src.id = '${src.id}'`;
 		}
-		const query = matchQuery + whereQuery + ` RETURN src`;
+		let query = matchQuery + whereQuery + ` RETURN src, collect(src) AS count`;
+		
+		if (pagination) {
+			query += ` SKIP ${pagination.skip} LIMIT ${pagination.limit}`;
+		}
+		console.log("Get source node")
+
 		const result = await session.run(query);
+		console.log("Get source node1")
 		session.close();	
 		
-		return result.records.map(record => record.get('src').properties);
+		return {
+			items: result.records.map(record => record.get('src').properties) || [],
+			count: result.records[0]?.get('count')[0].identity.toNumber() || 0
+		};
 	}
 
 	private toProps(props: any): string {

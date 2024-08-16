@@ -36,10 +36,8 @@ export class UnfollowUserService {
 
 		const followRelations = await this.neo4jService.getDestinationNodes(
 			SocialRelations.FOLLOW_USER,
-			userId,
-			GraphLabels.USER,
-			followerId,
-			GraphLabels.USER,
+			{ id: userId, label: GraphLabels.USER },
+			{ id: followerId, label: GraphLabels.USER }
 		);
 		if (!followRelations[0]) {
 			throw new ConflictException("You haven't followed this user yet");

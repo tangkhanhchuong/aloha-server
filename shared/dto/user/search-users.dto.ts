@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, ValidateIf } from 'class-validator';
 
-import { ListingRequestBodyDTO } from 'shared/dto/listing.request.dto';
+import { ListingRequestQueryDTO } from 'shared/dto/listing.request.dto';
 
 import { DTO, HttpMedthod } from '../base.dto';
 import { PaginatedResponseDTO } from '../paginated.response.dto';
 
-export class User_SearchUsersRequestBodyDTO extends ListingRequestBodyDTO {
+export class User_SearchUsersRequestBodyDTO extends ListingRequestQueryDTO {
 	@ApiProperty({ default: '' })
 	@IsArray()
 	@ValidateIf((obj) => {

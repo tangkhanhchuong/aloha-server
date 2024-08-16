@@ -1,10 +1,11 @@
-import { Controller, HttpCode, HttpStatus, Logger, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Logger, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import { AuthUser, AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 import {
 	UserRelation_GetFollowersDTO,
+	UserRelation_GetFollowersRequestQueryDTO,
 	UserRelation_GetFollowersResponseDTO,
 } from 'shared/dto/user-relation/get-followers.dto';
 
@@ -18,13 +19,15 @@ export class GetFollowersController {
 		private readonly getFollowersService: GetFollowersService,
 	) {}
 
-	@Post(UserRelation_GetFollowersDTO.url)
+	@Get(UserRelation_GetFollowersDTO.url)
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(CognitoGuard)
-	async getFollowers(@AuthUser() authUser: AuthUserPayload): Promise<UserRelation_GetFollowersResponseDTO> {
+	async getFollowers(
+		@Query() query: UserRelation_GetFollowersRequestQueryDTO,
+		@AuthUser() authUser: AuthUserPayload
+	): Promise<UserRelation_GetFollowersResponseDTO> {
 		try {
-		console.log({ authUser });
-			return await this.getFollowersService.execute(authUser.userId);
+			return await this.getFollowersService.execute(query, authUser.userId);
 		} catch (e) {
 			this.logger.error(e, e.stack, GetFollowersController.name);
 			throw e;

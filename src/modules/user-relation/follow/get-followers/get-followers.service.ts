@@ -6,6 +6,7 @@ import {
 	SocialRelations
 } from 'shared/constants/neo4j';
 import {
+	UserRelation_GetFollowersRequestQueryDTO,
 	UserRelation_GetFollowersResponseDTO
 } from 'shared/dto/user-relation/get-followers.dto';
 
@@ -15,16 +16,20 @@ export class GetFollowersService {
 		private readonly neo4jService: Neo4jService
 	) {}
 
-	async execute(userId: string): Promise<UserRelation_GetFollowersResponseDTO> {
-		const followers = await this.neo4jService.getSourceNodes(
-            SocialRelations.FOLLOW_USER,
-            userId,
-			GraphLabels.USER
+	async execute(
+		queryDTO: UserRelation_GetFollowersRequestQueryDTO,
+		userId: string
+	): Promise<UserRelation_GetFollowersResponseDTO> {
+		const { items, count } = await this.neo4jService.getSourceNodes(
+			SocialRelations.FOLLOW_USER,
+			{ id: userId, label: GraphLabels.USER }
 		)
-		return {
-			followers: followers.map(follower => ({
-				userId: follower.userId
-			}))
-		};
+			
+		return new UserRelation_GetFollowersResponseDTO(
+			items.map(item => ({ userId:item.id })),
+			queryDTO.page,
+			queryDTO.limit,
+			count,
+		)
 	}
 }

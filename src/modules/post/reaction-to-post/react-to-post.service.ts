@@ -36,10 +36,8 @@ export class ReactToPostService {
 
 		const postReactions = await this.neo4jService.getDestinationNodes(
 			SocialRelations.REACT_POST,
-			userId,
-			GraphLabels.USER,
-			postId,
-			GraphLabels.POST,
+			{ id: userId, label: GraphLabels.USER },
+			{ id: postId, label: GraphLabels.POST }
 		);
 
 		if (!postReactions[0]) {

@@ -2,7 +2,7 @@ import { Orders } from './order';
 
 export const PAGINATION_DEFAULT = {
   PAGE: 1,
-  LIMIT: 50,
+  LIMIT: 10,
 };
 
 export const SORT_DEFAULT = {
