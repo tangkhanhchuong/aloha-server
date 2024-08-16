@@ -24,16 +24,14 @@ export class Neo4jService {
 
 	async removeRelation(
 		relationType: SocialRelations,
-		srcId: string,
-		srcLabel: string,
-		destId: string,
-		destLabel: string,
+		src: { id: string, label: string },
+		dest: { id: string, label: string }
 	): Promise<boolean> {
 		const session = this.neo4jService.getWriteSession();
 		await session.run(
 			`
-				MATCH (src:${srcLabel})-[r:${relationType}]->(dest:${destLabel})
-				WHERE src.id = '${srcId}' AND dest.id = '${destId}'
+				MATCH (src:${src.label})-[r:${relationType}]->(dest:${dest.label})
+				WHERE src.id = '${src.id}' AND dest.id = '${dest.id}'
 				DELETE r
 			`
 		);
@@ -43,16 +41,14 @@ export class Neo4jService {
 
 	async createRelation(
 		relationType: SocialRelations,
-		srcId: string,
-		srcLabel: string,
-		destId: string,
-		destLabel: string,
+		src: { id: string, label: string },
+		dest: { id: string, label: string },
 		additionalProperties?: { [key: string]: string }
 	): Promise<Record<string, string>> {
 		const session = this.neo4jService.getWriteSession();
 		let query = `
-			MATCH (src:${srcLabel} {id: '${srcId}'})
-			MATCH (dest:${destLabel} {id: '${destId}'})
+			MATCH (src:${src.label} {id: '${src.id}'})
+			MATCH (dest:${dest.label} {id: '${dest.id}'})
 			MERGE (src)-[r:${relationType}]->(dest)
 		`;
 		if (additionalProperties) {
@@ -63,7 +59,6 @@ export class Neo4jService {
 		query += `
 			RETURN r	
 		`;
-		console.log({query})
 		const result = await session.run(query);
 		session.close();
 		if (!result.records.length) {
@@ -81,16 +76,14 @@ export class Neo4jService {
 
 	async updateRelation(
 		relationType: SocialRelations,
-		srcId: string,
-		srcLabel: string,
-		destId: string,
-		destLabel: string,
+		src: { id: string, label: string },
+		dest: { id: string, label: string },
 		updatedProperties?: { [key: string]: string }
 	): Promise<Record<string, string>> {
 		const session = this.neo4jService.getWriteSession();
 		let query = `
-			MATCH (src:${srcLabel})-[r:${relationType}]->(dest:${destLabel}})
-			WHERE src.id=${srcId} AND dest.id = ${destId}
+			MATCH (src:${src.label})-[r:${relationType}]->(dest:${dest.label}})
+			WHERE src.id=${src.id} AND dest.id = ${dest.id}
 			SET r = {${Object.keys(updatedProperties).map((key) => `${key}: '${updatedProperties[key]}'`).join(', ')}}
 			RETURN r
 		`;
@@ -152,10 +145,8 @@ export class Neo4jService {
 		if (pagination) {
 			query += ` SKIP ${pagination.skip} LIMIT ${pagination.limit}`;
 		}
-		console.log("Get source node")
 
 		const result = await session.run(query);
-		console.log("Get source node1")
 		session.close();	
 		
 		return {

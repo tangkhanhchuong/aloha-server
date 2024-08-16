@@ -26,7 +26,6 @@ export class CreatePostController {
 		@Body() body: Post_CreatePostRequestBodyDTO
 	): Promise<Post_CreatePostResponseDTO> {
 		try {
-			console.log('Hello')
 			return await this.createPostService.execute(body, authUser);
 		} catch (e) {
 			this.logger.error(e, e.stack, CreatePostController.name);

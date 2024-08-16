@@ -1,7 +1,9 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { isValidObjectId, Model } from 'mongoose';
 
+import { InjectModel } from '@nestjs/mongoose';
 import { Neo4jService } from 'core/neo4j/neo4j.service';
+import { User } from 'database/user/user';
 import {
 	GraphLabels,
 	SocialRelations
@@ -9,9 +11,6 @@ import {
 import {
 	UserRelation_UnfollowUserResponseDTO
 } from 'shared/dto/user-relation/unfollow-user.dto';
-import { SearchUsersService } from 'src/modules/user/user-management/search-users/search-users.service';
-import { User } from 'database/user/user';
-import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class UnfollowUserService {
@@ -44,10 +43,8 @@ export class UnfollowUserService {
 		}
 		const result = await this.neo4jService.removeRelation(
 			SocialRelations.FOLLOW_USER,
-			userId,
-			GraphLabels.USER,
-			followerId,
-			GraphLabels.USER,
+			{ id: userId, label: GraphLabels.USER },
+			{ id: followerId, label: GraphLabels.USER }
 		);
 		return {
 			status: result

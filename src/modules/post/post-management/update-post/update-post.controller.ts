@@ -26,7 +26,6 @@ export class Post_UpdatePostController {
 		@Body() body: Post_UpdatePostRequestBodyDTO
 	): Promise<Post_UpdatePostResponseDTO> {
 		try {
-			console.log('Hello')
 			return await this.updatePostService.execute(id, body);
 		} catch (e) {
 			this.logger.error(e, e.stack, Post_UpdatePostController.name);

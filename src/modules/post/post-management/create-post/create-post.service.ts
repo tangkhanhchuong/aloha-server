@@ -32,8 +32,7 @@ export class CreatePostService {
 		});
 		const savedPost = await createdPost.save();
 		await this.neo4jService.createNode(GraphLabels.POST, {
-			title,
-			postId: createdPost.id
+			id: createdPost.id
 		});
 
 		return {

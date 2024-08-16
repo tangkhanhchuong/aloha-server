@@ -40,32 +40,28 @@ export class ReactToPostService {
 			{ id: postId, label: GraphLabels.POST }
 		);
 
-		if (!postReactions[0]) {
+		if (!postReactions.items[0]) {
 			await this.neo4jService.createRelation(
 				SocialRelations.REACT_POST,
-				userId,
-				GraphLabels.USER,
-				postId,
-				GraphLabels.POST,
-				{
-					type: bodyDTO.reaction
-				}
+				{ id: userId, label: GraphLabels.USER },
+				{ id: postId, label: GraphLabels.POST},
+				{ type: reaction }
 			);
-			return {
-				isReacted: true
-			};
+			post.numberOfReactions += 1;
 		} else {
 			await this.neo4jService.removeRelation(
 				SocialRelations.REACT_POST,
-				userId,
-				GraphLabels.USER,
-				postId,
-				GraphLabels.POST,
+				{ id: userId, label: GraphLabels.USER },
+				{ id: postId, label: GraphLabels.POST }
 			);
-
-			return {
-				isReacted: false
-			};
+			if (post.numberOfReactions > 0) {
+				post.numberOfReactions -= 1;
+			}
 		}
+		await post.save();
+
+		return {
+			isReacted: postReactions.items[0] ? false : true
+		};
 	}
 }
