@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { DTO, HttpMedthod } from '../base.dto';
+import { DTO, HttpMethod } from '../base.dto';
 import { ListingRequestQueryDTO } from '../listing.request.dto';
 import { PaginatedResponseDTO } from '../paginated.response.dto';
 
@@ -15,7 +15,7 @@ export class UserRelation_GetFolloweesResponseDTO extends PaginatedResponseDTO<U
 
 export class UserRelation_GetFolloweesDTO extends DTO {
 	public static url = '/users/:userId/followees';
-	public HttpMedthod = HttpMedthod.GET;
+	public method = HttpMethod.GET;
 
 	public bodyDTO: undefined;
 	public paramDTO: undefined;

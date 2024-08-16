@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { CommentTypes } from 'shared/constants/comment';
 
-@Schema({ versionKey: false, collection: 'comments' })
+@Schema({ versionKey: false, collection: 'post-comments' })
 export class PostComment extends Document<number> {
 	@Prop({
 		type: MongooseSchema.Types.ObjectId,
@@ -11,17 +12,16 @@ export class PostComment extends Document<number> {
 	postId: MongooseSchema.Types.ObjectId;
 
 	@Prop({
-		type: MongooseSchema.Types.ObjectId,
-		ref: 'user',
-		required: true
+		type: String,
+		default: 'Comment content',
 	})
-	userId: MongooseSchema.Types.ObjectId;
-    
+	content: string;
+	
 	@Prop({
-		type: Date,
-		default: Date.now,
+		enum: CommentTypes,
+		default: CommentTypes.TEXT
 	})
-    content: Date;
+	type: CommentTypes;
     
 	@Prop({
 		type: Date,

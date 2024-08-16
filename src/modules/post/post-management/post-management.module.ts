@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CognitoModule } from 'core/aws/cognito/cognito.module';
 import { RmqModule } from 'core/rmq/rmq.module';
 import { Post, PostSchema } from 'database/post/post';
+import { MediaModule } from 'src/modules/media/media.module';
 
 import { CreatePostController } from './create-post/create-post.controller';
 import { CreatePostService } from './create-post/create-post.service';
@@ -21,6 +22,7 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 		]),
 		RmqModule,
 		CognitoModule,
+		MediaModule
 	],
 	controllers: [
 		GetPostController,

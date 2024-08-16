@@ -1,6 +1,6 @@
 import { IsBoolean } from 'class-validator';
 
-import { DTO, HttpMedthod } from '../base.dto';
+import { DTO, HttpMethod } from '../base.dto';
 
 export class User_ActivateUserResponseDTO {
 	@IsBoolean()
@@ -9,7 +9,7 @@ export class User_ActivateUserResponseDTO {
 
 export class User_ActivateUserDTO extends DTO {
 	public static url = '/users/:id/activate';
-	public HttpMedthod = HttpMedthod.POST;
+	public method = HttpMethod.POST;
 
 	public paramDTO: undefined;
 	public queryDTO: undefined;

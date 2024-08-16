@@ -2,7 +2,7 @@ import { IsBoolean, IsEnum, IsMongoId, IsOptional, IsString } from 'class-valida
 
 import { PostReactions } from 'shared/constants/post';
 
-import { DTO, HttpMedthod } from '../base.dto';
+import { DTO, HttpMethod } from '../base.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class Post_ReactToPostRequestBodyDTO {
@@ -31,7 +31,7 @@ export class Post_ReactToPostResponseDTO {
 
 export class Post_ReactToPostDTO extends DTO {
 	public static url = '/posts/:postId/reactions';
-	public HttpMedthod = HttpMedthod.POST;
+	public method = HttpMethod.POST;
 
 	public queryDTO: undefined;
 

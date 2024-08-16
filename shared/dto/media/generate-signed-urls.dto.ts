@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
-import { DTO, HttpMedthod } from '../base.dto';
+import { DTO, HttpMethod } from '../base.dto';
 
 export class Media_GenerateSignedUrlsRequestBodyDTO {
 	@ApiProperty()
@@ -12,7 +12,8 @@ export class Media_GenerateSignedUrlsRequestBodyDTO {
 	@ApiProperty()
 	@IsString()
 	@Transform(({ value }) => value?.trim())
-	mineType: string;
+	@IsOptional()
+	mineType?: string;
 }
 
 export class Media_GenerateSignedUrlsResponseDTO {
@@ -22,7 +23,7 @@ export class Media_GenerateSignedUrlsResponseDTO {
 
 export class Media_GenerateSignedUrlsDTO extends DTO {
 	public static url = '/media/signed-urls';
-	public HttpMedthod = HttpMedthod.POST;
+	public method = HttpMethod.POST;
 
 	public paramDTO: undefined;
     public queryDTO: undefined;

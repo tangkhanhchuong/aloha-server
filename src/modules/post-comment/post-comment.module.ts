@@ -1,4 +1,10 @@
 import { Module } from '@nestjs/common';
 
-@Module({})
+import { CommentModule } from './comment/comment.module';
+
+@Module({
+    imports: [
+        CommentModule
+    ]
+})
 export class PostCommentModule {}

@@ -20,7 +20,7 @@ export class Post extends Document<number> {
 	@Prop({
 		type: [String],
 	})
-	media: string[];
+	files: string[];
 
 	@Prop({
 		enum: PostStatuses,

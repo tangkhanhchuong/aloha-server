@@ -17,25 +17,24 @@ export class GenerateSignedUrlsService {
 		const urls = await Promise.all(body.fileKeys.map(
 			key => this.s3Service.getSignedUrl(
 				key,
-				body.mineType,
-				SignedUrlCommandTypes.PUT_OBJECT
+				SignedUrlCommandTypes.PUT_OBJECT,
+				body.mineType
 			)
 		));
 		return {
 			urls
-		}
+		};
 	}
 
 	async generateDownloadSignedUrl(body: Media_GenerateSignedUrlsRequestBodyDTO): Promise<Media_GenerateSignedUrlsResponseDTO> {
 		const urls = await Promise.all(body.fileKeys.map(
 			key => this.s3Service.getSignedUrl(
 				key,
-				body.mineType,
 				SignedUrlCommandTypes.GET_OBJECT
 			)
 		));
 		return {
 			urls
-		}
+		};
 	}
 }

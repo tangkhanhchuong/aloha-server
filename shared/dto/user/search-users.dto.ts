@@ -3,7 +3,7 @@ import { IsArray, ValidateIf } from 'class-validator';
 
 import { ListingRequestQueryDTO } from 'shared/dto/listing.request.dto';
 
-import { DTO, HttpMedthod } from '../base.dto';
+import { DTO, HttpMethod } from '../base.dto';
 import { PaginatedResponseDTO } from '../paginated.response.dto';
 
 export class User_SearchUsersRequestBodyDTO extends ListingRequestQueryDTO {
@@ -30,7 +30,7 @@ export class User_SearchUsersResponseDTO extends PaginatedResponseDTO<User_UserR
 
 export class User_SearchUsersDTO extends DTO {
 	public static url = '/users/search';
-	public HttpMedthod = HttpMedthod.POST;
+	public method = HttpMethod.POST;
 
 	public paramDTO: undefined;
 	public queryDTO: undefined;

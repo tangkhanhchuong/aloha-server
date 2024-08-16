@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 
-import { DTO, HttpMedthod } from '../base.dto';
+import { DTO, HttpMethod } from '../base.dto';
 
 export class Post_GetPostResponseDTO {
 	@ApiProperty({
@@ -25,13 +25,40 @@ export class Post_GetPostResponseDTO {
 		isArray: true
 	})
 	@IsArray()
-	@IsString()
-	media: string[];
+	fileUrls: string[];
+
+	@ApiProperty({
+		type: Number,
+		default: 0
+	})
+	@IsNumber()
+	numberOfReactions: number;
+	
+	@ApiProperty({
+		type: Number,
+		default: 0
+	})
+	@IsNumber()
+	numberOfComments: number;
+
+	@ApiProperty({
+		type: String,
+		default: ''
+	})
+	@IsNumber()
+	createdAt: string;
+
+	@ApiProperty({
+		type: String,
+		default: ''
+	})
+	@IsNumber()
+	createdBy: string;
 }
 
 export class Post_GetPostDTO extends DTO {
 	public static url = '/posts/:id';
-	public HttpMedthod = HttpMedthod.GET;
+	public method = HttpMethod.GET;
 
 	public paramDTO: undefined;
 	public queryDTO: undefined;

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
-import { DTO, HttpMedthod } from '../base.dto';
+import { DTO, HttpMethod } from '../base.dto';
 
 export class Post_DeletePostResponseDTO {
 	@ApiProperty({
@@ -14,7 +14,7 @@ export class Post_DeletePostResponseDTO {
 
 export class Post_DeletePostDTO extends DTO {
 	public static url = '/posts/:id';
-	public HttpMedthod = HttpMedthod.DELETE;
+	public method = HttpMethod.DELETE;
 
 	public paramDTO: undefined;
 	public queryDTO: undefined;

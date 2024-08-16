@@ -30,12 +30,14 @@ export class S3Service {
 
     public async getSignedUrl(
         key: string,
-        mineType: string,
-        signedType: SignedUrlCommandTypes = SignedUrlCommandTypes.GET_OBJECT
+        signedType: SignedUrlCommandTypes = SignedUrlCommandTypes.GET_OBJECT,
+        mineType?: string
     ): Promise<string> {
-        const isValidExtension = isValidFileExtension(key, mineType);
-        if (!isValidExtension) {
-            throw new BadRequestException(ErrorMessage.INVALID_FILE_EXTENSION);
+        if (signedType === SignedUrlCommandTypes.PUT_OBJECT) {
+            const isValidExtension = isValidFileExtension(key, mineType);
+            if (!isValidExtension) {
+                throw new BadRequestException(ErrorMessage.INVALID_FILE_EXTENSION);
+            }
         }
 
         const command = signedType === SignedUrlCommandTypes.PUT_OBJECT

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, MaxLength } from 'class-validator';
 
-import { DTO, HttpMedthod } from '../base.dto';
+import { DTO, HttpMethod } from '../base.dto';
 
 export class User_CreateUserRequestBodyDTO {
 	@ApiProperty({
@@ -29,7 +29,7 @@ export class User_CreateUserResponseDTO {
 
 export class User_CreateUserDTO extends DTO {
 	public static url = '/users';
-	public HttpMedthod = HttpMedthod.POST;
+	public method = HttpMethod.POST;
 
 	public paramDTO: undefined;
 	public queryDTO: undefined;

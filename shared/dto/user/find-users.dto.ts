@@ -3,7 +3,7 @@ import { IsArray } from 'class-validator';
 
 import { UserStatuses } from 'shared/constants/user';
 
-import { DTO, HttpMedthod } from '../base.dto';
+import { DTO, HttpMethod } from '../base.dto';
 
 export class User_FindUsersRequestBodyDTO {
 	@ApiProperty({ isArray: true, default: [] })
@@ -35,7 +35,7 @@ export class User_FindUsersResponseDTO {
 
 export class User_FindUsersDTO extends DTO {
 	public static url = '/users';
-	public HttpMedthod = HttpMedthod.GET;
+	public method = HttpMethod.GET;
 
 	public paramDTO: undefined;
 	public bodyDTO: undefined;
