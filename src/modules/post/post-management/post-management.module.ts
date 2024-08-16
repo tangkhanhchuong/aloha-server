@@ -2,7 +2,6 @@ import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { CognitoModule } from 'core/aws/cognito/cognito.module';
-import { Neo4jModule } from 'core/neo4j/neo4j.module';
 import { RmqModule } from 'core/rmq/rmq.module';
 import { Post, PostSchema } from 'database/post/post';
 
@@ -22,7 +21,6 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 		]),
 		RmqModule,
 		CognitoModule,
-		Neo4jModule
 	],
 	controllers: [
 		GetPostController,

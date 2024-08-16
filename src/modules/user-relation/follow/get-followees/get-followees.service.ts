@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
-import { Neo4jService } from 'core/neo4j/neo4j.service';
-import {
-	GraphLabels,
-	SocialRelations
-} from 'shared/constants/neo4j';
+import { UserRelation } from 'database/user-relation/user-relation';
 import {
 	UserRelation_GetFolloweesRequestQueryDTO,
 	UserRelation_GetFolloweesResponseDTO
@@ -13,25 +11,28 @@ import {
 @Injectable()
 export class GetFolloweesService {
 	constructor(
-		private readonly neo4jService: Neo4jService
+		@InjectModel(UserRelation.name)
+		private readonly userRelationModel: Model<UserRelation>
 	) {}
 
 	async execute(
 		queryDTO: UserRelation_GetFolloweesRequestQueryDTO,
 		userId: string
 	): Promise<UserRelation_GetFolloweesResponseDTO> {
-		const { items, count } = await this.neo4jService.getDestinationNodes(
-			SocialRelations.FOLLOW_USER,
-			{ id: userId, label: GraphLabels.USER },
-			null,
-			{ skip:queryDTO.limit * (+queryDTO.page - 1), limit: queryDTO.limit}
-		)
-
+		const items = await this.userRelationModel.find()
+			.where({ createdBy: userId })
+			.skip(queryDTO.limit * (+queryDTO.page - 1))
+			.limit(queryDTO.limit)
+			.exec();
+		const count = items.length;
+		
 		return new UserRelation_GetFolloweesResponseDTO(
-			items.map(item => ({ userId:item.id })),
+			items.map((item) => ({
+				userId: item.targetId.toString()
+			})),
 			queryDTO.page,
 			queryDTO.limit,
 			count,
-		)
+		);
 	}
 }

@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsMongoId, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsMongoId, IsOptional, IsString } from 'class-validator';
 
 import { PostReactions } from 'shared/constants/post';
 
@@ -11,7 +11,8 @@ export class Post_ReactToPostRequestBodyDTO {
 		default: PostReactions.LIKE
 	})
 	@IsEnum(PostReactions)
-	reaction: PostReactions;
+	@IsOptional()
+	reaction?: PostReactions;
 }
 
 export class Post_ReactToPostRequestParamDTO {

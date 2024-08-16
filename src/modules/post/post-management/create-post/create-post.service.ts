@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { Neo4jService } from 'core/neo4j/neo4j.service';
 import { Post } from 'database/post/post';
-import { GraphLabels } from 'shared/constants/neo4j';
 import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 import {
 	Post_CreatePostRequestBodyDTO,
@@ -16,7 +14,6 @@ export class CreatePostService {
 	constructor(
 		@InjectModel(Post.name)
 		private readonly postModel: Model<Post>,
-		private readonly neo4jService: Neo4jService
     ) {}
     
 	async execute(
@@ -31,9 +28,6 @@ export class CreatePostService {
 			createdBy: authUser.userId 
 		});
 		const savedPost = await createdPost.save();
-		await this.neo4jService.createNode(GraphLabels.POST, {
-			id: createdPost.id
-		});
 
 		return {
 			id: savedPost.id

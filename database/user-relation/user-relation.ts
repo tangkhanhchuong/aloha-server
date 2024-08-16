@@ -1,36 +1,21 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-import { UserStatuses } from 'shared/constants/user';
+import { UserRelations } from 'shared/constants/user';
 
-@Schema({ versionKey: false, collection: 'users' })
-export class User extends Document<number> {
+@Schema({ versionKey: false, collection: 'user-relations' })
+export class UserRelation extends Document<number> {
 	@Prop({
-		type: String,
-		required: true,
-		trim: true,
-		maxlength: 25,
+		type: MongooseSchema.Types.ObjectId,
+		ref: 'User',
 	})
-	username: string;
+	targetId: MongooseSchema.Types.ObjectId;
 
 	@Prop({
-		type: String,
-		required: true,
-		trim: true,
-		unique: true,
+		enum: UserRelations,
+		default: UserRelations.FOLLOW
 	})
-	email: string;
-
-	@Prop({
-		enum: UserStatuses,
-		default: UserStatuses.INACTIVE
-	})
-	status: UserStatuses;
-
-	@Prop({
-		type: String,
-	})
-	avatar: string;
+	relationType: UserRelations;
 
 	@Prop({
 		type: Date,
@@ -69,4 +54,4 @@ export class User extends Document<number> {
 	deletedBy: MongooseSchema.Types.ObjectId;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserRelationSchema = SchemaFactory.createForClass(UserRelation);

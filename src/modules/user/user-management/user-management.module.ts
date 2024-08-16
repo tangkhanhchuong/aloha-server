@@ -3,7 +3,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { RmqModule } from 'core/rmq/rmq.module';
 import { User, UserSchema } from 'database/user/user';
-import { InitializeUserRelationModule } from 'src/modules/user-relation/initialize-user-relation/initialize-user-relation.module';
 
 import { ActivateUserService } from './activate-user/activate-user.service';
 import { CreateUserController } from './create-user/create-user.controller';
@@ -17,7 +16,6 @@ import { SearchUsersService } from './search-users/search-users.service';
 	imports: [
 		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
 		RmqModule,
-		InitializeUserRelationModule
 	],
 	controllers: [
 		CreateUserController,

@@ -2,9 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { Neo4jService } from 'core/neo4j/neo4j.service';
 import { Post } from 'database/post/post';
-import { GraphLabels, SocialRelations } from 'shared/constants/neo4j';
+import { PostReaction } from 'database/post/post-reaction.dto';
 import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 import {
 	Post_ReactToPostRequestBodyDTO,
@@ -17,7 +16,8 @@ export class ReactToPostService {
 	constructor(
 		@InjectModel(Post.name)
 		private readonly postModel: Model<Post>,
-		private readonly neo4jService: Neo4jService,
+		@InjectModel(PostReaction.name)
+		private readonly postReactionModel: Model<PostReaction>,
     ) {}
     
 	async execute(
@@ -34,34 +34,40 @@ export class ReactToPostService {
 			throw new NotFoundException('Post not found');
 		}
 
-		const postReactions = await this.neo4jService.getDestinationNodes(
-			SocialRelations.REACT_POST,
-			{ id: userId, label: GraphLabels.USER },
-			{ id: postId, label: GraphLabels.POST }
-		);
-
-		if (!postReactions.items[0]) {
-			await this.neo4jService.createRelation(
-				SocialRelations.REACT_POST,
-				{ id: userId, label: GraphLabels.USER },
-				{ id: postId, label: GraphLabels.POST},
-				{ type: reaction }
-			);
+		let postReaction = await this.postReactionModel.findOne({
+			postId,
+			createdBy: userId
+		});
+		if (!postReaction) {
+			if (!bodyDTO.reaction) {
+				return {
+					isReacted: false
+				};
+			}
+			postReaction = new this.postReactionModel({
+				postId,
+				reactionType: reaction,
+				createdBy: userId
+			});
 			post.numberOfReactions += 1;
 		} else {
-			await this.neo4jService.removeRelation(
-				SocialRelations.REACT_POST,
-				{ id: userId, label: GraphLabels.USER },
-				{ id: postId, label: GraphLabels.POST }
-			);
-			if (post.numberOfReactions > 0) {
+			if (bodyDTO.reaction && postReaction.reactionType === bodyDTO.reaction) {
+				return {
+					isReacted: false
+				};
+			}
+			if (bodyDTO.reaction && !postReaction.reactionType) {
+				post.numberOfReactions += 1;
+			} else if (!bodyDTO.reaction && postReaction.reactionType) {
 				post.numberOfReactions -= 1;
 			}
+			postReaction.reactionType = bodyDTO.reaction;
 		}
+		await postReaction.save();
 		await post.save();
 
 		return {
-			isReacted: postReactions.items[0] ? false : true
+			isReacted: !!postReaction.reactionType
 		};
 	}
 }

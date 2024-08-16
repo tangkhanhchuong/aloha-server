@@ -1,11 +1,14 @@
 import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { Neo4jModule } from 'core/neo4j/neo4j.module';
 import {
     Post,
     PostSchema
 } from 'database/post/post';
+import {
+    PostReaction,
+    PostReactionSchema
+} from 'database/post/post-reaction.dto';
 import {
     User,
     UserSchema
@@ -19,8 +22,8 @@ import { ReactToPostService } from './react-to-post.service';
 		MongooseModule.forFeature([
             { name: Post.name, schema: PostSchema },
             { name: User.name, schema: UserSchema },
+            { name: PostReaction.name, schema: PostReactionSchema },
 		]),
-		Neo4jModule
     ],
     controllers: [
         ReactToPostController

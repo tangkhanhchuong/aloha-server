@@ -1,36 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-import { UserStatuses } from 'shared/constants/user';
+import { PostReactions } from 'shared/constants/post';
 
-@Schema({ versionKey: false, collection: 'users' })
-export class User extends Document<number> {
+@Schema({ versionKey: false, collection: 'post-reactions' })
+export class PostReaction extends Document<number> {
 	@Prop({
-		type: String,
-		required: true,
-		trim: true,
-		maxlength: 25,
+		type: MongooseSchema.Types.ObjectId,
+		ref: 'Post',
 	})
-	username: string;
-
-	@Prop({
-		type: String,
-		required: true,
-		trim: true,
-		unique: true,
-	})
-	email: string;
-
-	@Prop({
-		enum: UserStatuses,
-		default: UserStatuses.INACTIVE
-	})
-	status: UserStatuses;
-
-	@Prop({
-		type: String,
-	})
-	avatar: string;
+    postId: MongooseSchema.Types.ObjectId;
+    
+    @Prop({
+        enum: PostReactions,
+    })
+    reactionType: PostReactions;
 
 	@Prop({
 		type: Date,
@@ -69,4 +53,4 @@ export class User extends Document<number> {
 	deletedBy: MongooseSchema.Types.ObjectId;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const PostReactionSchema = SchemaFactory.createForClass(PostReaction);

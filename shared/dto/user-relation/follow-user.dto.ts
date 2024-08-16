@@ -4,7 +4,7 @@ import { DTO, HttpMedthod } from '../base.dto';
 
 export class UserRelation_FollowUserResponseDTO {
 	@IsBoolean()
-	status: boolean
+	status: boolean;
 }
 
 export class UserRelation_FollowUserDTO extends DTO {

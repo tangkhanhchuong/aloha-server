@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-@Schema({ versionKey: false })
+@Schema({ versionKey: false, collection: 'comments' })
 export class PostComment extends Document<number> {
 	@Prop({
 		type: MongooseSchema.Types.ObjectId,
