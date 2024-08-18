@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 
 import { Post } from 'database/post/post';
 import { User } from 'database/user/user';
@@ -29,8 +29,10 @@ export class GetUserTimelineService {
         const { limit, page } = queryDTO;
         const { userId } = paramDTO;
 
-		const filter = {
-			status: PostStatuses.PUBLISHED
+		const filter: FilterQuery<Post> = {
+			status: PostStatuses.PUBLISHED,
+			createdBy: userId,
+			deletedAt: null
 		};
 		const [postEntities, count] = await Promise.all([
 			this.postModel

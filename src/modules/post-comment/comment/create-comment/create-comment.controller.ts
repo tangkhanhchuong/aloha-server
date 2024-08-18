@@ -37,7 +37,7 @@ export class CreateCommentController {
 		try {
 			return await this.createCommentService.execute(bodyDTO, paramDTO, authUser);
 		} catch (e) {
-			this.logger.error(e, e.stack, PostComment_CreateCommentDTO.name);
+			this.logger.error(e, e.stack, CreateCommentController.name);
 			throw e;
 		}
 	}

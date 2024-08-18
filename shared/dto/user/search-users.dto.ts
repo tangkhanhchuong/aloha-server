@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, ValidateIf } from 'class-validator';
 
 import { ListingRequestQueryDTO } from 'shared/dto/listing.request.dto';
@@ -8,7 +7,6 @@ import { PaginatedResponseDTO } from '../paginated.response.dto';
 import { UserDTO } from './user.dto';
 
 export class User_SearchUsersRequestBodyDTO extends ListingRequestQueryDTO {
-	@ApiProperty({ default: '' })
 	@IsArray()
 	@ValidateIf((obj) => {
 		return !obj.keyword

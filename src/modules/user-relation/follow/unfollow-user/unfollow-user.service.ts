@@ -2,12 +2,14 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { isValidObjectId, Model } from 'mongoose';
 
 import { InjectModel } from '@nestjs/mongoose';
+import { UserRelation } from 'database/user-relation/user-relation';
 import { User } from 'database/user/user';
+import { UserRelations } from 'shared/constants/user';
+import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 import {
+	UserRelation_UnfollowUserRequestParamDTO,
 	UserRelation_UnfollowUserResponseDTO
 } from 'shared/dto/user-relation/unfollow-user.dto';
-import { UserRelation } from 'database/user-relation/user-relation';
-import { UserRelations } from 'shared/constants/user';
 
 @Injectable()
 export class UnfollowUserService {
@@ -18,7 +20,12 @@ export class UnfollowUserService {
 		private readonly userRelationModel: Model<UserRelation>
 	) {}
 
-	async execute(userId: string, followerId: string): Promise<UserRelation_UnfollowUserResponseDTO> {
+	async execute(
+		paramDTO: UserRelation_UnfollowUserRequestParamDTO,
+		authUser: AuthUserPayload
+	): Promise<UserRelation_UnfollowUserResponseDTO> {
+		const { userId } = authUser;
+		const { userId: followerId } = paramDTO;
 		if (
 			userId === followerId
 			|| !isValidObjectId(followerId)

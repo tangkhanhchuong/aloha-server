@@ -27,7 +27,7 @@ export class GetFollowersController {
 		@AuthUser() authUser: AuthUserPayload
 	): Promise<UserRelation_GetFollowersResponseDTO> {
 		try {
-			return await this.getFollowersService.execute(query, authUser.userId);
+			return await this.getFollowersService.execute(query, authUser);
 		} catch (e) {
 			this.logger.error(e, e.stack, GetFollowersController.name);
 			throw e;

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 import { Post } from "database/post/post";
 import { User } from "database/user/user";
-import { PostDTO } from "shared/dto/user/post.dto";
+import { PostDTO } from "shared/dto/post/post.dto";
 import { GenerateSignedUrlsService } from "src/modules/media/generate-signed-urls/generate-signed-urls.service";
 
 import { UserMapper } from "./user.mapper";

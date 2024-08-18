@@ -40,7 +40,7 @@ export class CreateCommentService {
         }
 
         const postComment = await this.postCommentService.create({
-            postId,
+            post: postId,
             content,
             type,
             createdBy: userId

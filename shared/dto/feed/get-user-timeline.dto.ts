@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { DTO, HttpMethod } from '../base.dto';
 import { ListingRequestQueryDTO } from '../listing.request.dto';
 import { PaginatedResponseDTO } from '../paginated.response.dto';
-import { PostDTO } from '../user/post.dto';
+import { PostDTO } from '../post/post.dto';
 
 export class Feed_GetUserTimelineRequestQueryDTO extends ListingRequestQueryDTO {}
 

@@ -6,7 +6,6 @@ import { DTO, HttpMethod } from '../base.dto';
 import { UserDTO } from './user.dto';
 
 export class User_FindUsersRequestBodyDTO {
-	@ApiProperty({ isArray: true, default: [] })
 	@IsArray()
     userIds?: string[];
 
@@ -15,7 +14,7 @@ export class User_FindUsersRequestBodyDTO {
 }
 
 export class User_FindUsersResponseDTO {
-	@ApiProperty({ isArray: true, type: UserDTO })
+	@IsArray()
 	users: UserDTO[];
 }
 

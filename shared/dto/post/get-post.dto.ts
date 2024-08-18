@@ -1,6 +1,6 @@
 
 import { DTO, HttpMethod } from '../base.dto';
-import { PostDTO } from '../user/post.dto';
+import { PostDTO } from './post.dto';
 
 export class Post_GetPostResponseDTO extends PostDTO {};
 

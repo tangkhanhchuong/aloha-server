@@ -5,7 +5,9 @@ import { isValidObjectId, Model } from 'mongoose';
 import { UserRelation } from 'database/user-relation/user-relation';
 import { User } from 'database/user/user';
 import { UserRelations } from 'shared/constants/user';
+import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 import {
+	UserRelation_FollowUserRequestParamDTO,
 	UserRelation_FollowUserResponseDTO
 } from 'shared/dto/user-relation/follow-user.dto';
 
@@ -18,7 +20,13 @@ export class FollowUserService {
 		private readonly userRelationModel: Model<UserRelation>
 	) {}
 
-	async execute(userId: string, followerId: string): Promise<UserRelation_FollowUserResponseDTO> {
+	async execute(
+		paramDTO: UserRelation_FollowUserRequestParamDTO,
+		authUser: AuthUserPayload
+	): Promise<UserRelation_FollowUserResponseDTO> {
+		const { userId } = authUser;
+		const { userId: followerId } = paramDTO
+
 		if (
 			userId === followerId
 			|| !isValidObjectId(followerId)

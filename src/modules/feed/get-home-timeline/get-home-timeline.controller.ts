@@ -28,7 +28,7 @@ export class GetHomeTimelineController {
 		try {
 			return await this.getHomeTimelineService.execute(queryDTO, authUser);
 		} catch (e) {
-			this.logger.error(e, e.stack, Feed_GetHomeTimelineDTO.name);
+			this.logger.error(e, e.stack, GetHomeTimelineController.name);
 			throw e;
 		}
 	}

@@ -5,6 +5,7 @@ import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import { AuthUser, AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 import {
 	UserRelation_FollowUserDTO,
+	UserRelation_FollowUserRequestParamDTO,
 	UserRelation_FollowUserResponseDTO
 } from 'shared/dto/user-relation/follow-user.dto';
 
@@ -22,11 +23,11 @@ export class FollowUserController {
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(CognitoGuard)
 	async followUser(
-		@Param('userId') userId: string,
+		@Param() paramDTO: UserRelation_FollowUserRequestParamDTO,
 		@AuthUser() authUser: AuthUserPayload
 	): Promise<UserRelation_FollowUserResponseDTO> {
 		try {
-			return await this.followService.execute(authUser.userId, userId);
+			return await this.followService.execute(paramDTO, authUser);
 		} catch (e) {
 			this.logger.error(e, e.stack, FollowUserController.name);
 			throw e;

@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { UserRelation } from 'database/user-relation/user-relation';
 import { User } from 'database/user/user';
 import { UserRelations } from 'shared/constants/user';
+import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 import {
 	UserRelation_GetFollowersRequestQueryDTO,
 	UserRelation_GetFollowersResponseDTO
@@ -21,13 +22,15 @@ export class GetFollowersService {
 
 	async execute(
 		queryDTO: UserRelation_GetFollowersRequestQueryDTO,
-		userId: string
+		authUser: AuthUserPayload
 	): Promise<UserRelation_GetFollowersResponseDTO> {
 		const { limit, page } = queryDTO;
+		const { userId } = authUser;
 
 		const filter = {
 			target: userId,
-			relationType: UserRelations.FOLLOW
+			relationType: UserRelations.FOLLOW,
+			deletedAt: null
 		};
 		const [followerEntities, count] = await Promise.all([
 			this.userRelationModel.find(filter)

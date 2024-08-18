@@ -30,7 +30,7 @@ export class GetUserTimelineController {
 		try {
 			return await this.getUserTimelineService.execute(queryDTO, paramDTO, authUser);
 		} catch (e) {
-			this.logger.error(e, e.stack, Feed_Feed_GetUserTimelineDTO.name);
+			this.logger.error(e, e.stack, GetUserTimelineController.name);
 			throw e;
 		}
 	}

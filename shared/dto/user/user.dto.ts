@@ -1,15 +1,16 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { IsOptional, IsString } from "class-validator";
 
 export class UserDTO {
-	@ApiProperty({ default: '' })
+	@IsString()
 	userId: string;
 
-	@ApiProperty({ default: 'example' })
+	@IsString()
 	username: string;
 
-	@ApiProperty({ default: 'example@gmail.com' })
+	@IsString()
 	email: string;
 
-	@ApiProperty({ default: 'http://avatar.png' })
+	@IsString()
+	@IsOptional()
 	avatar?: string;
 }

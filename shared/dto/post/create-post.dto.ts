@@ -1,29 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsString } from 'class-validator';
 
 import { DTO, HttpMethod } from '../base.dto';
 
 export class Post_CreatePostRequestBodyDTO {
-	@ApiProperty({
-		type: String,
-		default: 'New Post',
-		required: true,
-	})
 	@IsString()
 	title: string;
 
-	@ApiProperty({
-		type: String,
-		default: 'New Post Content',
-		required: true,
-	})
 	@IsString()
     content: string;
 
-	@ApiProperty({
-		type: String,
-		isArray: true
-	})
 	@IsArray()
 	media: string[];
 }

@@ -9,7 +9,7 @@ export class PostComment extends Document<number> {
 		ref: 'Post',
 		required: true
 	})
-	postId: MongooseSchema.Types.ObjectId;
+	post: MongooseSchema.Types.ObjectId;
 
 	@Prop({
 		type: String,

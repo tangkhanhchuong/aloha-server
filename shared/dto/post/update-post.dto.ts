@@ -1,30 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString } from 'class-validator';
 
 import { DTO, HttpMethod } from '../base.dto';
 
 export class Post_UpdatePostRequestBodyDTO {
-	@ApiProperty({
-		type: String,
-		default: 'New Post',
-	})
     @IsString()
     @IsOptional()
 	title?: string;
 
-	@ApiProperty({
-		type: String,
-		default: 'New Post Content',
-		required: true,
-	})
 	@IsString()
     @IsOptional()
     content?: string;
 
-	@ApiProperty({
-		type: String,
-		isArray: true
-	})
 	@IsArray()
 	@IsString()
 	@IsOptional()
@@ -35,7 +21,6 @@ export class Post_UpdatePostResponseDTO {
 	@IsString()
 	id: string;
 }
-
 
 export class Post_UpdatePostDTO extends DTO {
 	public static url = '/posts/:id';
