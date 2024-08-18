@@ -67,6 +67,20 @@ export class User extends Document<number> {
 		ref: 'User',
 	})
 	deletedBy: MongooseSchema.Types.ObjectId;
+
+	activate: Function;
+	deactivate: Function;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.methods.activate = async function(): Promise<void> {
+	this.status = UserStatuses.ACTIVE;
+	this.save();
+}
+
+UserSchema.methods.deactivate = async function(): Promise<void> {
+	this.status = UserStatuses.INACTIVE;
+	this.save();
+}
+

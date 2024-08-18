@@ -1,8 +1,9 @@
 import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { RmqModule } from 'core/rmq/rmq.module';
 import { User, UserSchema } from 'database/user/user';
+import { UserMapper } from 'shared/mappers/user.mapper';
+import { MediaModule } from 'src/modules/media/media.module';
 
 import { ActivateUserService } from './activate-user/activate-user.service';
 import { CreateUserController } from './create-user/create-user.controller';
@@ -15,7 +16,7 @@ import { SearchUsersService } from './search-users/search-users.service';
 @Module({
 	imports: [
 		MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-		RmqModule,
+		MediaModule
 	],
 	controllers: [
 		CreateUserController,
@@ -27,6 +28,7 @@ import { SearchUsersService } from './search-users/search-users.service';
 		SearchUsersService,
 		FindUsersService,
 		ActivateUserService,
+		UserMapper,
 		Logger
 	],
 	exports: [

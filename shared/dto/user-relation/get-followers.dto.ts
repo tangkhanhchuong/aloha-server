@@ -1,17 +1,11 @@
-
-import { ApiProperty } from '@nestjs/swagger';
-
 import { DTO, HttpMethod } from '../base.dto';
 import { ListingRequestQueryDTO } from '../listing.request.dto';
 import { PaginatedResponseDTO } from '../paginated.response.dto';
+import { UserDTO } from '../user/user.dto';
 
-export class UserRelation_GetFollowersRequestQueryDTO extends ListingRequestQueryDTO {}
-export class UserRelation_UserResponseDTO {
-	@ApiProperty({ default: '' })
-	userId: string;
-}
+export class UserRelation_GetFollowersRequestQueryDTO extends ListingRequestQueryDTO { }
 
-export class UserRelation_GetFollowersResponseDTO extends PaginatedResponseDTO<UserRelation_UserResponseDTO> {};
+export class UserRelation_GetFollowersResponseDTO extends PaginatedResponseDTO<UserDTO> {};
 
 export class UserRelation_GetFollowersDTO extends DTO {
 	public static url = '/users/:userId/followers';

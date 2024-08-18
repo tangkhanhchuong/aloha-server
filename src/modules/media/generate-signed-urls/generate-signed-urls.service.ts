@@ -14,6 +14,9 @@ export class GenerateSignedUrlsService {
 	) {}
     
 	async generateUploadSignedUrl(body: Media_GenerateSignedUrlsRequestBodyDTO): Promise<Media_GenerateSignedUrlsResponseDTO> {
+		if (!body.fileKeys) {
+			return { urls: [] };
+		}
 		const urls = await Promise.all(body.fileKeys.map(
 			key => this.s3Service.getSignedUrl(
 				key,
@@ -27,6 +30,9 @@ export class GenerateSignedUrlsService {
 	}
 
 	async generateDownloadSignedUrl(body: Media_GenerateSignedUrlsRequestBodyDTO): Promise<Media_GenerateSignedUrlsResponseDTO> {
+		if (!body.fileKeys) {
+			return { urls: [] };
+		}
 		const urls = await Promise.all(body.fileKeys.map(
 			key => this.s3Service.getSignedUrl(
 				key,

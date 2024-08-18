@@ -7,12 +7,14 @@ import {
 	User_FindUsersRequestBodyDTO,
 	User_FindUsersResponseDTO
 } from 'shared/dto/user/find-users.dto';
+import { UserMapper } from 'shared/mappers/user.mapper';
 
 @Injectable()
 export class FindUsersService {
 	constructor(
 		@InjectModel(User.name)
 		private readonly userModel: Model<User>,
+		private readonly userMapper: UserMapper
 	) {}
 
 	async execute(query: User_FindUsersRequestBodyDTO): Promise<User_FindUsersResponseDTO> {
@@ -26,14 +28,10 @@ export class FindUsersService {
 			conditions['email'] = query.email;
 		}
 
-		const items = await this.userModel.find(conditions).exec();
+		const userEntities = await this.userModel.find(conditions).exec();
+		const userDTOs = await Promise.all(userEntities.map(user => this.userMapper.entityToDTO(user)));
 		return {
-			users: items.map(item => ({
-				userId: item.id,
-                username: item.username,
-                email: item.email,
-                status: item.status
-            }))
+			users: userDTOs
 		};
 	}
 }

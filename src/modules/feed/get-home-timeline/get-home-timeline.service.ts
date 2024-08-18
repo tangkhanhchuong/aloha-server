@@ -3,34 +3,51 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Post } from 'database/post/post';
+import { User } from 'database/user/user';
+import { PostStatuses } from 'shared/constants/post';
 import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 import {
-	Post_CreatePostRequestBodyDTO,
-	Post_CreatePostResponseDTO,
-} from 'shared/dto/post/create-post.dto';
+	Feed_GetHomeTimelineRequestQueryDTO,
+	Feed_GetHomeTimelineResponseDTO
+} from 'shared/dto/feed/get-home-timeline.dto';
+import { PostMapper } from 'shared/mappers/post.mapper';
 
 @Injectable()
-export class CreatePostService {
+export class GetHomeTimelineService {
 	constructor(
 		@InjectModel(Post.name)
 		private readonly postModel: Model<Post>,
+		private readonly postMapper: PostMapper,
     ) {}
     
 	async execute(
-		bodyDTO: Post_CreatePostRequestBodyDTO,
+		queryDTO: Feed_GetHomeTimelineRequestQueryDTO,
 		authUser: AuthUserPayload
-	): Promise<Post_CreatePostResponseDTO> {
-		const { title, content, media } = bodyDTO;
-		const createdPost = await this.postModel.create({
-			title,
-			content,
-			media,
-			createdBy: authUser.userId 
-		});
-		const savedPost = await createdPost.save();
+	): Promise<Feed_GetHomeTimelineResponseDTO> {
+		const { limit, page } = queryDTO;
 
-		return {
-			id: savedPost.id
-		}
+		const filter = {
+			status: PostStatuses.PUBLISHED
+		};
+		const [postEntities, count] = await Promise.all([
+			this.postModel
+				.find(filter)
+				.populate('createdBy')
+				.skip(limit * (+page - 1))
+				.limit(limit)
+				.sort({ createdAt: -1 })
+				.exec(),
+			this.postModel.countDocuments(filter)
+		]);
+		
+		const postDTOs = await Promise.all(postEntities.map(async (postEntity) => {
+			return this.postMapper.entityToDTO(postEntity as Post & { createdBy: User });
+		}));
+		return new Feed_GetHomeTimelineResponseDTO(
+			postDTOs,
+			queryDTO.page,
+			queryDTO.limit,
+			count,
+		);
 	}
 }

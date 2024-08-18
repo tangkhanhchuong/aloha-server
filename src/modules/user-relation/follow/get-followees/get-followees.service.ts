@@ -7,31 +7,43 @@ import {
 	UserRelation_GetFolloweesRequestQueryDTO,
 	UserRelation_GetFolloweesResponseDTO
 } from 'shared/dto/user-relation/get-followees.dto';
+import { UserMapper } from 'shared/mappers/user.mapper';
+import { UserRelations } from 'shared/constants/user';
+import { User } from 'database/user/user';
 
 @Injectable()
 export class GetFolloweesService {
 	constructor(
 		@InjectModel(UserRelation.name)
-		private readonly userRelationModel: Model<UserRelation>
+		private readonly userRelationModel: Model<UserRelation>,
+		private readonly userMapper: UserMapper
 	) {}
 
 	async execute(
 		queryDTO: UserRelation_GetFolloweesRequestQueryDTO,
 		userId: string
 	): Promise<UserRelation_GetFolloweesResponseDTO> {
-		const items = await this.userRelationModel.find()
-			.where({ createdBy: userId })
-			.skip(queryDTO.limit * (+queryDTO.page - 1))
-			.limit(queryDTO.limit)
-			.exec();
-		const count = items.length;
-		
+		const { limit, page } = queryDTO;
+
+		const filter = {
+			createdBy: userId,
+			relationType: UserRelations.FOLLOW
+		};
+		const [userRelationEntities, count] = await Promise.all([
+			this.userRelationModel.find(filter)
+				.populate('createdBy')
+				.skip(limit * (+page - 1))
+				.limit(limit)
+				.exec(),
+			this.userRelationModel.countDocuments(filter)
+		]);
+		const followeeDTOs = await Promise.all(userRelationEntities
+			.map((userRelationEntity) => this.userMapper.entityToDTO((userRelationEntity.createdBy) as User)));
+
 		return new UserRelation_GetFolloweesResponseDTO(
-			items.map((item) => ({
-				userId: item.targetId.toString()
-			})),
-			queryDTO.page,
-			queryDTO.limit,
+			followeeDTOs,
+			page,
+			limit,
 			count,
 		);
 	}

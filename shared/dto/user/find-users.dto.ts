@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray } from 'class-validator';
 
-import { UserStatuses } from 'shared/constants/user';
 
 import { DTO, HttpMethod } from '../base.dto';
+import { UserDTO } from './user.dto';
 
 export class User_FindUsersRequestBodyDTO {
 	@ApiProperty({ isArray: true, default: [] })
@@ -14,23 +14,9 @@ export class User_FindUsersRequestBodyDTO {
 	email?: string;
 }
 
-export class User_UserResponseDTO {
-	@ApiProperty({ default: '' })
-	userId: string;
-
-	@ApiProperty({ default: 'example' })
-	username: string;
-
-	@ApiProperty({ default: 'example@gmail.com' })
-	email: string;
-	
-	@ApiProperty({ enum: UserStatuses, default: UserStatuses.INACTIVE })
-	status: UserStatuses;
-}
-
 export class User_FindUsersResponseDTO {
-	@ApiProperty({ isArray: true, type: User_UserResponseDTO })
-	users: User_UserResponseDTO[];
+	@ApiProperty({ isArray: true, type: UserDTO })
+	users: UserDTO[];
 }
 
 export class User_FindUsersDTO extends DTO {

@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
+import { User } from 'database/user/user';
 import { UserRelations } from 'shared/constants/user';
 
 @Schema({ versionKey: false, collection: 'user-relations' })
@@ -9,7 +10,7 @@ export class UserRelation extends Document<number> {
 		type: MongooseSchema.Types.ObjectId,
 		ref: 'User',
 	})
-	targetId: MongooseSchema.Types.ObjectId;
+	target: MongooseSchema.Types.ObjectId | User;
 
 	@Prop({
 		enum: UserRelations,
@@ -27,7 +28,7 @@ export class UserRelation extends Document<number> {
 		type: MongooseSchema.Types.ObjectId,
 		ref: 'User',
 	})
-	createdBy: MongooseSchema.Types.ObjectId;
+	createdBy: MongooseSchema.Types.ObjectId | User;
 
 	@Prop({
 		type: Date,
@@ -39,7 +40,7 @@ export class UserRelation extends Document<number> {
 		type: MongooseSchema.Types.ObjectId,
 		ref: 'User',
 	})
-	updatedBy: MongooseSchema.Types.ObjectId;
+	updatedBy: MongooseSchema.Types.ObjectId | User;
 
 	@Prop({
 		type: Date,
@@ -51,7 +52,7 @@ export class UserRelation extends Document<number> {
 		type: MongooseSchema.Types.ObjectId,
 		ref: 'User',
 	})
-	deletedBy: MongooseSchema.Types.ObjectId;
+	deletedBy: MongooseSchema.Types.ObjectId | User;
 }
 
 export const UserRelationSchema = SchemaFactory.createForClass(UserRelation);

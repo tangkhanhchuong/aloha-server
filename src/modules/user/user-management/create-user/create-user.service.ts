@@ -7,7 +7,6 @@ import {
 	User_CreateUserRequestBodyDTO,
 	User_CreateUserResponseDTO
 } from 'shared/dto/user/create-user.dto';
-import { UserStatuses } from 'shared/constants/user';
 
 @Injectable()
 export class CreateUserService {
@@ -19,7 +18,6 @@ export class CreateUserService {
 	async execute(dto: User_CreateUserRequestBodyDTO): Promise<User_CreateUserResponseDTO> {
 		const { email, username } = dto;
 		const foundUser = await this.userModel.findOne({ email });
-		console.log('Haha')
 		if (foundUser) {
 			throw new BadRequestException('Email existed!');
 		}

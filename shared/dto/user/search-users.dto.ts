@@ -5,6 +5,7 @@ import { ListingRequestQueryDTO } from 'shared/dto/listing.request.dto';
 
 import { DTO, HttpMethod } from '../base.dto';
 import { PaginatedResponseDTO } from '../paginated.response.dto';
+import { UserDTO } from './user.dto';
 
 export class User_SearchUsersRequestBodyDTO extends ListingRequestQueryDTO {
 	@ApiProperty({ default: '' })
@@ -15,18 +16,7 @@ export class User_SearchUsersRequestBodyDTO extends ListingRequestQueryDTO {
 	userIds?: string[];
 }
 
-export class User_UserResponseDTO {
-	@ApiProperty({ default: 'example' })
-	username: string;
-
-	@ApiProperty({ default: 'example@gmail.com' })
-	email: string;
-
-	@ApiProperty({ default: 'https://avatar.png' })
-	avatar: string;
-}
-
-export class User_SearchUsersResponseDTO extends PaginatedResponseDTO<User_UserResponseDTO> {};
+export class User_SearchUsersResponseDTO extends PaginatedResponseDTO<UserDTO> {};
 
 export class User_SearchUsersDTO extends DTO {
 	public static url = '/users/search';

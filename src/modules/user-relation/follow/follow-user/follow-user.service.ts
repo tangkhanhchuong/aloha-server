@@ -32,7 +32,7 @@ export class FollowUserService {
 		}
 		const userRelation = await this.userRelationModel.findOne({
 			createdBy: userId,
-			targetId: followerId,
+			target: followerId,
 			relationType: UserRelations.FOLLOW
 		})
 		if (userRelation) {
@@ -40,7 +40,7 @@ export class FollowUserService {
 		}
 		const newUserRelation = new this.userRelationModel({
             createdBy: userId,
-            targetId: followerId,
+            target: followerId,
             relationType: UserRelations.FOLLOW
 		});
 		await newUserRelation.save();

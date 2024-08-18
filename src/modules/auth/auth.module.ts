@@ -1,10 +1,10 @@
 import { Logger, Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 
 import { CognitoModule } from 'core/aws/cognito/cognito.module';
-import { RmqModule } from 'core/rmq/rmq.module';
-import { Services } from 'shared/constants/microservice';
+import { User, UserSchema } from 'database/user/user';
+import { UserMapper } from 'shared/mappers/user.mapper';
 
-import { UserModule } from '../user/user.module';
 import { ChangePasswordController } from './change-password/change-password.controller';
 import { ChangePasswordService } from './change-password/change-password.service';
 import { ForgotPasswordController } from './forgot-password/forgot-password.controller';
@@ -13,14 +13,15 @@ import { LoginController } from './login/login.controller';
 import { LoginService } from './login/login.service';
 import { RegisterController } from './register/register.controller';
 import { RegisterService } from './register/register.service';
+import { MediaModule } from '../media/media.module';
 
 @Module({
     imports: [
+		MongooseModule.forFeature([
+			{ name: User.name, schema: UserSchema }
+        ]),
         CognitoModule,
-		RmqModule.register({
-            name: Services.USER_SERVICE,
-        }),
-        UserModule
+        MediaModule
     ],
     controllers: [
         ChangePasswordController,
@@ -34,6 +35,7 @@ import { RegisterService } from './register/register.service';
         ForgotPasswordService,
         LoginService,
         RegisterService,
+        UserMapper
     ]
 })
 export class AuthModule {}

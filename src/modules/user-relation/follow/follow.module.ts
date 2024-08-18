@@ -1,12 +1,13 @@
 import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { RmqModule } from 'core/rmq/rmq.module';
 import {
 	UserRelation,
 	UserRelationSchema
 } from 'database/user-relation/user-relation';
 import { User, UserSchema } from 'database/user/user';
+import { UserMapper } from 'shared/mappers/user.mapper';
+import { MediaModule } from 'src/modules/media/media.module';
 
 import { FollowUserController } from './follow-user/follow-user.controller';
 import { FollowUserService } from './follow-user/follow-user.service';
@@ -19,11 +20,11 @@ import { UnfollowUserService } from './unfollow-user/unfollow-user.service';
 
 @Module({
 	imports: [
-		RmqModule,
 		MongooseModule.forFeature([
             { name: User.name, schema: UserSchema },
             { name: UserRelation.name, schema: UserRelationSchema },
 		]),
+		MediaModule
 	],
 	controllers: [
 		FollowUserController,
@@ -36,6 +37,7 @@ import { UnfollowUserService } from './unfollow-user/unfollow-user.service';
 		UnfollowUserService,
 		GetFolloweesService,
 		GetFollowersService,
+		UserMapper,
 		Logger
 	],
 	exports: [

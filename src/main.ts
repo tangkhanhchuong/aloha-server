@@ -34,10 +34,6 @@ async function bootstrap() {
 	);
 	// setupSwagger(app);
 
-	const rmqService = app.get<RmqService>(RmqService);
-	app.connectMicroservice<RmqOptions>(rmqService.getOptions(Services.AUTH_SERVICE, true));
-	await app.startAllMicroservices();
-
 	await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

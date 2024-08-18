@@ -2,8 +2,9 @@ import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { CognitoModule } from 'core/aws/cognito/cognito.module';
-import { RmqModule } from 'core/rmq/rmq.module';
 import { Post, PostSchema } from 'database/post/post';
+import { PostMapper } from 'shared/mappers/post.mapper';
+import { UserMapper } from 'shared/mappers/user.mapper';
 import { MediaModule } from 'src/modules/media/media.module';
 
 import { CreatePostController } from './create-post/create-post.controller';
@@ -20,7 +21,6 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 		MongooseModule.forFeature([
 			{ name: Post.name, schema: PostSchema }
 		]),
-		RmqModule,
 		CognitoModule,
 		MediaModule
 	],
@@ -35,6 +35,8 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 		CreatePostService,
 		Post_UpdatePostService,
 		DeletePostService,
+		PostMapper,
+		UserMapper,
 		Logger
     ],
 	exports: [],

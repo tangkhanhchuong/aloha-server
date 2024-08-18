@@ -3,36 +3,48 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { UserRelation } from 'database/user-relation/user-relation';
+import { User } from 'database/user/user';
+import { UserRelations } from 'shared/constants/user';
 import {
 	UserRelation_GetFollowersRequestQueryDTO,
 	UserRelation_GetFollowersResponseDTO
 } from 'shared/dto/user-relation/get-followers.dto';
+import { UserMapper } from 'shared/mappers/user.mapper';
 
 @Injectable()
 export class GetFollowersService {
 	constructor(
 		@InjectModel(UserRelation.name)
-		private readonly userRelationModel: Model<UserRelation>
+		private readonly userRelationModel: Model<UserRelation>,
+		private readonly userMapper: UserMapper
 	) {}
 
 	async execute(
 		queryDTO: UserRelation_GetFollowersRequestQueryDTO,
 		userId: string
 	): Promise<UserRelation_GetFollowersResponseDTO> {
-		const items = await this.userRelationModel.find()
-			.where({ targetId: userId })
-			.skip(queryDTO.limit * (+queryDTO.page - 1))
-			.limit(queryDTO.limit)
-			.exec();
-		const count = items.length;
-		
+		const { limit, page } = queryDTO;
+
+		const filter = {
+			target: userId,
+			relationType: UserRelations.FOLLOW
+		};
+		const [followerEntities, count] = await Promise.all([
+			this.userRelationModel.find(filter)
+				.populate('target')
+				.skip(limit * (+page - 1))
+				.limit(limit)
+				.exec(),
+			this.userRelationModel.countDocuments(filter)
+		]);
+		const followerDTOs = await Promise.all(followerEntities
+			.map((userRelationEntity) => this.userMapper.entityToDTO((userRelationEntity.createdBy) as User)));
+
 		return new UserRelation_GetFollowersResponseDTO(
-			items.map((item) => ({
-				userId: item.targetId.toString()
-			})),
-			queryDTO.page,
-			queryDTO.limit,
-			count,
+			followerDTOs,
+			page,
+			limit,
+			1,
 		);
 	}
 }

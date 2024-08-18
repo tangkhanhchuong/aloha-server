@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 import { CognitoService } from 'core/aws/cognito/cognito.service';
+import { User } from 'database/user/user';
 import { UserStatuses } from 'shared/constants/user';
 import {
 	Auth_AutoAuthLoginRequestBodyDTO,
@@ -10,19 +13,20 @@ import {
 	Auth_LoginRequestBodyDTO,
 	Auth_LoginResponseDTO
 } from 'shared/dto/auth/login.dto';
-import { FindUsersService } from 'src/modules/user/user-management/find-users/find-users.service';
 
 @Injectable()
 export class LoginService {
 	constructor(
 		private readonly cognitoService: CognitoService,
-		private readonly findUsersService: FindUsersService
-	) {}
-	async login(dto: Auth_LoginRequestBodyDTO): Promise<Auth_LoginResponseDTO> {
-		const users = await this.findUsersService.execute({
-			email: dto.email
+		@InjectModel(User.name)
+		private readonly userModel: Model<User>,
+	) { }
+	
+	async login(bodyDTO: Auth_LoginRequestBodyDTO): Promise<Auth_LoginResponseDTO> {
+		const { email, password } = bodyDTO;
+		const foundUser = await this.userModel.findOne({
+			email: bodyDTO.email
 		});
-		const foundUser = users.users?.[0];
 		if (!foundUser) {
 			throw new NotFoundException('User not found');
 		}
@@ -30,7 +34,7 @@ export class LoginService {
 			throw new UnauthorizedException('User is inactive');
 		}
 
-		const authenticatedResult = await this.cognitoService.authenticate(dto.email, dto.password);
+		const authenticatedResult = await this.cognitoService.authenticate(email, password);
 		return {
 			accessToken: authenticatedResult.getIdToken().getJwtToken(),
 			refreshToken: authenticatedResult.getRefreshToken().getToken(),

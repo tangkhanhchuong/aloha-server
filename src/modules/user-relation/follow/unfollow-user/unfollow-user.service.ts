@@ -29,10 +29,17 @@ export class UnfollowUserService {
 		if (!user) {
 			throw new NotFoundException("User not found");
 		}
-
+		const userRelation = await this.userRelationModel.findOne({
+			createdBy: userId,
+			target: followerId,
+			relationType: UserRelations.FOLLOW
+		})
+		if (!userRelation) {
+			throw new ConflictException("You haven't already follow this user yet!");
+		}
 		await this.userRelationModel.deleteOne({
 			createdBy: userId,
-			targetId: followerId,
+			target: followerId,
 			relationType: UserRelations.FOLLOW
 		});
 

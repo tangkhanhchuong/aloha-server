@@ -6,7 +6,7 @@ import { PAGINATION_DEFAULT } from '../constants/find-query';
 export class PaginatedResponseDTO<T> {
 	@IsArray()
 	@ApiProperty({ isArray: true })
-	readonly paginatedResults: T[];
+	readonly items: T[];
 
 	@ApiProperty({ type: Number, default: PAGINATION_DEFAULT.PAGE })
 	readonly page: number;
@@ -21,7 +21,7 @@ export class PaginatedResponseDTO<T> {
 	readonly total: number;
 
 	constructor(data: T[], page: number, limit: number, total: number) {
-		this.paginatedResults = data;
+		this.items = data;
 		this.pageCount = data.length;
 		this.page = page;
 		this.limit = limit;
