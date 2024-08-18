@@ -30,6 +30,8 @@ export class CreateCommentService {
         const { postId } = paramDTO;
         const { userId } = authUser;
 
+        console.log({ userId, postId })
+
         if (type !== CommentTypes.TEXT) {
             throw new BadRequestException('Comment type is not supported!');
         }

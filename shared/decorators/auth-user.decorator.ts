@@ -13,9 +13,5 @@ export const AuthUser = createParamDecorator((data: unknown, ctx: ExecutionConte
 	if (!isMongoId(requestUser.userId)) {
 		throw new UnauthorizedException();
 	}
-	return {
-		cognitoId: requestUser.cognitoId,
-		userId: requestUser.userId,
-		email: requestUser.email,
-	};
+	return requestUser;
 });

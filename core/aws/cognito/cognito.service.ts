@@ -25,13 +25,7 @@ export class CognitoService {
 
 	public async register(email: string, userId: string, password: string): Promise<ISignUpResult> {
 		return new Promise((resolve, reject) => {
-			const attributeList: CognitoUserAttribute[] = [
-				new CognitoUserAttribute({
-					Name: 'nickname',
-					Value: userId
-				})
-			];
-			this.userPool.signUp(email, password, attributeList, null, (err, result) => {
+			this.userPool.signUp(email, password, null, null, (err, result) => {
 				if (err) {
 					reject(new UnauthorizedException(err.message));
 				}
@@ -144,14 +138,14 @@ export class CognitoService {
 		const cognitoUser = new CognitoUser(userData);
 
 		return new Promise((resolve, reject) => {
-		cognitoUser.confirmPassword(verificationCode, newPassword, {
-			onSuccess: () => {
-				resolve();
-			},
-			onFailure: (err) => {
-				reject(err);
-			},
-		});
+			cognitoUser.confirmPassword(verificationCode, newPassword, {
+				onSuccess: () => {
+					resolve();
+				},
+				onFailure: (err) => {
+					reject(err);
+				},
+			});
 		});
 	}
 

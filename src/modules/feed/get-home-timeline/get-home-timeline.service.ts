@@ -28,7 +28,7 @@ export class GetHomeTimelineService {
 
 		const filter: FilterQuery<Post> = {
 			status: PostStatuses.PUBLISHED,
-			deletedAt: null
+			deletedAt: { $ne: null }
 		};
 		const [postEntities, count] = await Promise.all([
 			this.postModel

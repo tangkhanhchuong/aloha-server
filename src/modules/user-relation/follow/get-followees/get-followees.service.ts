@@ -30,7 +30,7 @@ export class GetFolloweesService {
 		const filter = {
 			createdBy: userId,
 			relationType: UserRelations.FOLLOW,
-			deletedAt: null
+			deletedAt: { $ne: null }
 		};
 		const [userRelationEntities, count] = await Promise.all([
 			this.userRelationModel.find(filter)

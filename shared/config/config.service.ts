@@ -21,6 +21,16 @@ export class ConfigService {
 		return parseInt(this.get('PORT'));
 	}
 
+	public getRedisConfig(): { 
+		host: string,
+        port: number
+	} {
+		return {
+			host: this.get('REDIS_HOST'),
+			port: parseInt(this.get('REDIS_PORT')),
+		}
+	}
+
 	public getMicroservicesURL(): {
 		auth: string,
 		user: string,

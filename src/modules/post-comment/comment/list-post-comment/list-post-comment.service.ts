@@ -30,9 +30,9 @@ export class ListPostCommentService {
         const { postId } = paramDTO;
 
 		const filter: FilterQuery<PostComment> = {
-            createdBy: userId,
-            post: postId,
-            deletedAt: null
+			createdBy: userId,
+			post: postId,
+			deletedAt: { $ne: null }
 		};
 		const [commentEntities, count] = await Promise.all([
 			this.postCommentModel.find(filter)

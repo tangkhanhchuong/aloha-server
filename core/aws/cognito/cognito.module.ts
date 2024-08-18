@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { RedisService } from 'core/redis/redis.service';
+
 import { CognitoService } from './cognito.service';
 import { CognitoStrategy } from './cognito.strategy';
 
@@ -8,7 +10,8 @@ import { CognitoStrategy } from './cognito.strategy';
 	providers: [
 		CognitoService,
 		CognitoStrategy,
-		JwtService
+		JwtService,
+		RedisService
 	],
 	exports: [
 		CognitoService,

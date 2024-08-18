@@ -32,7 +32,7 @@ export class GetUserTimelineService {
 		const filter: FilterQuery<Post> = {
 			status: PostStatuses.PUBLISHED,
 			createdBy: userId,
-			deletedAt: null
+			deletedAt: { $ne: null }
 		};
 		const [postEntities, count] = await Promise.all([
 			this.postModel
