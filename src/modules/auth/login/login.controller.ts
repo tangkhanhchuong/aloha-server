@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Logger, Post } from '@nestjs/common';
 
 import {
-	Auth_AutoAuthLoginRequestBodyDTO,
+	Auth_AutoLoginRequestBodyDTO,
 	Auth_AutoLoginDTO,
 	Auth_AutoLoginResponseDTO
 } from 'shared/dto/auth/auto-login.dto';
@@ -33,7 +33,7 @@ export class LoginController {
 
 	@Post(Auth_AutoLoginDTO.url)
 	@HttpCode(HttpStatus.OK)
-	async autoLogin(@Body() dto: Auth_AutoAuthLoginRequestBodyDTO): Promise<Auth_AutoLoginResponseDTO> {
+	async autoLogin(@Body() dto: Auth_AutoLoginRequestBodyDTO): Promise<Auth_AutoLoginResponseDTO> {
 		try {
 			return await this.loginService.autoLogin(dto);
 		} catch (e) {

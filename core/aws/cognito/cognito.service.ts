@@ -177,4 +177,18 @@ export class CognitoService {
 			});
 		});
 	}
+
+	public async logout(email: string): Promise<void> {
+		const userData = {
+			Username: email,
+			Pool: this.userPool,
+		};
+		const user = new CognitoUser(userData);
+
+		return new Promise((resolve, reject) => {
+			user.signOut(() => {
+				resolve();
+			});
+		});
+	}
 }

@@ -8,7 +8,7 @@ import { User } from 'database/user/user';
 import { ConfigService } from 'shared/config/config.service';
 import { UserStatuses } from 'shared/constants/user';
 import {
-	Auth_AutoAuthLoginRequestBodyDTO,
+	Auth_AutoLoginRequestBodyDTO,
 	Auth_AutoLoginResponseDTO
 } from 'shared/dto/auth/auto-login.dto';
 import {
@@ -61,7 +61,7 @@ export class LoginService {
 		} as Auth_LoginResponseDTO;
 	}
 
-	async autoLogin(dto: Auth_AutoAuthLoginRequestBodyDTO): Promise<Auth_AutoLoginResponseDTO> {
+	async autoLogin(dto: Auth_AutoLoginRequestBodyDTO): Promise<Auth_AutoLoginResponseDTO> {
 		const accessToken = await this.cognitoService.refreshSession(dto.refreshToken);
 		return {
 			accessToken,

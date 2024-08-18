@@ -1,14 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail } from "class-validator";
 
 import { DTO, HttpMethod } from "../base.dto";
 
 export class Auth_ForgotPasswordRequestBodyDTO {
-	@ApiProperty({
-		type: String,
-		default: 'example@gmail.com',
-		required: true,
-	})
 	@IsEmail()
 	email: string;
 }

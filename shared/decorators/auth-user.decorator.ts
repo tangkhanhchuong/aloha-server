@@ -5,6 +5,8 @@ export class AuthUserPayload {
 	cognitoId: string;
 	userId: string;
 	email: string;
+	username: string;
+	avatar: string;
 }
 
 export const AuthUser = createParamDecorator((data: unknown, ctx: ExecutionContext): AuthUserPayload => {

@@ -13,6 +13,8 @@ import { ForgotPasswordController } from './forgot-password/forgot-password.cont
 import { ForgotPasswordService } from './forgot-password/forgot-password.service';
 import { LoginController } from './login/login.controller';
 import { LoginService } from './login/login.service';
+import { LogoutController } from './logout/logout.controller';
+import { LogoutService } from './logout/logout.service';
 import { RegisterController } from './register/register.controller';
 import { RegisterService } from './register/register.service';
 
@@ -30,6 +32,7 @@ import { RegisterService } from './register/register.service';
         ForgotPasswordController,
         LoginController,
         RegisterController,
+        LogoutController
     ],
     providers: [
         Logger,
@@ -37,6 +40,7 @@ import { RegisterService } from './register/register.service';
         ForgotPasswordService,
         LoginService,
         RegisterService,
+        LogoutService,
         UserMapper
     ]
 })

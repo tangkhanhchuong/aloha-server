@@ -1,37 +1,21 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
 
 import { DTO, HttpMethod } from '../base.dto';
 
 export class Auth_LoginRequestBodyDTO {
-	@ApiProperty({
-		type: String,
-		default: 'example@gmail.com',
-		required: true,
-	})
 	@IsEmail()
 	email: string;
 
-	@ApiProperty({
-		type: String,
-		default: 'AAaa11!!',
-		required: true,
-	})
 	@IsString()
 	password: string;
 }
 
 
 export class Auth_LoginResponseDTO {
-	@ApiProperty({
-		default: '',
-	})
+	@IsString()
 	accessToken: string;
 
-	@ApiProperty({
-		default: '',
-	})
-	@IsEmail()
+	@IsString()
 	refreshToken: string;
 }
 

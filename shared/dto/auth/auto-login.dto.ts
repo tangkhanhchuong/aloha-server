@@ -3,7 +3,7 @@ import { IsString } from "class-validator";
 
 import { DTO, HttpMethod } from "../base.dto";
 
-export class Auth_AutoAuthLoginRequestBodyDTO {
+export class Auth_AutoLoginRequestBodyDTO {
 	@ApiProperty({
 		type: String,
 		default: '',
@@ -28,7 +28,7 @@ export class Auth_AutoLoginDTO extends DTO {
 	public queryDTO: undefined;
 
 	constructor(
-		public bodyDTO: Auth_AutoAuthLoginRequestBodyDTO,
+		public bodyDTO: Auth_AutoLoginRequestBodyDTO,
 		public responseDTO: Auth_AutoLoginResponseDTO
 	) {
 		super();
