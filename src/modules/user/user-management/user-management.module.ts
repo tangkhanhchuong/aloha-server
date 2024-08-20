@@ -10,6 +10,8 @@ import { CreateUserController } from './create-user/create-user.controller';
 import { CreateUserService } from './create-user/create-user.service';
 import { FindUsersController } from './find-users/find-users.controller';
 import { FindUsersService } from './find-users/find-users.service';
+import { GetUserController } from './get-user/get-user.controller';
+import { GetUserService } from './get-user/get-user.service';
 import { SearchUsersController } from './search-users/search-users.controller';
 import { SearchUsersService } from './search-users/search-users.service';
 
@@ -21,13 +23,15 @@ import { SearchUsersService } from './search-users/search-users.service';
 	controllers: [
 		CreateUserController,
 		SearchUsersController,
-		FindUsersController
+		FindUsersController,
+		GetUserController
 	],
 	providers: [
 		CreateUserService,
 		SearchUsersService,
 		FindUsersService,
 		ActivateUserService,
+		GetUserService,
 		UserMapper,
 		Logger
 	],

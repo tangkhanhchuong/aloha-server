@@ -1,6 +1,7 @@
-import { Body, Controller, HttpCode, HttpStatus, Logger, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Logger, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import {
 	User_SearchUsersDTO,
 	User_SearchUsersRequestBodyDTO,
@@ -18,6 +19,7 @@ export class SearchUsersController {
 	) {}
 
 	@Post(User_SearchUsersDTO.url)
+	@UseGuards(CognitoGuard)
 	@HttpCode(HttpStatus.OK)
 	async findUsers(@Body() body: User_SearchUsersRequestBodyDTO): Promise<User_SearchUsersResponseDTO> {
 		try {

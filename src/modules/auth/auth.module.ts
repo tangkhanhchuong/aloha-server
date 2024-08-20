@@ -11,6 +11,8 @@ import { ChangePasswordController } from './change-password/change-password.cont
 import { ChangePasswordService } from './change-password/change-password.service';
 import { ForgotPasswordController } from './forgot-password/forgot-password.controller';
 import { ForgotPasswordService } from './forgot-password/forgot-password.service';
+import { GetMeController } from './get-me/get-me.controller';
+import { GetMeService } from './get-me/get-me.service';
 import { LoginController } from './login/login.controller';
 import { LoginService } from './login/login.service';
 import { LogoutController } from './logout/logout.controller';
@@ -32,7 +34,8 @@ import { RegisterService } from './register/register.service';
         ForgotPasswordController,
         LoginController,
         RegisterController,
-        LogoutController
+        LogoutController,
+        GetMeController,
     ],
     providers: [
         Logger,
@@ -41,6 +44,7 @@ import { RegisterService } from './register/register.service';
         LoginService,
         RegisterService,
         LogoutService,
+        GetMeService,
         UserMapper
     ]
 })

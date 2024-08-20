@@ -1,6 +1,7 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import {
 	User_CreateUserDTO,
 	User_CreateUserRequestBodyDTO,
@@ -18,6 +19,7 @@ export class CreateUserController {
 	) {}
 
 	@Post(User_CreateUserDTO.url)
+	@UseGuards(CognitoGuard)
 	async createUser(@Body() body: User_CreateUserRequestBodyDTO): Promise<User_CreateUserResponseDTO> {
 		try {
 			return await this.createUserService.execute(body);

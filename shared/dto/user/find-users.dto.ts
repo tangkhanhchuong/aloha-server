@@ -1,6 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsArray } from 'class-validator';
-
+import { IsArray, IsString } from 'class-validator';
 
 import { DTO, HttpMethod } from '../base.dto';
 import { UserDTO } from './user.dto';
@@ -9,7 +7,7 @@ export class User_FindUsersRequestBodyDTO {
 	@IsArray()
     userIds?: string[];
 
-    @ApiProperty({ default: 'example@gmail.com' })
+	@IsString()
 	email?: string;
 }
 
