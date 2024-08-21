@@ -32,10 +32,7 @@ export class UnfollowUserService {
 		) {
 			throw new BadRequestException('Invalid userId or followeeId');
 		}
-		const user = await this.userModel.findById(userId);
-		if (!user) {
-			throw new NotFoundException("User not found");
-		}
+		
 		const userRelation = await this.userRelationModel.findOne({
 			createdBy: userId,
 			target: followerId,
@@ -49,6 +46,16 @@ export class UnfollowUserService {
 			target: followerId,
 			relationType: UserRelations.FOLLOW
 		});
+		
+		// TODO: Async tasks
+		// Increase number of followers and number of followees
+		await this.userModel.findByIdAndUpdate(
+			followerId,
+			{ $inc: { numberOfFollowers: -1 } },
+			{ new: true }
+		);
+
+		// Notification
 
 		return {
 			status: true

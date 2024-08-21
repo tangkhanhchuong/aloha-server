@@ -18,14 +18,14 @@ export class GetMeService {
 	async execute(authUser: AuthUserPayload): Promise<Auth_GetMeResponseDTO> {
 		const { userId } = authUser;
 		const foundUser = await this.userModel.findById(userId);
-		if (foundUser) {
-			throw new BadRequestException('Email existed!');
+		if (!foundUser) {
+			throw new BadRequestException('User not found');
 		}
 		return {
 			userId: foundUser.id,
 			email: foundUser.email,
 			username: foundUser.username,
-			avatar: foundUser.avatar
+			avatar: foundUser.avatar,
 		}
 	}
 }

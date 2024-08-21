@@ -5,7 +5,10 @@ import { Model } from 'mongoose';
 import { CognitoService } from 'core/aws/cognito/cognito.service';
 import { User } from 'database/user/user';
 import { Auth_ConfirmRegistrationRequestBodyDTO } from 'shared/dto/auth/confirm-registration.dto';
-import { Auth_RegisterRequestBodyDTO, Auth_RegisterResponseDTO } from 'shared/dto/auth/register.dto';
+import {
+	Auth_RegisterRequestBodyDTO,
+	Auth_RegisterResponseDTO
+} from 'shared/dto/auth/register.dto';
 import { Auth_ResendRegistrationOTPRequestBodyDTO } from 'shared/dto/auth/resend-registration-otp.request.dto';
 
 @Injectable()
@@ -22,7 +25,7 @@ export class RegisterService {
 		const saveUser = await this.userModel.create({
 			email,
 			username
-		})
+		});
 		const cognitoService = await this.cognitoService.register(email, saveUser.id, password);
 		this.logger.debug(`OTP Sent::${JSON.stringify(cognitoService.codeDeliveryDetails)}`);
 		return {

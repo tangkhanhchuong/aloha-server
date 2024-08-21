@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
 
@@ -34,10 +34,6 @@ export class FollowUserService {
 			throw new BadRequestException('Invalid userId or followerId');
 		}
 
-		const user = await this.userModel.findById(userId);
-		if (!user) {
-			throw new NotFoundException("User not found");
-		}
 		const userRelation = await this.userRelationModel.findOne({
 			createdBy: userId,
 			target: followerId,
@@ -52,6 +48,16 @@ export class FollowUserService {
             relationType: UserRelations.FOLLOW
 		});
 		await newUserRelation.save();
+
+		// TODO: Async tasks
+		// Increase number of followers and number of followees
+		await this.userModel.findByIdAndUpdate(
+			followerId,
+			{ $inc: { numberOfFollowers: 1 } },
+			{ new: true }
+		);
+
+		// Notification
 
 		return {
 			status: true

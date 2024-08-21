@@ -14,6 +14,8 @@ import { GetUserController } from './get-user/get-user.controller';
 import { GetUserService } from './get-user/get-user.service';
 import { SearchUsersController } from './search-users/search-users.controller';
 import { SearchUsersService } from './search-users/search-users.service';
+import { UpdateMyProfileController } from './update-my-profile/update-my-profile.controller';
+import { UpdateMyProfileService } from './update-my-profile/update-my-profile.service';
 
 @Module({
 	imports: [
@@ -24,6 +26,8 @@ import { SearchUsersService } from './search-users/search-users.service';
 		CreateUserController,
 		SearchUsersController,
 		FindUsersController,
+		GetUserController,
+		UpdateMyProfileController,
 		GetUserController
 	],
 	providers: [
@@ -31,6 +35,8 @@ import { SearchUsersService } from './search-users/search-users.service';
 		SearchUsersService,
 		FindUsersService,
 		ActivateUserService,
+		GetUserService,
+		UpdateMyProfileService,
 		GetUserService,
 		UserMapper,
 		Logger

@@ -3,7 +3,12 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import {
+	AuthUser,
+	AuthUserPayload
+} from 'shared/decorators/auth-user.decorator';
+import {
 	Post_DeletePostDTO,
+	Post_DeletePostRequestParamDTO,
 	Post_DeletePostResponseDTO
 } from 'shared/dto/post/delete-post.dto';
 
@@ -20,10 +25,11 @@ export class DeletePostController {
 	@Delete(Post_DeletePostDTO.url)
 	@UseGuards(CognitoGuard)
 	async deletePost(
-		@Param('id') id: string,
+		@Param() paramDTO: Post_DeletePostRequestParamDTO,
+		@AuthUser() authUser: AuthUserPayload
 	): Promise<Post_DeletePostResponseDTO> {
 		try {
-			return await this.deletePostService.execute(id);
+			return await this.deletePostService.execute(paramDTO, authUser);
 		} catch (e) {
 			this.logger.error(e, e.stack, DeletePostController.name);
 			throw e;

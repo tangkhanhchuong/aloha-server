@@ -1,16 +1,58 @@
-import { IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 import { DTO, HttpMethod } from '../base.dto';
-import { UserDTO } from './user.dto';
 
-export class User_GetUserRequestParamDTO {
-	@IsString()
-	userId: string;
+export class Auth_GetUserResponseDTO {
+    @IsString()
+    userId: string;
+    
+    @IsString()
+    username: string;
+
+    @IsString()
+    mobile: string;
+
+    @IsString()
+    avatar: string;
+
+    @IsString()
+    cover: string;
+    
+    @IsString()
+    bio: string;
+    
+    @IsString()
+    location: string;
+    
+    @IsString()
+    website: string;
+    
+    @IsString()
+    birthday: string;
+    
+    @IsString()
+    gender: string;
+    
+    @IsString()
+    joinedAt: string;
+
+    @IsNumber()
+    numberOfPosts: number;
+
+    @IsNumber()
+    numberOfFollowers: number;
+
+    @IsNumber()
+    numberOfFollowees: number;
 }
 
-export class User_GetUserResponseDTO extends UserDTO {}
+export class Auth_GetUserRequestParamDTO {
+    @IsString()
+    @IsNotEmpty()
+    userId: string;
+}
 
-export class User_GetUserDTO extends DTO {
+export class Auth_GetUserDTO extends DTO {
 	public static url = '/users/:userId';
 	public method = HttpMethod.GET;
 
@@ -18,8 +60,8 @@ export class User_GetUserDTO extends DTO {
 	public bodyDTO: undefined;
 
     constructor(
-        public paramDTO: User_GetUserRequestParamDTO,
-		public responseDTO: User_GetUserResponseDTO
+        public paramDTO: Auth_GetUserRequestParamDTO,
+		public responseDTO: Auth_GetUserResponseDTO
 	) {
 		super();
 	}

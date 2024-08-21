@@ -8,10 +8,13 @@ import {
 	Post_CreatePostRequestBodyDTO,
 	Post_CreatePostResponseDTO,
 } from 'shared/dto/post/create-post.dto';
+import { User } from 'database/user/user';
 
 @Injectable()
 export class CreatePostService {
 	constructor(
+		@InjectModel(User.name)
+		private readonly userModel: Model<User>,
 		@InjectModel(Post.name)
 		private readonly postModel: Model<Post>,
     ) {}
@@ -21,6 +24,7 @@ export class CreatePostService {
 		authUser: AuthUserPayload
 	): Promise<Post_CreatePostResponseDTO> {
 		const { title, content, media } = bodyDTO;
+
 		const createdPost = await this.postModel.create({
 			title,
 			content,
@@ -28,6 +32,12 @@ export class CreatePostService {
 			createdBy: authUser.userId 
 		});
 		const savedPost = await createdPost.save();
+
+		await this.userModel.findByIdAndUpdate(
+			authUser.userId,
+			{ $inc: { numberOfPosts: 1 } },
+			{ new: true }
+		);
 
 		return {
 			id: savedPost.id

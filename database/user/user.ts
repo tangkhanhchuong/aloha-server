@@ -1,7 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-import { UserStatuses } from 'shared/constants/user';
+import {
+	UserGenders,
+	UserStatuses
+} from 'shared/constants/user';
+
+export class UserProfile {
+	cover: string;
+	bio: string;
+	location: string;
+	website: string;
+	birthday: Date;
+	gender: UserGenders;
+}
 
 @Schema({ versionKey: false, collection: 'users' })
 export class User extends Document<number> {
@@ -32,6 +44,31 @@ export class User extends Document<number> {
 	})
 	avatar: string;
 
+	@Prop({
+		type: String,
+	})
+	mobile: string;
+
+	@Prop({
+		type: UserProfile,
+	})
+	profile: UserProfile;
+
+	@Prop({
+		type: Number,
+	})
+	numberOfPosts: number;
+
+	@Prop({
+		type: Number,
+	})
+	numberOfFollowers: number;
+
+	@Prop({
+		type: Number,
+	})
+	numberOfFollowees: number;
+	
 	@Prop({
 		type: Date,
 		default: Date.now,
@@ -69,6 +106,7 @@ export class User extends Document<number> {
 	deletedBy: MongooseSchema.Types.ObjectId;
 
 	activate: Function;
+
 	deactivate: Function;
 }
 

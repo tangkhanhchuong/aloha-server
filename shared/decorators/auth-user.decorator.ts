@@ -6,7 +6,6 @@ export class AuthUserPayload {
 	userId: string;
 	email: string;
 	username: string;
-	avatar: string;
 }
 
 export const AuthUser = createParamDecorator((data: unknown, ctx: ExecutionContext): AuthUserPayload => {
