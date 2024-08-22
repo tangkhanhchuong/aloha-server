@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { CognitoService } from 'core/aws/cognito/cognito.service';
 import { RedisService } from 'core/redis/redis.service';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import { Auth_LogoutResponseDTO } from 'shared/dto/auth/logout.dto';
 
 @Injectable()

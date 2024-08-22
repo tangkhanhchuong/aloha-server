@@ -1,3 +1,3 @@
-export const ErrorMessage = {
+export const ErrorCodes = {
 	INVALID_FILE_EXTENSION: 'INVALID_FILE_EXTENSION'
 };

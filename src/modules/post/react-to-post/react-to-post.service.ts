@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { Post } from 'database/post/post';
 import { PostReaction } from 'database/post/post-reaction.dto';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	Post_ReactToPostRequestBodyDTO,
 	Post_ReactToPostRequestParamDTO,

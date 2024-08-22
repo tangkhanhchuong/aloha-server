@@ -1,11 +1,11 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
 
-import { InjectModel } from '@nestjs/mongoose';
 import { UserRelation } from 'database/user-relation/user-relation';
 import { User } from 'database/user/user';
-import { UserRelations } from 'shared/constants/user';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
+import { UserRelations } from 'shared/business/user/user';
 import {
 	UserRelation_UnfollowUserRequestParamDTO,
 	UserRelation_UnfollowUserResponseDTO

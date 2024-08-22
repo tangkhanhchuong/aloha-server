@@ -1,6 +1,6 @@
 import { IsBoolean, IsEnum, IsMongoId, IsOptional } from 'class-validator';
 
-import { PostReactions } from 'shared/constants/post';
+import { PostReactions } from 'shared/business/post/post';
 
 import { DTO, HttpMethod } from '../base.dto';
 

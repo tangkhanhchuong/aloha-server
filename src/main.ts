@@ -1,11 +1,8 @@
 import { LogLevel, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { RmqOptions } from '@nestjs/microservices';
 import * as morgan from 'morgan';
 
 // import { setupSwagger } from 'core/docs/swagger';
-import { RmqService } from 'core/rmq/rmq.service';
-import { Services } from 'shared/constants/microservice';
 
 import { AppModule } from './app.module';
 

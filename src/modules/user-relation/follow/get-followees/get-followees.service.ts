@@ -4,8 +4,8 @@ import { Model } from 'mongoose';
 
 import { UserRelation } from 'database/user-relation/user-relation';
 import { User } from 'database/user/user';
-import { UserRelations } from 'shared/constants/user';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
+import { UserRelations } from 'shared/business/user/user';
 import {
 	UserRelation_GetFolloweesRequestQueryDTO,
 	UserRelation_GetFolloweesResponseDTO

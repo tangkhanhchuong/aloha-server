@@ -1,6 +1,6 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
-import { CommentTypes } from 'shared/constants/comment';
+import { CommentTypes } from 'shared/business/comment/comment';
 
 import { DTO, HttpMethod } from '../base.dto';
 

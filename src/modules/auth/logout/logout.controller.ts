@@ -1,9 +1,9 @@
 import { Controller, HttpCode, HttpStatus, Logger, Post, UseGuards } from '@nestjs/common';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	AuthUser,
-	AuthUserPayload
 } from 'shared/decorators/auth-user.decorator';
 import {
 	Auth_LogoutDTO,

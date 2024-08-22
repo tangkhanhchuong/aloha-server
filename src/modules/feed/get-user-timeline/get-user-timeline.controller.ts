@@ -2,12 +2,13 @@ import { Controller, Get, Logger, Param, Query, UseGuards } from '@nestjs/common
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
-import { AuthUser, AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
+import { AuthUser } from 'shared/decorators/auth-user.decorator';
 import {
-    Feed_Feed_GetUserTimelineDTO,
-    Feed_GetUserTimelineRequestParamDTO,
-    Feed_GetUserTimelineRequestQueryDTO,
-    Feed_Feed_GetUserTimelineResponseDTO
+	Feed_Feed_GetUserTimelineDTO,
+	Feed_Feed_GetUserTimelineResponseDTO,
+	Feed_GetUserTimelineRequestParamDTO,
+	Feed_GetUserTimelineRequestQueryDTO
 } from 'shared/dto/feed/get-user-timeline.dto';
 
 import { GetUserTimelineService } from './get-user-timeline.service';

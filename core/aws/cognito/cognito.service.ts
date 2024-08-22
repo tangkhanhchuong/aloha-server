@@ -9,7 +9,7 @@ import {
 	ISignUpResult,
 } from 'amazon-cognito-identity-js';
 
-import { ConfigService } from 'shared/config/config.service';
+import { ConfigService } from 'core/config/config.service';
 
 @Injectable()
 export class CognitoService {

@@ -2,12 +2,13 @@ import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
-import { AuthUser, AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUser } from 'shared/decorators/auth-user.decorator';
 import {
 	Post_CreatePostDTO,
 	Post_CreatePostRequestBodyDTO,
 	Post_CreatePostResponseDTO
 } from 'shared/dto/post/create-post.dto';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 
 import { CreatePostService } from './create-post.service';
 

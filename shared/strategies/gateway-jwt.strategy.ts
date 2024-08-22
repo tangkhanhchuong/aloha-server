@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 
-import { ConfigService } from '../config/config.service';
+import { ConfigService } from '../../core/config/config.service';
 
 @Injectable()
 export class GatewayJwtStrategy extends PassportStrategy(Strategy, 'gateway-jwt') {

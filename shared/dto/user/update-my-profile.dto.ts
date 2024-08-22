@@ -1,6 +1,6 @@
-import { IsBoolean, IsEmail, IsEnum, IsISO8601, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsEnum, IsISO8601, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
-import { UserGenders } from 'shared/constants/user';
+import { UserGenders } from 'shared/business/user/user';
 
 import {
     DTO,

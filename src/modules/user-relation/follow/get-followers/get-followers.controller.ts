@@ -2,7 +2,8 @@ import { Controller, Get, HttpCode, HttpStatus, Logger, Query, UseGuards } from 
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
-import { AuthUser, AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
+import { AuthUser } from 'shared/decorators/auth-user.decorator';
 import {
 	UserRelation_GetFollowersDTO,
 	UserRelation_GetFollowersRequestQueryDTO,

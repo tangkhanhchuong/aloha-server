@@ -2,8 +2,8 @@ import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { ConfigService } from 'shared/config/config.service';
-import { ErrorMessage } from 'shared/constants/error-message';
+import { ConfigService } from 'core/config/config.service';
+import { ErrorCodes } from 'shared/code/error';
 
 import {
     isValidFileExtension,
@@ -36,7 +36,7 @@ export class S3Service {
         if (signedType === SignedUrlCommandTypes.PUT_OBJECT) {
             const isValidExtension = isValidFileExtension(key, mineType);
             if (!isValidExtension) {
-                throw new BadRequestException(ErrorMessage.INVALID_FILE_EXTENSION);
+                throw new BadRequestException(ErrorCodes.INVALID_FILE_EXTENSION);
             }
         }
 

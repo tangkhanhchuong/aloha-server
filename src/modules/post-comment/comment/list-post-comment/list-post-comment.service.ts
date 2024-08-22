@@ -4,7 +4,7 @@ import { FilterQuery, Model } from 'mongoose';
 
 import { PostComment } from 'database/post-comment/post-comment';
 import { User } from 'database/user/user';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	PostComment_ListPostCommentRequestParamDTO,
 	PostComment_ListPostCommentRequestQueryDTO,

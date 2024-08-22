@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
 import { User } from 'database/user/user';
-import { UserRelations } from 'shared/constants/user';
+import { UserRelations } from 'shared/business/user/user';
 
 @Schema({ versionKey: false, collection: 'user-relations' })
 export class UserRelation extends Document<number> {

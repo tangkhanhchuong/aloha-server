@@ -1,10 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-import {
-	UserGenders,
-	UserStatuses
-} from 'shared/constants/user';
+import { UserGenders, UserStatuses } from 'shared/business/user/user';
 
 export class UserProfile {
 	cover: string;

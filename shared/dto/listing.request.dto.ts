@@ -2,8 +2,20 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsOptional, IsString, Min } from 'class-validator';
 
-import { PAGINATION_DEFAULT, SORT_DEFAULT } from '../constants/find-query';
-import { Orders } from '../constants/order';
+export enum Orders {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
+export const PAGINATION_DEFAULT = {
+  PAGE: 1,
+  LIMIT: 10,
+};
+
+export const SORT_DEFAULT = {
+  SORT_BY: 'updatedTime',
+  SORT_Orders: Orders.ASC,
+};
 
 export class ListingRequestQueryDTO {
 	@ApiProperty({

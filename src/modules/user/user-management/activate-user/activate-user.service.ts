@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model, Schema as MongooseSchema } from 'mongoose';
 
 import { User } from 'database/user/user';
-import { UserStatuses } from 'shared/constants/user';
+import { UserStatuses } from 'shared/business/user/user';
 import { User_ActivateUserResponseDTO } from 'shared/dto/user/activate-user.dto';
 
 @Injectable()

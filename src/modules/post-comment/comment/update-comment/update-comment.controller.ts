@@ -2,9 +2,9 @@ import { Body, Controller, HttpCode, HttpStatus, Logger, Param, Post, UseGuards 
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	AuthUser,
-	AuthUserPayload
 } from 'shared/decorators/auth-user.decorator';
 import {
 	PostComment_UpdateCommentDTO,

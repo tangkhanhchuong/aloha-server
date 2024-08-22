@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { CognitoService } from 'core/aws/cognito/cognito.service';
+import { ConfigService } from 'core/config/config.service';
 import { RedisService } from 'core/redis/redis.service';
 import { User } from 'database/user/user';
-import { ConfigService } from 'shared/config/config.service';
-import { UserStatuses } from 'shared/constants/user';
+import { UserStatuses } from 'shared/business/user/user';
 import {
 	Auth_AutoLoginRequestBodyDTO,
 	Auth_AutoLoginResponseDTO

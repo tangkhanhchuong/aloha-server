@@ -4,7 +4,7 @@ import { Model, Schema as MongooseSchema } from 'mongoose';
 
 import { Post } from 'database/post/post';
 import { User } from 'database/user/user';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	Post_BookmarkPostRequestParamDTO,
 	Post_BookmarkPostResponseDTO

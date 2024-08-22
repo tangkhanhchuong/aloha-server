@@ -3,18 +3,15 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import {
-    AuthUser,
-    AuthUserPayload
+	AuthUser,
 } from 'shared/decorators/auth-user.decorator';
-import {
-    Post_ReactToPostResponseDTO
-} from 'shared/dto/post/react-to-post.dto';
 
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
-    PostComment_CreateCommentDTO,
-    PostComment_CreateCommentRequestBodyDTO,
-    PostComment_CreateCommentRequestParamDTO,
-    PostComment_CreateCommentResponseDTO
+	PostComment_CreateCommentDTO,
+	PostComment_CreateCommentRequestBodyDTO,
+	PostComment_CreateCommentRequestParamDTO,
+	PostComment_CreateCommentResponseDTO
 } from 'shared/dto/post-comment/create-comment.dto';
 import { CreateCommentService } from './create-comment.service';
 

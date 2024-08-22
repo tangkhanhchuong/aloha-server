@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { User } from 'database/user/user';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	User_UpdateMyProfileRequestBodyDTO,
 	User_UpdateMyProfileResponseDTO

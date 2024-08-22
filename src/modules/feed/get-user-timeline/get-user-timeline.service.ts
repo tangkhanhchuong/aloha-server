@@ -4,12 +4,12 @@ import { FilterQuery, Model } from 'mongoose';
 
 import { Post } from 'database/post/post';
 import { User } from 'database/user/user';
-import { PostStatuses } from 'shared/constants/post';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
+import { PostStatuses } from 'shared/business/post/post';
 import {
-    Feed_GetUserTimelineRequestQueryDTO,
-    Feed_GetUserTimelineRequestParamDTO,
-    Feed_Feed_GetUserTimelineResponseDTO
+	Feed_Feed_GetUserTimelineResponseDTO,
+	Feed_GetUserTimelineRequestParamDTO,
+	Feed_GetUserTimelineRequestQueryDTO
 } from 'shared/dto/feed/get-user-timeline.dto';
 import { PostMapper } from 'shared/mappers/post.mapper';
 

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray } from 'class-validator';
 
-import { PAGINATION_DEFAULT } from '../constants/find-query';
+import { PAGINATION_DEFAULT } from './listing.request.dto';
 
 export class PaginatedResponseDTO<T> {
 	@IsArray()

@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { User } from 'database/user/user';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	Auth_GetMeResponseDTO
 } from 'shared/dto/auth/get-me.dto';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
 
 @Injectable()
 export class GetMeService {

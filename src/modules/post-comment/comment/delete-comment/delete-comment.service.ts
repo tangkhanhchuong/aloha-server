@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { PostComment } from 'database/post-comment/post-comment';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
     PostComment_DeleteCommentRequestParamDTO,
     PostComment_DeleteCommentResponseDTO

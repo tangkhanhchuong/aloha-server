@@ -4,8 +4,8 @@ import { Model } from 'mongoose';
 
 import { PostComment } from 'database/post-comment/post-comment';
 import { Post } from 'database/post/post';
-import { CommentTypes } from 'shared/constants/comment';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
+import { CommentTypes } from 'shared/business/comment/comment';
 import {
     PostComment_CreateCommentRequestBodyDTO,
     PostComment_CreateCommentRequestParamDTO,

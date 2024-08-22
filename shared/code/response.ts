@@ -1,4 +1,4 @@
-export enum ResponseCode {
+export enum ResponseCodes {
   SUCCESS = '000200',
   BAD_REQUEST = '000400',
   RESOURCE_NOT_FOUND = '000404',

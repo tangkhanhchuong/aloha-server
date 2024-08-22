@@ -4,7 +4,7 @@ import { passportJwtSecret } from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { RedisService } from 'core/redis/redis.service';
-import { ConfigService } from 'shared/config/config.service';
+import { ConfigService } from 'core/config/config.service';
 
 @Injectable()
 export class CognitoStrategy extends PassportStrategy(Strategy) {

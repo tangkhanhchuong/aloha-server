@@ -2,9 +2,9 @@ import { Body, Controller, Logger, Patch, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	AuthUser,
-	AuthUserPayload
 } from 'shared/decorators/auth-user.decorator';
 import {
 	User_UpdateMyProfileDTO,

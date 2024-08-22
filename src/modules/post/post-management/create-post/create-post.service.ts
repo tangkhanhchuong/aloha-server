@@ -3,12 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Post } from 'database/post/post';
-import { AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { User } from 'database/user/user';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	Post_CreatePostRequestBodyDTO,
 	Post_CreatePostResponseDTO,
 } from 'shared/dto/post/create-post.dto';
-import { User } from 'database/user/user';
 
 @Injectable()
 export class CreatePostService {

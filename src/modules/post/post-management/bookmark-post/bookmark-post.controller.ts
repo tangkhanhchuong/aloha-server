@@ -2,7 +2,8 @@ import { Controller, Logger, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
-import { AuthUser, AuthUserPayload } from 'shared/decorators/auth-user.decorator';
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
+import { AuthUser } from 'shared/decorators/auth-user.decorator';
 import {
 	Post_BookmarkPostDTO,
 	Post_BookmarkPostRequestParamDTO,

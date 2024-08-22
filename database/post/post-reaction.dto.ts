@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-import { PostReactions } from 'shared/constants/post';
+import { PostReactions } from 'shared/business/post/post';
 
 @Schema({ versionKey: false, collection: 'post-reactions' })
 export class PostReaction extends Document<number> {

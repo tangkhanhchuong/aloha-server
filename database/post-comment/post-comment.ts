@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { CommentTypes } from 'shared/constants/comment';
+
+import { CommentTypes } from 'shared/business/comment/comment';
 
 @Schema({ versionKey: false, collection: 'post-comments' })
 export class PostComment extends Document<number> {

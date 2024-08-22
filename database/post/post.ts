@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
-import { PostStatuses } from 'shared/constants/post';
+import { PostStatuses } from 'shared/business/post/post';
 
 @Schema({ versionKey: false, collection: 'posts' })
 export class Post extends Document<number> {

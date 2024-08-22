@@ -1,12 +1,7 @@
 import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { isMongoId } from 'class-validator';
 
-export class AuthUserPayload {
-	cognitoId: string;
-	userId: string;
-	email: string;
-	username: string;
-}
+import { AuthUserPayload } from 'shared/business/auth/auth-user';
 
 export const AuthUser = createParamDecorator((data: unknown, ctx: ExecutionContext): AuthUserPayload => {
 	const request = ctx.switchToHttp().getRequest();

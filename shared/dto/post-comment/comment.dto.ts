@@ -2,7 +2,7 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsString } from "class-validator";
 
-import { CommentTypes } from "shared/constants/comment";
+import { CommentTypes } from "shared/business/comment/comment";
 
 import { UserDTO } from "../user/user.dto";
 
