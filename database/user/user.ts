@@ -15,6 +15,12 @@ export class UserProfile {
 	gender: UserGenders;
 }
 
+export class NotificationPreferences {
+	EmailEnabled: boolean = false;
+	SMSEnabled: boolean = false;
+	PushEnabled: boolean = true;
+}
+
 @Schema({ versionKey: false, collection: 'users' })
 export class User extends Document<number> {
 	@Prop({
@@ -68,6 +74,23 @@ export class User extends Document<number> {
 		type: Number,
 	})
 	numberOfFollowees: number;
+
+	@Prop({
+		type: NotificationPreferences
+	})
+	notificationPreferences: NotificationPreferences;
+
+	@Prop({
+		type: [MongooseSchema.Types.ObjectId],
+		ref: 'User'
+	})
+	blackList: MongooseSchema.Types.ObjectId[];
+
+	@Prop({
+		type: [MongooseSchema.Types.ObjectId],
+		ref: 'Post'
+	})
+	bookmarks: MongooseSchema.Types.ObjectId[];
 	
 	@Prop({
 		type: Date,

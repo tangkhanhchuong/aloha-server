@@ -14,6 +14,8 @@ import { PostMapper } from 'shared/mappers/post.mapper';
 import { UserMapper } from 'shared/mappers/user.mapper';
 import { MediaModule } from 'src/modules/media/media.module';
 
+import { BookmarkPostController } from './bookmark-post/bookmark-post.controller';
+import { BookmarkPostService } from './bookmark-post/bookmark-post.service';
 import { CreatePostController } from './create-post/create-post.controller';
 import { CreatePostService } from './create-post/create-post.service';
 import { DeletePostController } from './delete-post/delete-post.controller';
@@ -36,13 +38,15 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 		GetPostController,
 		CreatePostController,
 		Post_UpdatePostController,
-		DeletePostController
+		DeletePostController,
+		BookmarkPostController
 	],
     providers: [
 		GetPostService,
 		CreatePostService,
 		Post_UpdatePostService,
 		DeletePostService,
+		BookmarkPostService,
 		PostMapper,
 		UserMapper,
 		Logger
