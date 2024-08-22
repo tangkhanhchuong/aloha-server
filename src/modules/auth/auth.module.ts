@@ -2,7 +2,7 @@ import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { CognitoModule } from 'core/aws/cognito/cognito.module';
-import { RedisModule } from 'core/redis/redis.module';
+import { SessionModule } from 'core/session/session.module';
 import { User, UserSchema } from 'database/user/user';
 import { UserMapper } from 'shared/mappers/user.mapper';
 
@@ -26,7 +26,7 @@ import { RegisterService } from './register/register.service';
 			{ name: User.name, schema: UserSchema }
         ]),
         CognitoModule,
-        RedisModule,
+        SessionModule,
         MediaModule
     ],
     controllers: [

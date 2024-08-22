@@ -17,27 +17,21 @@ export class RedisService {
         });
     }
 
-    async setData<V>(key: string, value: V, expiredInSeconds?: number) {
+    async setData(key: string, value: string, expiredInSeconds?: number): Promise<void> {
         await this.redisClient.set(
             key,
-            JSON.stringify(value),
+            value,
             'EX',
             expiredInSeconds
         );
     }
 
-    async getData(key: string) {
+    async getData(key: string): Promise<string> {
         const value = await this.redisClient.get(key);
-        if (value) {
-            return JSON.parse(value);
-        }
-        return null;
+        return value;
     }
 
-    async removeData(key: string) {
-        
-        const value = await this.redisClient.get(key);
-        console.log({ key, value });
+    async removeData(key: string): Promise<void> {
         await this.redisClient.del(key);
     }
 }

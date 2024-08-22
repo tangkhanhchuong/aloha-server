@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { RedisService } from 'core/redis/redis.service';
+import { SessionModule } from 'core/session/session.module';
 
 import { CognitoService } from './cognito.service';
 import { CognitoStrategy } from './cognito.strategy';
 
 @Module({
+	imports: [SessionModule],
 	providers: [
 		CognitoService,
 		CognitoStrategy,
 		JwtService,
-		RedisService
 	],
 	exports: [
 		CognitoService,

@@ -4,8 +4,9 @@ import { Model } from 'mongoose';
 
 import { CognitoService } from 'core/aws/cognito/cognito.service';
 import { ConfigService } from 'core/config/config.service';
-import { RedisService } from 'core/redis/redis.service';
+import { SessionService } from 'core/session/session.service';
 import { User } from 'database/user/user';
+import { UserSessionPayload } from 'shared/business/auth/user-session';
 import { UserStatuses } from 'shared/business/user/user';
 import {
 	Auth_AutoLoginRequestBodyDTO,
@@ -23,7 +24,7 @@ export class LoginService {
 		private readonly userModel: Model<User>,
 		private readonly configService: ConfigService,
 		private readonly cognitoService: CognitoService,
-		private readonly redisService: RedisService
+		private readonly sessionService: SessionService
 	) {}
 
 	async login(bodyDTO: Auth_LoginRequestBodyDTO): Promise<Auth_LoginResponseDTO> {
@@ -44,10 +45,10 @@ export class LoginService {
 		const refreshToken = authenticatedResult.getRefreshToken().getToken()
 
 		const sessionKey = authenticatedResult.getIdToken().decodePayload().sub;
-		await this.redisService.setData(
+		await this.sessionService.addSession<UserSessionPayload>(
 			sessionKey,
 			{
-				userId: foundUser._id,
+				userId: foundUser.id,
                 username: foundUser.username,
                 email: foundUser.email,
                 avatar: foundUser.avatar
