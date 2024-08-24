@@ -1,18 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { ConfigService } from 'core/config/config.service';
 import { RedisService } from 'core/redis/redis.service';
 
 @Injectable()
 export class SessionService {
     constructor(
+        private readonly configService: ConfigService,
         private readonly redisService: RedisService
     ) {}
 
     async addSession<V>(key: string, value: V, expiredInSeconds?: number) {
+        const currentValue = await this.redisService.getData(key);
+        if (!currentValue) {
+            throw new NotFoundException('Session not found');
+        }
+        const updatedValue = {
+            ...JSON.parse(currentValue),
+            ...value,
+        }
         await this.redisService.setData(
             key,
-            JSON.stringify(value),
-            expiredInSeconds
+            JSON.stringify({
+                ...updatedValue,
+            }),
+            expiredInSeconds || parseInt(this.configService.getJwtConfig().expirationTime)
         );
     }
 

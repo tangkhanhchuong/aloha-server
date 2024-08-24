@@ -51,7 +51,7 @@ export class LoginService {
 				userId: foundUser.id,
                 username: foundUser.username,
                 email: foundUser.email,
-                avatar: foundUser.avatar
+				avatar: foundUser.avatar,
 			},
 			parseInt(this.configService.getJwtConfig().expirationTime)
 		);

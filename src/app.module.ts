@@ -16,6 +16,7 @@ import { PostCommentModule } from './modules/post-comment/post-comment.module';
 import { PostModule } from './modules/post/post.module';
 import { UserRelationModule } from './modules/user-relation/user-relation.module';
 import { UserModule } from './modules/user/user.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
 	imports: [
@@ -31,6 +32,7 @@ import { UserModule } from './modules/user/user.module';
 		PostCommentModule,
 		MediaModule,
 		FeedModule,
+		NotificationModule
 	],
 	providers: [
 		AppService,

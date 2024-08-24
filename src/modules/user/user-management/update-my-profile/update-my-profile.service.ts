@@ -38,7 +38,6 @@ export class UpdateMyProfileService {
 				}
 			}
 		)
-		console.log(updatedResult);
 		return {
 			status: true
 		};
