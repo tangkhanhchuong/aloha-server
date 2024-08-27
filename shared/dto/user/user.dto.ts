@@ -1,8 +1,11 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsString } from "class-validator";
 
 export class UserDTO {
 	@IsString()
 	userId: string;
+
+	@IsBoolean()
+	isFollowed?: boolean;
 
 	@IsString()
 	username: string;
@@ -11,6 +14,11 @@ export class UserDTO {
 	email: string;
 
 	@IsString()
-	@IsOptional()
 	avatar?: string;
+
+	@IsString()
+	fullname?: string;
+
+	@IsString()
+	bio?: string;
 }

@@ -34,14 +34,26 @@ export class GetFollowersService {
 		};
 		const [followerEntities, count] = await Promise.all([
 			this.userRelationModel.find(filter)
-				.populate('target')
+				.populate('createdBy')
 				.skip(limit * (+page - 1))
 				.limit(limit)
 				.exec(),
 			this.userRelationModel.countDocuments(filter)
 		]);
 		const followerDTOs = await Promise.all(followerEntities
-			.map((userRelationEntity) => this.userMapper.entityToDTO((userRelationEntity.createdBy) as User)));
+			.map(async (userRelationEntity) => {
+				const contrariwiseRelation = await this.userRelationModel.exists({
+					createdBy: userId,
+					target: userRelationEntity.createdBy,
+					deletedAt: { $ne: null }
+				});
+				return this.userMapper.entityToDTO(
+					{
+						...userRelationEntity.createdBy['_doc'],
+						isFollowed: !!contrariwiseRelation
+					} as User & { isFollowed: boolean }
+				);
+			}));
 
 		return new UserRelation_GetFollowersResponseDTO(
 			followerDTOs,

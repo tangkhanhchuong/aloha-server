@@ -10,11 +10,14 @@ export class UserMapper {
 		private readonly generateSignedUrlsService: GenerateSignedUrlsService,
     ) {}
     
-    async entityToDTO(user: User): Promise<UserDTO> {
+    async entityToDTO(user: User & { isFollowed?: boolean }): Promise<UserDTO> {
         const userDTO: UserDTO = {
-            userId: user.id,
+            isFollowed: user.isFollowed,
+            userId: user._id.toString(),
             email: user.email,
             username: user.username,
+            fullname: user.profile.fullname,
+            bio: user.profile.bio
         };
         if (user.avatar) {
             const files = await this.generateSignedUrlsService
