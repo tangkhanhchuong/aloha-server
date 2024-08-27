@@ -5,6 +5,9 @@ import { DTO, HttpMethod } from '../base.dto';
 export class Auth_GetUserResponseDTO {
     @IsString()
     userId: string;
+
+    @IsString()
+    fullname: string;
     
     @IsString()
     username: string;

@@ -19,6 +19,7 @@ export class PostMapper {
             .generateDownloadSignedUrl({ fileKeys: post.files });
         const createdBy = await this.userMapper.entityToDTO(post.createdBy); 
         const postDTO: PostDTO = {
+            postId: post.id,
             fileUrls: fileUrls.urls,
             content: post.content,
             title: post.title,

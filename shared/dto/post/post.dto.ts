@@ -9,6 +9,9 @@ export class PostDTO {
 	fileUrls: string[];
 
 	@IsString()
+	postId: string;
+
+	@IsString()
 	title: string;
 
 	@IsString()

@@ -15,7 +15,7 @@ export class  Feed_GetUserTimelineRequestParamDTO {
 export class Feed_Feed_GetUserTimelineResponseDTO extends PaginatedResponseDTO<PostDTO> {}
 
 export class Feed_Feed_GetUserTimelineDTO extends DTO {
-	public static url = '/users/:userId/timeline';
+	public static url = '/users/:userId/posts';
 	public method = HttpMethod.GET;
 
 	public bodyDTO: undefined;

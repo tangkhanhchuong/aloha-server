@@ -12,13 +12,9 @@ export class SessionService {
 
     async addSession<V>(key: string, value: V, expiredInSeconds?: number) {
         const currentValue = await this.redisService.getData(key);
-        if (!currentValue) {
-            throw new NotFoundException('Session not found');
-        }
-        const updatedValue = {
-            ...JSON.parse(currentValue),
-            ...value,
-        }
+        const updatedValue = currentValue
+            ? { ...JSON.parse(currentValue), ...value }
+            : { ...value };
         await this.redisService.setData(
             key,
             JSON.stringify({

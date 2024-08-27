@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import * as moment from 'moment';
 
 import { User } from 'database/user/user';
@@ -21,6 +21,9 @@ export class GetUserService {
 
 	async execute(paramDTO: Auth_GetUserRequestParamDTO): Promise<Auth_GetUserResponseDTO> {
 		const { userId } = paramDTO;
+		if (!isValidObjectId(userId)) {
+			throw new BadRequestException('Invalid userId');
+		}
 		const foundUser = await this.userModel.findById(userId);
 		if (!foundUser) {
 			throw new BadRequestException('User not found');
@@ -32,6 +35,7 @@ export class GetUserService {
 			mobile: foundUser.mobile,
 			username: foundUser?.username,
 			bio: userProfile?.bio,
+			fullname: userProfile?.fullname,
 			birthday: userProfile?.birthday ? moment(userProfile?.birthday).format('MMM D, YYYY') : null,
 			gender: userProfile?.gender?.toString() || null,
 			website: userProfile?.website,

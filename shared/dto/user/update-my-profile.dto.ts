@@ -27,6 +27,11 @@ export class User_UpdateMyProfileRequestBodyDTO {
     @IsString()
     @IsNotEmpty()
     @IsOptional()
+    fullname?: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @IsOptional()
     bio?: string;
     
     @IsString()

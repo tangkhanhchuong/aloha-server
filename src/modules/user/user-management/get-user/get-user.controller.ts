@@ -1,11 +1,10 @@
-import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, Param, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
-import { AuthUserPayload } from 'shared/business/auth/auth-user';
-import { AuthUser } from 'shared/decorators/auth-user.decorator';
 import {
 	Auth_GetUserDTO,
+	Auth_GetUserRequestParamDTO,
 	Auth_GetUserResponseDTO
 } from 'shared/dto/user/get-user.dto';
 
@@ -21,9 +20,9 @@ export class GetUserController {
 
 	@Get(Auth_GetUserDTO.url)
 	@UseGuards(CognitoGuard)
-	async getMe(@AuthUser() authUser: AuthUserPayload): Promise<Auth_GetUserResponseDTO> {
+	async getUser(@Param() paramDTO: Auth_GetUserRequestParamDTO): Promise<Auth_GetUserResponseDTO> {
 		try {
-			return await this.getUserService.execute(authUser);
+			return await this.getUserService.execute(paramDTO);
 		} catch (e) {
 			this.logger.error(e, e.stack, GetUserController.name);
 			throw e;

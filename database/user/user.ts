@@ -6,6 +6,7 @@ import { UserGenders, UserStatuses } from 'shared/business/user/user';
 export class UserProfile {
 	cover: string;
 	bio: string;
+	fullname: string;
 	location: string;
 	website: string;
 	birthday: Date;

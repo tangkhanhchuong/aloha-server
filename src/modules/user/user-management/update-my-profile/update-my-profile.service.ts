@@ -20,7 +20,16 @@ export class UpdateMyProfileService {
 		bodyDTO: User_UpdateMyProfileRequestBodyDTO,
 		authUser: AuthUserPayload
 	): Promise<User_UpdateMyProfileResponseDTO> {
-		const { username, website, avatar, bio, cover, birthday, gender, location } = bodyDTO;
+		const { username,
+			website,
+			avatar,
+			bio,
+			fullname,
+			cover,
+			birthday,
+			gender,
+			location
+		} = bodyDTO;
 		const { userId } = authUser;
 
 		const updatedResult = await this.userModel.findByIdAndUpdate(
@@ -34,7 +43,8 @@ export class UpdateMyProfileService {
 					cover,
 					birthday,
 					gender,
-					location
+					location,
+					fullname
 				}
 			}
 		)
