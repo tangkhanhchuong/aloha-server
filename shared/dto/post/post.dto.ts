@@ -1,6 +1,6 @@
 
 import { Type } from "class-transformer";
-import { IsArray, IsNumber, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNumber, IsString } from "class-validator";
 
 import { UserDTO } from "../user/user.dto";
 
@@ -10,6 +10,9 @@ export class PostDTO {
 
 	@IsString()
 	postId: string;
+
+	@IsBoolean()
+	isReacted: boolean;
 
 	@IsString()
 	title: string;

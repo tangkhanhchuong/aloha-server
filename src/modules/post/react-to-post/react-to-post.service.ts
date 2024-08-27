@@ -35,7 +35,7 @@ export class ReactToPostService {
 		}
 
 		let postReaction = await this.postReactionModel.findOne({
-			postId,
+			post,
 			createdBy: userId
 		});
 		if (!postReaction) {
@@ -45,7 +45,7 @@ export class ReactToPostService {
 				};
 			}
 			postReaction = new this.postReactionModel({
-				postId,
+				post,
 				reactionType: reaction,
 				createdBy: userId
 			});

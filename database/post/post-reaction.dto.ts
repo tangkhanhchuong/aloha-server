@@ -9,7 +9,7 @@ export class PostReaction extends Document<number> {
 		type: MongooseSchema.Types.ObjectId,
 		ref: 'Post',
 	})
-    postId: MongooseSchema.Types.ObjectId;
+    post: MongooseSchema.Types.ObjectId;
     
     @Prop({
         enum: PostReactions,

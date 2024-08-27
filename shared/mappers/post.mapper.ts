@@ -14,19 +14,20 @@ export class PostMapper {
         private readonly userMapper: UserMapper,
     ) {}
     
-    async entityToDTO(post: Post & { createdBy: User }): Promise<PostDTO> {
+    async entityToDTO(post: Post & { createdBy: User, isReacted?: boolean }): Promise<PostDTO> {
         const fileUrls = await this.generateSignedUrlsService
             .generateDownloadSignedUrl({ fileKeys: post.files });
-        const createdBy = await this.userMapper.entityToDTO(post.createdBy); 
+        const createdBy = await this.userMapper.entityToDTO(post.createdBy);
         const postDTO: PostDTO = {
-            postId: post.id,
+            createdBy,
+            isReacted: post.isReacted || false,
+            postId: post._id?.toString(),
             fileUrls: fileUrls.urls,
             content: post.content,
             title: post.title,
             numberOfReactions: post.numberOfReactions,
             numberOfComments: post.numberOfComments,
-            createdAt: post.createdAt.toISOString(),
-            createdBy
+            createdAt: post.createdAt.toISOString()
         };
         return postDTO;
     }

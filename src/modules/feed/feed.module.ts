@@ -6,6 +6,10 @@ import {
     PostSchema
 } from 'database/post/post';
 import {
+    PostReaction,
+    PostReactionSchema
+} from 'database/post/post-reaction.dto';
+import {
     User,
     UserSchema
 } from 'database/user/user';
@@ -26,6 +30,7 @@ import { GetUserTimelineService } from './get-user-timeline/get-user-timeline.se
     imports: [
 		MongooseModule.forFeature([
             { name: Post.name, schema: PostSchema },
+            { name: PostReaction.name, schema: PostReactionSchema },
 			{ name: User.name, schema: UserSchema }
         ]),
         MediaModule
