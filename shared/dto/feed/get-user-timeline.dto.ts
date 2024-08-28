@@ -12,9 +12,9 @@ export class  Feed_GetUserTimelineRequestParamDTO {
 	userId: string;
 }
 
-export class Feed_Feed_GetUserTimelineResponseDTO extends PaginatedResponseDTO<PostDTO> {}
+export class Feed_GetUserTimelineResponseDTO extends PaginatedResponseDTO<PostDTO> {}
 
-export class Feed_Feed_GetUserTimelineDTO extends DTO {
+export class Feed_GetUserTimelineDTO extends DTO {
 	public static url = '/users/:userId/posts';
 	public method = HttpMethod.GET;
 
@@ -23,7 +23,7 @@ export class Feed_Feed_GetUserTimelineDTO extends DTO {
 	constructor(
 		public queryDTO: Feed_GetUserTimelineRequestQueryDTO,
 		public paramDTO: Feed_GetUserTimelineRequestParamDTO,
-		public responseDTO: Feed_Feed_GetUserTimelineResponseDTO
+		public responseDTO: Feed_GetUserTimelineResponseDTO
 	) {
 		super();
 	}

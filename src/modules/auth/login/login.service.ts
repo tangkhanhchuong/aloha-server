@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -33,10 +33,10 @@ export class LoginService {
 			email: bodyDTO.email
 		});
 		if (!foundUser) {
-			throw new NotFoundException('User not found');
+			throw new UnauthorizedException('INVALID_EMAIL_OR_PASSWORD');
 		}
 		if (foundUser.status === UserStatuses.INACTIVE) {
-			throw new UnauthorizedException('User is inactive');
+			throw new UnauthorizedException('INVALID_EMAIL_OR_PASSWORD');
 		}
 
 		const authenticatedResult = await this.cognitoService.authenticate(email, password);

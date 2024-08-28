@@ -26,7 +26,7 @@ export class RegisterService {
 			email,
 			username
 		});
-		const cognitoService = await this.cognitoService.register(email, saveUser.id, password);
+		const cognitoService = await this.cognitoService.register(email, password);
 		this.logger.debug(`OTP Sent::${JSON.stringify(cognitoService.codeDeliveryDetails)}`);
 		return {
 			id: saveUser.id,

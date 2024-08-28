@@ -8,14 +8,14 @@ import { User } from 'database/user/user';
 import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import { PostStatuses } from 'shared/business/post/post';
 import {
-	Feed_GetUserTimelineResponseDTO,
-	Feed_GetUserTimelineRequestParamDTO,
-	Feed_GetUserTimelineRequestQueryDTO
-} from 'shared/dto/feed/get-user-timeline.dto';
+	Post_ListBookmarkPostsRequestParamDTO,
+	Post_ListBookmarkPostsRequestQueryDTO,
+	Post_ListBookmarkPostsResponseDTO
+} from 'shared/dto/post/list-bookmark-posts.dto';
 import { PostMapper } from 'shared/mappers/post.mapper';
 
 @Injectable()
-export class GetUserTimelineService {
+export class ListBookmarkPostsService {
 	constructor(
 		@InjectModel(Post.name)
 		private readonly postModel: Model<Post>,
@@ -27,10 +27,10 @@ export class GetUserTimelineService {
     ) {}
     
 	async execute(
-        queryDTO: Feed_GetUserTimelineRequestQueryDTO,
-        paramDTO: Feed_GetUserTimelineRequestParamDTO,
+        queryDTO: Post_ListBookmarkPostsRequestQueryDTO,
+        paramDTO: Post_ListBookmarkPostsRequestParamDTO,
 		authUser: AuthUserPayload
-	): Promise<Feed_GetUserTimelineResponseDTO> {
+	): Promise<Post_ListBookmarkPostsResponseDTO> {
         const { limit, page } = queryDTO;
 		const { userId: authorId } = paramDTO;
 		const { userId } = authUser;
@@ -72,7 +72,7 @@ export class GetUserTimelineService {
 			);
 		}));
 		
-		return new Feed_GetUserTimelineResponseDTO(
+		return new Post_ListBookmarkPostsResponseDTO(
 			postDTOs,
 			queryDTO.page,
 			queryDTO.limit,

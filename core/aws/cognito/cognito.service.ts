@@ -3,10 +3,9 @@ import {
 	AuthenticationDetails,
 	CognitoRefreshToken,
 	CognitoUser,
-	CognitoUserAttribute,
 	CognitoUserPool,
 	CognitoUserSession,
-	ISignUpResult,
+	ISignUpResult
 } from 'amazon-cognito-identity-js';
 
 import { ConfigService } from 'core/config/config.service';
@@ -23,7 +22,7 @@ export class CognitoService {
 		});
 	}
 
-	public async register(email: string, userId: string, password: string): Promise<ISignUpResult> {
+	public async register(email: string, password: string): Promise<ISignUpResult> {
 		return new Promise((resolve, reject) => {
 			this.userPool.signUp(email, password, null, null, (err, result) => {
 				if (err) {
@@ -78,12 +77,12 @@ export class CognitoService {
 
 		const user = new CognitoUser(userData);
 		return new Promise((resolve, reject) => {
-			return user.authenticateUser(authenticationDetails, {
+			return user.authenticateUser(authenticationDetails, {	
 				onSuccess: (result) => {
 					resolve(result);
 				},
 				onFailure: (err) => {
-					reject(new UnauthorizedException(err.message));
+					reject(new UnauthorizedException('INVALID_EMAIL_OR_PASSWORD'));
 				},
 			});
 		});

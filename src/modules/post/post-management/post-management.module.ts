@@ -22,6 +22,8 @@ import { DeletePostController } from './delete-post/delete-post.controller';
 import { DeletePostService } from './delete-post/delete-post.service';
 import { GetPostController } from './get-post/get-post.controller';
 import { GetPostService } from './get-post/get-post.service';
+import { ListBookmarkPostsController } from './list-bookmark-posts/list-bookmark-posts.controller';
+import { ListBookmarkPostsService } from './list-bookmark-posts/list-bookmark-posts.service';
 import { Post_UpdatePostController } from './update-post/update-post.controller';
 import { Post_UpdatePostService } from './update-post/update-post.service';
 
@@ -39,7 +41,8 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 		CreatePostController,
 		Post_UpdatePostController,
 		DeletePostController,
-		BookmarkPostController
+		BookmarkPostController,
+		ListBookmarkPostsController
 	],
     providers: [
 		GetPostService,
@@ -47,6 +50,7 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 		Post_UpdatePostService,
 		DeletePostService,
 		BookmarkPostService,
+		ListBookmarkPostsService,
 		PostMapper,
 		UserMapper,
 		Logger
