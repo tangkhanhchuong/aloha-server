@@ -20,7 +20,8 @@ export class UpdateMyProfileService {
 		bodyDTO: User_UpdateMyProfileRequestBodyDTO,
 		authUser: AuthUserPayload
 	): Promise<User_UpdateMyProfileResponseDTO> {
-		const { username,
+		const {
+			username,
 			website,
 			avatar,
 			bio,
@@ -32,19 +33,19 @@ export class UpdateMyProfileService {
 		} = bodyDTO;
 		const { userId } = authUser;
 
-		const updatedResult = await this.userModel.findByIdAndUpdate(
+		await this.userModel.findByIdAndUpdate(
 			userId,
 			{
-				username,
-				avatar,
-				profile: {
-					website,
-					bio,
-					cover,
-					birthday,
-					gender,
-					location,
-					fullname
+				$set: {
+					username,
+					avatar,
+					'profile.website': website,
+					'profile.bio': bio,
+                    'profile.fullname': fullname,
+                    'profile.cover': cover,
+                    'profile.birthday': birthday,
+                    'profile.gender': gender,
+                    'profile.location': location,	
 				}
 			}
 		)

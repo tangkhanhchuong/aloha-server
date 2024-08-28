@@ -7,6 +7,10 @@ import {
 	PostSchema
 } from 'database/post/post';
 import {
+	PostReaction,
+	PostReactionSchema
+} from 'database/post/post-reaction.dto';
+import {
 	User,
 	UserSchema
 } from 'database/user/user';
@@ -31,6 +35,7 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 	imports: [
 		MongooseModule.forFeature([
 			{ name: Post.name, schema: PostSchema },
+			{ name: PostReaction.name, schema: PostReactionSchema },
 			{ name: User.name, schema: UserSchema }
 		]),
 		CognitoModule,
