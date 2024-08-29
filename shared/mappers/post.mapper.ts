@@ -14,13 +14,18 @@ export class PostMapper {
         private readonly userMapper: UserMapper,
     ) {}
     
-    async entityToDTO(post: Post & { createdBy: User, isReacted?: boolean }): Promise<PostDTO> {
+    async entityToDTO(post: Post & {
+        createdBy: User,
+        isReacted?: boolean,
+        isBookmarked?: boolean
+    }): Promise<PostDTO> {
         const fileUrls = await this.generateSignedUrlsService
             .generateDownloadSignedUrl({ fileKeys: post.files });
         const createdBy = await this.userMapper.entityToDTO(post.createdBy);
         const postDTO: PostDTO = {
             createdBy,
             isReacted: post.isReacted || false,
+            isBookmarked: post.isBookmarked || false,
             postId: post._id?.toString(),
             fileUrls: fileUrls.urls,
             content: post.content,

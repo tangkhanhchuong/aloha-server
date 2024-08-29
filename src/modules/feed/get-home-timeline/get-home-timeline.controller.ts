@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Logger, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
@@ -22,6 +22,7 @@ export class GetHomeTimelineController {
 
 	@Get(Feed_GetHomeTimelineDTO.url)
 	@UseGuards(CognitoGuard)
+	@HttpCode(HttpStatus.OK)
 	async getHomeTimeline(
 		@AuthUser() authUser: AuthUserPayload,
 		@Query() queryDTO: Feed_GetHomeTimelineRequestQueryDTO

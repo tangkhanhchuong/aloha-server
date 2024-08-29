@@ -1,11 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Post } from 'database/post/post';
+import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
 import { UserGenders, UserStatuses } from 'shared/business/user/user';
 
 export class UserProfile {
-	cover: string;
-	bio: string;
+	cover: string = 'default-cover.png';
+	bio: string = 'Hi, I am new to Aloha';
 	fullname: string;
 	location: string;
 	website: string;
@@ -45,6 +46,7 @@ export class User extends Document<number> {
 
 	@Prop({
 		type: String,
+		default: 'default-male-avatar.png'
 	})
 	avatar: string;
 
@@ -55,21 +57,25 @@ export class User extends Document<number> {
 
 	@Prop({
 		type: UserProfile,
+		default: {}
 	})
 	profile: UserProfile;
 
 	@Prop({
 		type: Number,
+		default: 0
 	})
 	numberOfPosts: number;
 
 	@Prop({
 		type: Number,
+		default: 0
 	})
 	numberOfFollowers: number;
 
 	@Prop({
 		type: Number,
+		default: 0
 	})
 	numberOfFollowees: number;
 
@@ -85,10 +91,10 @@ export class User extends Document<number> {
 	blackList: MongooseSchema.Types.ObjectId[];
 
 	@Prop({
-		type: [MongooseSchema.Types.ObjectId],
+		type: [Types.ObjectId],
 		ref: 'Post'
 	})
-	bookmarks: MongooseSchema.Types.ObjectId[];
+	bookmarks: Types.ObjectId[];
 	
 	@Prop({
 		type: Date,

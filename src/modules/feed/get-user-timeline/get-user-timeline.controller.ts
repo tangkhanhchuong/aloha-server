@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Logger, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
@@ -6,9 +6,9 @@ import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import { AuthUser } from 'shared/decorators/auth-user.decorator';
 import {
 	Feed_GetUserTimelineDTO,
-	Feed_GetUserTimelineResponseDTO,
 	Feed_GetUserTimelineRequestParamDTO,
-	Feed_GetUserTimelineRequestQueryDTO
+	Feed_GetUserTimelineRequestQueryDTO,
+	Feed_GetUserTimelineResponseDTO
 } from 'shared/dto/feed/get-user-timeline.dto';
 
 import { GetUserTimelineService } from './get-user-timeline.service';
@@ -23,6 +23,7 @@ export class GetUserTimelineController {
 
 	@Get(Feed_GetUserTimelineDTO.url)
 	@UseGuards(CognitoGuard)
+	@HttpCode(HttpStatus.OK)
 	async getHomeTimeline(
 		@AuthUser() authUser: AuthUserPayload,
         @Query() queryDTO: Feed_GetUserTimelineRequestQueryDTO,

@@ -32,19 +32,17 @@ export class GetUserTimelineService {
 		authUser: AuthUserPayload
 	): Promise<Feed_GetUserTimelineResponseDTO> {
         const { limit, page } = queryDTO;
-		const { userId: authorId } = paramDTO;
-		const { userId } = authUser;
+		const { userId: userId } = paramDTO;
+		const { userId: myId } = authUser;
 
-		const author = await this.userModel.exists({
-			_id: authorId
-		});
-		if (!author) {
+		const user = await this.userModel.findById(userId);
+		if (!user) {
 			throw new NotFoundException('User not found');
 		}
 
 		const filter: FilterQuery<Post> = {
 			status: PostStatuses.PUBLISHED,
-			createdBy: authorId,
+			createdBy: userId,
 			deletedAt: { $ne: null }
 		};
 		const [postEntities, count] = await Promise.all([
@@ -62,11 +60,13 @@ export class GetUserTimelineService {
 			const postReaction = await this.postReactionModel.exists({
 				post: postEntity._id.toString(),
 				reactionType: { $ne: null },
-            	createdBy: userId,
+				createdBy: myId,
 			});
+			const isBookmarked = user.bookmarks.map(post => post.toString()).includes(postEntity.id);
 			return this.postMapper.entityToDTO(
 				{
 					...postEntity['_doc'],
+					isBookmarked,
 					isReacted: !!postReaction,
 				} as Post & { createdBy: User, isReacted: boolean },
 			);

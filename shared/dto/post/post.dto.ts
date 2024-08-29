@@ -12,7 +12,10 @@ export class PostDTO {
 	postId: string;
 
 	@IsBoolean()
-	isReacted: boolean;
+	isReacted?: boolean;
+
+	@IsBoolean()
+	isBookmarked?: boolean;
 
 	@IsString()
 	title: string;
