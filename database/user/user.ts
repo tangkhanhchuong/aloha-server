@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Post } from 'database/post/post';
 import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
 import { UserGenders, UserStatuses } from 'shared/business/user/user';
@@ -49,6 +48,12 @@ export class User extends Document<number> {
 		default: 'default-male-avatar.png'
 	})
 	avatar: string;
+
+	@Prop({
+		type: String,
+		default: 'user.029345'
+	})
+	slug: string;
 
 	@Prop({
 		type: String,
@@ -138,6 +143,18 @@ export class User extends Document<number> {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.pre<User>('save', function (next) {
+	if (this.isModified('username')) {
+		this.slug = this.username
+			.toLowerCase()
+			.replace(/[^\w\s.-]+/g, '')
+			.trim()
+			.replace(/\s+/g, '-')
+			.replace(/-+/g, '.')
+	}
+	next();
+})
 
 UserSchema.methods.activate = async function(): Promise<void> {
 	this.status = UserStatuses.ACTIVE;

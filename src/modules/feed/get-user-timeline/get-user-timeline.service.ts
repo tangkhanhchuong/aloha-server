@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, isValidObjectId, Model } from 'mongoose';
 
 import { Post } from 'database/post/post';
 import { PostReaction } from 'database/post/post-reaction.dto';
@@ -32,8 +32,12 @@ export class GetUserTimelineService {
 		authUser: AuthUserPayload
 	): Promise<Feed_GetUserTimelineResponseDTO> {
         const { limit, page } = queryDTO;
-		const { userId: userId } = paramDTO;
+		const { userId } = paramDTO;
 		const { userId: myId } = authUser;
+
+		if (!isValidObjectId(userId) || !isValidObjectId(myId)) {
+			throw new BadRequestException('Invalid user id');
+		}
 
 		const user = await this.userModel.findById(userId);
 		if (!user) {
@@ -71,7 +75,6 @@ export class GetUserTimelineService {
 				} as Post & { createdBy: User, isReacted: boolean },
 			);
 		}));
-		
 		return new Feed_GetUserTimelineResponseDTO(
 			postDTOs,
 			queryDTO.page,

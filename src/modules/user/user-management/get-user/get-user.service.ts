@@ -20,11 +20,8 @@ export class GetUserService {
 	) {}
 
 	async execute(paramDTO: Auth_GetUserRequestParamDTO): Promise<Auth_GetUserResponseDTO> {
-		const { userId } = paramDTO;
-		if (!isValidObjectId(userId)) {
-			throw new BadRequestException('Invalid userId');
-		}
-		const foundUser = await this.userModel.findById(userId);
+		const { slug } = paramDTO;
+		const foundUser = await this.userModel.findOne({ slug });
 		if (!foundUser) {
 			throw new BadRequestException('User not found');
 		}

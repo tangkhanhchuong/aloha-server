@@ -52,11 +52,11 @@ export class Auth_GetUserResponseDTO {
 export class Auth_GetUserRequestParamDTO {
     @IsString()
     @IsNotEmpty()
-    userId: string;
+    slug: string;
 }
 
 export class Auth_GetUserDTO extends DTO {
-	public static url = '/users/:userId';
+	public static url = '/users/:slug';
 	public method = HttpMethod.GET;
 
 	public queryDTO: undefined;

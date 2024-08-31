@@ -4,7 +4,7 @@ import { UserDTO } from '../user/user.dto';
 export class Auth_GetMeResponseDTO extends UserDTO {}
 
 export class Auth_GetMeDTO extends DTO {
-	public static url = '/me';
+	public static url = 'auth/me';
 	public method = HttpMethod.GET;
 
 	public queryDTO: undefined;

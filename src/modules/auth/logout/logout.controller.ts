@@ -1,4 +1,4 @@
-import { Controller, HttpCode, HttpStatus, Logger, Post, UseGuards } from '@nestjs/common';
+import { Controller, Delete, HttpCode, HttpStatus, Logger, UseGuards } from '@nestjs/common';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
 import { AuthUserPayload } from 'shared/business/auth/auth-user';
@@ -19,7 +19,7 @@ export class LogoutController {
 		private readonly logoutService: LogoutService
 	) {}
 
-	@Post(Auth_LogoutDTO.url)
+	@Delete(Auth_LogoutDTO.url)
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(CognitoGuard)
 	async logout(@AuthUser() authUser: AuthUserPayload): Promise<Auth_LogoutResponseDTO> {

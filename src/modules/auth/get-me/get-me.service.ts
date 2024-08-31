@@ -26,6 +26,7 @@ export class GetMeService {
 			email: foundUser.email,
 			username: foundUser.username,
 			avatar: foundUser.avatar,
+			slug: foundUser.slug
 		}
 	}
 }

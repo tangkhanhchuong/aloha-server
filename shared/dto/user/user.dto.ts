@@ -20,5 +20,8 @@ export class UserDTO {
 	fullname?: string;
 
 	@IsString()
+	slug?: string;
+
+	@IsString()
 	bio?: string;
 }

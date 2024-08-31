@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -20,8 +20,16 @@ export class RegisterService {
 		private readonly userModel: Model<User>,
 	) {}
 
-	async execute(body: Auth_RegisterRequestBodyDTO): Promise<Auth_RegisterResponseDTO> {
-		const { email, password, username } = body;
+	async execute(bodyDTO: Auth_RegisterRequestBodyDTO): Promise<Auth_RegisterResponseDTO> {
+		const { email, password, username } = bodyDTO;
+
+		const foundUser = await this.userModel.findOne({
+			email: bodyDTO.email
+		});
+		if (foundUser) {
+			throw new ConflictException('Email existed!');
+		}
+
 		const saveUser = await this.userModel.create({
 			email,
 			username,
@@ -36,8 +44,8 @@ export class RegisterService {
 		} as Auth_RegisterResponseDTO;
 	}
 
-	async confirmRegistration(bodyDTO: Auth_ConfirmRegistrationRequestBodyDTO) {
-		const { email, otp } = bodyDTO;
+	async confirmRegistration(bodyDTODTO: Auth_ConfirmRegistrationRequestBodyDTO) {
+		const { email, otp } = bodyDTODTO;
 		const userEntity = await this.userModel.findOne({ email });
 		if (!userEntity) {
 			throw new BadRequestException('User not found');
