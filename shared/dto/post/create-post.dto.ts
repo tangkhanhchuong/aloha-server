@@ -1,15 +1,13 @@
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 import { DTO, HttpMethod } from '../base.dto';
 
 export class Post_CreatePostRequestBodyDTO {
-	@IsString()
-	title: string;
-
-	@IsString()
+	@IsString({ message: 'Content is not a string' })
     content: string;
 
-	@IsArray()
+	@IsArray({ message: 'Content is not a string' })
+	@IsOptional({ message: 'Content is required' })
 	media: string[];
 }
 

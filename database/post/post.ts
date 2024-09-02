@@ -9,12 +9,6 @@ export class Post extends Document<number> {
 		type: String,
 		required: true,
 	})
-	title: string;
-
-	@Prop({
-		type: String,
-		required: true,
-	})
 	content: string;
 
 	@Prop({

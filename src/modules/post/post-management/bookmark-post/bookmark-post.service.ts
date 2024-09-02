@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Schema as MongooseSchema, Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 import { Post } from 'database/post/post';
 import { User } from 'database/user/user';
@@ -26,7 +26,6 @@ export class BookmarkPostService {
 		const { postId } = paramDTO;
 		const { userId } = authUser;
 
-		console.log({ postId, userId })
 		const post = await this.postModel.findById(postId);
 		if (!post) {
             throw new NotFoundException('Post not found');

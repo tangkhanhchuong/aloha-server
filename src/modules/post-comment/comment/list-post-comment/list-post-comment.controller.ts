@@ -1,4 +1,4 @@
-import { Controller, HttpCode, HttpStatus, Logger, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Logger, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { CognitoGuard } from 'core/aws/cognito/cognito.guard';
@@ -23,7 +23,7 @@ export class ListPostCommentController {
 		private readonly logger: Logger,
 	) {}
 
-	@Post(PostComment_ListPostCommentDTO.url)
+	@Get(PostComment_ListPostCommentDTO.url)
 	@HttpCode(HttpStatus.OK)
 	@UseGuards(CognitoGuard)
 	async listPostComment(

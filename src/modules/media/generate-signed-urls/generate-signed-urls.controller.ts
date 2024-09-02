@@ -14,8 +14,7 @@ import { GenerateSignedUrlsService } from './generate-signed-urls.service';
 @ApiBearerAuth('access-token')
 export class GenerateSignedUrlsController {
 	constructor(
-		private readonly generateSignedUrlsService: GenerateSignedUrlsService,
-
+		private readonly generateSignedUrlsService: GenerateSignedUrlsService
 	) {}
 
 	@Post(Media_GenerateSignedUrlsDTO.url)

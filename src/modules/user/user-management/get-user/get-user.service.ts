@@ -1,15 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId, Model } from 'mongoose';
 import * as moment from 'moment';
+import { Model } from 'mongoose';
 
 import { User } from 'database/user/user';
+import { MediaMineTypes } from 'shared/business/file/file';
 import {
 	Auth_GetUserRequestParamDTO,
 	Auth_GetUserResponseDTO
 } from 'shared/dto/user/get-user.dto';
 import { GenerateSignedUrlsService } from 'src/modules/media/generate-signed-urls/generate-signed-urls.service';
-import { MediaMineTypes } from 'core/aws/s3/s3.utils';
 
 @Injectable()
 export class GetUserService {
@@ -48,21 +48,21 @@ export class GetUserService {
 		if (foundUser.avatar) {
 			const signedResponse = await this.generateSignedUrlsService.generateDownloadSignedUrl(
 				{
-					fileKeys: [foundUser.avatar],
+					fileNames: [foundUser.avatar],
 					mineType: MediaMineTypes.IMAGES_PNG
 				}
 			);
-			response['avatar'] = signedResponse.urls[0];
+			response['avatar'] = signedResponse.files[0]?.url;
 		}
 
 		if (userProfile.cover) {
 			const signedResponse = await this.generateSignedUrlsService.generateDownloadSignedUrl(
 				{
-					fileKeys: [userProfile.cover],
+					fileNames: [userProfile.cover],
 					mineType: MediaMineTypes.IMAGES_PNG
 				}
 			);
-			response['cover'] = signedResponse.urls[0];
+			response['cover'] = signedResponse.files[0]?.url;
 		}
 		
 		return response;

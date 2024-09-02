@@ -1,15 +1,12 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from 'core/config/config.service';
-import { ErrorCodes } from 'shared/code/error';
-
 import {
-    isValidFileExtension,
     SIGNED_URL_EXPIRED_IN,
     SignedUrlCommandTypes
-} from './s3.utils';
+} from 'shared/business/file/file';
 
 @Injectable()
 export class S3Service {
@@ -33,12 +30,12 @@ export class S3Service {
         signedType: SignedUrlCommandTypes = SignedUrlCommandTypes.GET_OBJECT,
         mineType?: string
     ): Promise<string> {
-        if (signedType === SignedUrlCommandTypes.PUT_OBJECT) {
-            const isValidExtension = isValidFileExtension(key, mineType);
-            if (!isValidExtension) {
-                throw new BadRequestException(ErrorCodes.INVALID_FILE_EXTENSION);
-            }
-        }
+        // if (signedType === SignedUrlCommandTypes.PUT_OBJECT) {
+        //     const isValidExtension = isValidFileExtension(key, mineType);
+        //     if (!isValidExtension) {
+        //         throw new BadRequestException(ErrorCodes.INVALID_FILE_EXTENSION);
+        //     }
+        // }
 
         const command = signedType === SignedUrlCommandTypes.PUT_OBJECT
             ? new PutObjectCommand({

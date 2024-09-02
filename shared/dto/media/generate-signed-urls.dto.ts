@@ -7,7 +7,7 @@ import { DTO, HttpMethod } from '../base.dto';
 export class Media_GenerateSignedUrlsRequestBodyDTO {
 	@ApiProperty()
 	@IsArray()
-	fileKeys: string[];
+	fileNames: string[];
 
 	@ApiProperty()
 	@IsString()
@@ -16,9 +16,18 @@ export class Media_GenerateSignedUrlsRequestBodyDTO {
 	mineType?: string;
 }
 
+export class FileItem {
+	@IsString()
+	@IsOptional()
+	key?: string;
+
+	@IsString()
+	url: string;
+}
+
 export class Media_GenerateSignedUrlsResponseDTO {
 	@IsArray()
-	urls: string[];
+	files: FileItem[];
 }
 
 export class Media_GenerateSignedUrlsDTO extends DTO {

@@ -16,10 +16,10 @@ export class Post_UpdatePostService {
     ) {}
     
     async execute(id: string, dto: Post_UpdatePostRequestBodyDTO): Promise<Post_UpdatePostResponseDTO> {
-        const { title, content, media } = dto;
+        const { content, media } = dto;
         const updatedPost = await this.postModel.updateOne(
             { id },
-            { title, content, media }
+            { content, media }
         );
 
 		return { id: updatedPost.upsertedId.toString() }

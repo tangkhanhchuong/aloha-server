@@ -23,12 +23,11 @@ export class CreatePostService {
 		bodyDTO: Post_CreatePostRequestBodyDTO,
 		authUser: AuthUserPayload
 	): Promise<Post_CreatePostResponseDTO> {
-		const { title, content, media } = bodyDTO;
+		const { content, media } = bodyDTO;
 
 		const createdPost = await this.postModel.create({
-			title,
 			content,
-			media,
+			files: media,
 			createdBy: authUser.userId 
 		});
 		const savedPost = await createdPost.save();

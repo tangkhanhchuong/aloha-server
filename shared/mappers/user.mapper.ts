@@ -21,8 +21,8 @@ export class UserMapper {
         };
         if (user.avatar) {
             const files = await this.generateSignedUrlsService
-                .generateDownloadSignedUrl({ fileKeys: [user.avatar] });
-            userDTO['avatar'] = files.urls[0]
+                .generateDownloadSignedUrl({ fileNames: [user.avatar] });
+            userDTO['avatar'] = files.files[0]?.url
         }
         return userDTO;
     }

@@ -18,7 +18,6 @@ export class FindUsersService {
 	) {}
 
 	async execute(query: User_FindUsersRequestBodyDTO): Promise<User_FindUsersResponseDTO> {
-		console.log('find-users')
 		let conditions = {};
 		if (query.userIds) {
 			conditions['_id'] = {

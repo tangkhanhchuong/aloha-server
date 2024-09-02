@@ -20,16 +20,15 @@ export class PostMapper {
         isBookmarked?: boolean
     }): Promise<PostDTO> {
         const fileUrls = await this.generateSignedUrlsService
-            .generateDownloadSignedUrl({ fileKeys: post.files });
+            .generateDownloadSignedUrl({ fileNames: post.files });
         const createdBy = await this.userMapper.entityToDTO(post.createdBy);
         const postDTO: PostDTO = {
             createdBy,
             isReacted: post.isReacted || false,
             isBookmarked: post.isBookmarked || false,
             postId: post._id?.toString(),
-            fileUrls: fileUrls.urls,
+            fileUrls: fileUrls.files.map(file => file.url),
             content: post.content,
-            title: post.title,
             numberOfReactions: post.numberOfReactions,
             numberOfComments: post.numberOfComments,
             createdAt: post.createdAt.toISOString()

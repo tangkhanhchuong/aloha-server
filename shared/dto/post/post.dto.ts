@@ -18,9 +18,6 @@ export class PostDTO {
 	isBookmarked?: boolean;
 
 	@IsString()
-	title: string;
-
-	@IsString()
 	content: string;
 
 	@IsNumber()

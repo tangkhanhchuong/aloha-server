@@ -3,10 +3,6 @@ import { IsArray, IsOptional, IsString } from 'class-validator';
 import { DTO, HttpMethod } from '../base.dto';
 
 export class Post_UpdatePostRequestBodyDTO {
-    @IsString()
-    @IsOptional()
-	title?: string;
-
 	@IsString()
     @IsOptional()
     content?: string;
