@@ -1,4 +1,5 @@
-import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
+import { Expose } from 'class-transformer';
+import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
 
 import { DATE_REGEXP } from 'shared/business/date';
 import { UserGenders } from 'shared/business/user/user';
@@ -7,15 +8,8 @@ import {
     DTO,
     HttpMethod
 } from '../base.dto';
-import { Expose } from 'class-transformer';
 
 export class User_UpdateMyProfileRequestBodyDTO {
-	@IsString()
-    @MaxLength(25)
-    @IsNotEmpty()
-    @IsOptional()
-	username?: string;
-    
     @IsString()
     @IsNotEmpty()
     @IsOptional()
@@ -32,25 +26,22 @@ export class User_UpdateMyProfileRequestBodyDTO {
     fullname?: string;
 
     @IsString()
-    @IsNotEmpty()
     @IsOptional()
     bio?: string;
     
     @IsString()
-    @IsNotEmpty()
     @IsOptional()
     location?: string;
     
     @IsString()
-    @IsNotEmpty()
     @IsOptional()
     website?: string;
     
     @Expose()
-    @IsNotEmpty()
+    @IsString()
     @IsOptional()
 	@Matches(DATE_REGEXP, { message: 'Invalid date' })
-    birthday?: Date;
+    birthday?: string;
     
     @IsEnum(UserGenders)
     @IsNotEmpty()

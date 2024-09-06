@@ -20,8 +20,8 @@ export class UpdateMyProfileService {
 		bodyDTO: User_UpdateMyProfileRequestBodyDTO,
 		authUser: AuthUserPayload
 	): Promise<User_UpdateMyProfileResponseDTO> {
+		console.log({ bodyDTO })
 		const {
-			username,
 			website,
 			avatar,
 			bio,
@@ -37,7 +37,6 @@ export class UpdateMyProfileService {
 			userId,
 			{
 				$set: {
-					username,
 					avatar,
 					'profile.website': website,
 					'profile.bio': bio,

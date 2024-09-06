@@ -14,6 +14,10 @@ import {
 	User,
 	UserSchema
 } from 'database/user/user';
+import {
+	UserMedia,
+	UserMediaSchema
+} from 'database/user/user-media';
 import { PostMapper } from 'shared/mappers/post.mapper';
 import { UserMapper } from 'shared/mappers/user.mapper';
 import { MediaModule } from 'src/modules/media/media.module';
@@ -36,7 +40,8 @@ import { Post_UpdatePostService } from './update-post/update-post.service';
 		MongooseModule.forFeature([
 			{ name: Post.name, schema: PostSchema },
 			{ name: PostReaction.name, schema: PostReactionSchema },
-			{ name: User.name, schema: UserSchema }
+			{ name: User.name, schema: UserSchema },
+			{ name: UserMedia.name, schema: UserMediaSchema }
 		]),
 		CognitoModule,
 		MediaModule

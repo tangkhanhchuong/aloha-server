@@ -8,7 +8,10 @@ import { UserDTO } from "../user/user.dto";
 
 export class CommentDTO {
     @IsString()
-    content: string
+    commentId: string;
+
+    @IsString()
+    content: string;
     
     @IsEnum(CommentTypes)
 	type: CommentTypes;

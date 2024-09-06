@@ -15,6 +15,7 @@ export class CommentMapper {
     async entityToDTO(comment: PostComment & { createdBy: User }): Promise<CommentDTO> {
         const createdBy = await this.userMapper.entityToDTO(comment.createdBy); 
         const commentDTO: CommentDTO = {
+            commentId: comment._id.toString(),
             content: comment.content,
             type: comment.type,
             createdAt: comment.createdAt.toISOString(),
