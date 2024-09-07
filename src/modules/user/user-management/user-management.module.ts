@@ -5,6 +5,7 @@ import { User, UserSchema } from 'database/user/user';
 import { UserMapper } from 'shared/mappers/user.mapper';
 import { MediaModule } from 'src/modules/media/media.module';
 
+import { GetUserMediaService } from '../user-media/get-user-media/get-user-media.service';
 import { ActivateUserService } from './activate-user/activate-user.service';
 import { CreateUserController } from './create-user/create-user.controller';
 import { CreateUserService } from './create-user/create-user.service';
@@ -28,7 +29,7 @@ import { UpdateMyProfileService } from './update-my-profile/update-my-profile.se
 		FindUsersController,
 		GetUserController,
 		UpdateMyProfileController,
-		GetUserController
+		GetUserController,
 	],
 	providers: [
 		CreateUserService,

@@ -53,23 +53,6 @@ export class ListBookmarkPostsService {
 		const paginatedBookmarks = user.bookmarks
 			.filter((item) => item.status === PostStatuses.PUBLISHED)
 			.slice(startIndex, startIndex + limit);
-
-		// const filter: FilterQuery<Post> = {
-		// 	status: PostStatuses.PUBLISHED,
-		// 	createdBy: authorId,
-		// 	deletedAt: { $ne: null }
-		// };
-		// await this.userModel.findById()
-		// const [postEntities, count] = await Promise.all([
-		// 	this.postModel
-		// 		.find(filter)
-		// 		.populate('createdBy')
-		// 		.skip(limit * (+page - 1))
-		// 		.limit(limit)
-		// 		.sort({ createdAt: -1 })
-		// 		.exec(),
-		// 	this.postModel.countDocuments(filter)
-		// ]);
 		
 		const postDTOs = await Promise.all(paginatedBookmarks.map(async (postEntity) => {
 			const postReaction = await this.postReactionModel.exists({

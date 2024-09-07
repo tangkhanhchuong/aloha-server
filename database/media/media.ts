@@ -2,12 +2,18 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
 @Schema({ versionKey: false, collection: 'media' })
-export class UserMedia extends Document<number> {
+export class Media extends Document<number> {
     @Prop({
         type: String,
         required: true
     })
-    key: string;
+	key: string;
+
+	@Prop({
+        type: String,
+        required: true
+    })
+    type: string;
 
 	@Prop({
 		type: Date,
@@ -46,4 +52,4 @@ export class UserMedia extends Document<number> {
 	deletedBy: MongooseSchema.Types.ObjectId;
 }
 
-export const UserMediaSchema = SchemaFactory.createForClass(UserMedia);
+export const MediaSchema = SchemaFactory.createForClass(Media);

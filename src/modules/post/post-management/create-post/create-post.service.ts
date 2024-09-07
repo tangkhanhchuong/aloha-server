@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { Post } from 'database/post/post';
 import { User } from 'database/user/user';
-import { UserMedia } from 'database/user/user-media';
+import { Media } from 'database/media/media';
 import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	Post_CreatePostRequestBodyDTO,
@@ -16,8 +16,8 @@ export class CreatePostService {
 	constructor(
 		@InjectModel(User.name)
 		private readonly userModel: Model<User>,
-		@InjectModel(UserMedia.name)
-		private readonly userMediaModel: Model<UserMedia>,
+		@InjectModel(Media.name)
+		private readonly mediaModel: Model<Media>,
 		@InjectModel(Post.name)
 		private readonly postModel: Model<Post>,
     ) {}
@@ -37,8 +37,9 @@ export class CreatePostService {
 
 		// Below tasks are async
 		for (let file in media) {
-			const userMedia = new this.userMediaModel({
-                key: file
+			const userMedia = new this.mediaModel({
+				key: file,
+				createdBy: authUser.userId
             });
             await userMedia.save();
 		}
