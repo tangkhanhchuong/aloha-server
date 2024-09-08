@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+import { Media, MediaTypes } from 'database/media/media';
 import { Post } from 'database/post/post';
 import { User } from 'database/user/user';
-import { Media } from 'database/media/media';
 import { AuthUserPayload } from 'shared/business/auth/auth-user';
 import {
 	Post_CreatePostRequestBodyDTO,
@@ -36,9 +36,10 @@ export class CreatePostService {
 		const savedPost = await createdPost.save();
 
 		// Below tasks are async
-		for (let file in media) {
+		for (let file of media) {
 			const userMedia = new this.mediaModel({
 				key: file,
+				type: MediaTypes.IMAGE,
 				createdBy: authUser.userId
             });
             await userMedia.save();

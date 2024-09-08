@@ -1,12 +1,20 @@
 
 import { Type } from "class-transformer";
-import { IsString } from "class-validator";
+import { IsEnum, IsString } from "class-validator";
+
+import { MediaTypes } from "database/media/media";
 
 import { UserDTO } from "../user/user.dto";
 
 export class MediaDTO {
 	@IsString()
-    url: string[];
+    mediaId: string;
+
+	@IsString()
+    url: string;
+
+	@IsEnum(MediaTypes)
+    type: MediaTypes;
     
 	@IsString()
     createdAt: string;

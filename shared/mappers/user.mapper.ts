@@ -16,8 +16,8 @@ export class UserMapper {
             userId: user._id.toString(),
             email: user.email,
             username: user.username,
-            fullname: user.profile.fullname,
-            bio: user.profile.bio
+            fullname: user.profile?.fullname,
+            bio: user.profile?.bio
         };
         if (user.avatar) {
             const files = await this.generateSignedUrlsService

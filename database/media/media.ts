@@ -1,6 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
+export enum MediaTypes {
+	IMAGE = "IMAGE"
+}
+
 @Schema({ versionKey: false, collection: 'media' })
 export class Media extends Document<number> {
     @Prop({
@@ -10,10 +14,10 @@ export class Media extends Document<number> {
 	key: string;
 
 	@Prop({
-        type: String,
+        enum: MediaTypes,
         required: true
     })
-    type: string;
+    type: MediaTypes;
 
 	@Prop({
 		type: Date,

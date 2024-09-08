@@ -2,16 +2,15 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, isValidObjectId, Model } from 'mongoose';
 
+import { Media } from 'database/media/media';
 import { Post } from 'database/post/post';
 import { User } from 'database/user/user';
 import { AuthUserPayload } from 'shared/business/auth/auth-user';
-import { PostStatuses } from 'shared/business/post/post';
 import {
-    User_GetUserMediaRequestParamDTO,
-    User_GetUserMediaRequestQueryDTO,
-    User_GetUserMediaResponseDTO
+	User_GetUserMediaRequestParamDTO,
+	User_GetUserMediaRequestQueryDTO,
+	User_GetUserMediaResponseDTO
 } from 'shared/dto/user/get-user-media.dto';
-import { Media } from 'database/media/media';
 import { MediaMapper } from 'shared/mappers/media.mapper';
 
 @Injectable()
@@ -43,14 +42,13 @@ export class GetUserMediaService {
 		}
 
 		const filter: FilterQuery<Post> = {
-			status: PostStatuses.PUBLISHED,
 			createdBy: userId,
 			deletedAt: { $ne: null }
 		};
 		const [mediaEntities, count] = await Promise.all([
 			this.mediaModel
 				.find(filter)
-				.populate<{ createdBy: User }>('createdBy')
+				// .populate<{ createdBy: User }>('createdBy')
 				.skip(limit * (+page - 1))
 				.limit(limit)
 				.sort({ createdAt: -1 })
